@@ -1,4 +1,18 @@
+# others
 node_modules/
 .cache/
 public
+
+# types
 src/gatsby-types.d.ts
+src/env.d.ts
+src/file.d.ts
+
+# configs
+
+apollo.config.js
+.prettierrc
+
+# Environment
+.env.development
+.env.production
