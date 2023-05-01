@@ -1,7 +1,7 @@
 import { FirebaseOptions, initializeApp } from 'firebase/app'
 import { GoogleAuthProvider, UserCredential, getAuth, signInWithPopup, signOut } from 'firebase/auth'
 
-import { User } from '@store/authorization/type'
+import type { CreateUserInput, GoogleProfile } from '@store/authorization/type'
 
 export class FirebaseAuthorization {
   private readonly _apiKey = process.env.GATSBY_FIREBASE_API_KEY
@@ -40,7 +40,7 @@ export class FirebaseAuthorization {
     return getAuth(this._app)
   }
 
-  private _userFromResult(result: UserCredential): User {
+  private _userFromResult(result: UserCredential): GoogleProfile {
     return {
       email: result.user.email!,
       username: `@${result.user.displayName?.trim().toLowerCase().replace(/ +/g, '')}`,
@@ -54,7 +54,7 @@ export class FirebaseAuthorization {
       const result = await signInWithPopup(this._authInstance, this._Provider)
       const user = this._userFromResult(result)
 
-      /* idk, maybe don't need it */
+      /* можливо не варто це робити, хз */
       await signOut(this._authInstance)
 
       return user

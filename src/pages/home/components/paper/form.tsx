@@ -1,23 +1,22 @@
 import React, { FC, useState } from 'react'
+import { observer } from 'mobx-react-lite'
+
 import { Avatar, Grid, IconButton, InputAdornment, Tooltip, Typography } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
-
 import EditIcon from '@mui/icons-material/Edit'
 
-import { useAppDispatch, useAppSelector } from '@store'
-import { selectCurrentUser, setAuthStatus } from '@store/authorization'
+import { store } from '@store/root'
 
 import { Input } from '@components/inputs'
 import { Button } from '@components/button'
 
-export const Form: FC = () => {
+const Form: FC = () => {
   const [formEnabled, setFormEnabled] = useState(false)
-  const currentUser = useAppSelector(selectCurrentUser)
-  const dispatch = useAppDispatch()
+  const { currentUser: user, setAuthStatus } = store.authorization
   const submitEdit = () => {
     try {
       /* query from db, if success - setAuthStatus - true */
-      dispatch(setAuthStatus(true))
+      setAuthStatus(true)
       setTimeout(() => {
         console.log('query from db>>>>>>')
       }, 2000)
@@ -30,7 +29,7 @@ export const Form: FC = () => {
   }
   return (
     <>
-      <Avatar src={currentUser?.photo} sx={{ width: 50, height: 50, mb: 3 }} />
+      <Avatar src={user?.photo} sx={{ width: 50, height: 50, mb: 3 }} />
       <Grid
         container
         sx={{
@@ -66,7 +65,7 @@ export const Form: FC = () => {
           {formEnabled ? (
             <Input name="displayName" defaultValue="Default value" fullWidth />
           ) : (
-            <Typography height={40}>{currentUser?.displayName}</Typography>
+            <Typography height={40}>{user?.displayName}</Typography>
           )}
         </Grid>
         <Grid item xs={12} md={8}>
@@ -76,7 +75,7 @@ export const Form: FC = () => {
           {formEnabled ? (
             <Input name="email" defaultValue="12341324@gmail.com" disabled />
           ) : (
-            <Typography height={40}>{currentUser?.email}</Typography>
+            <Typography height={40}>{user?.email}</Typography>
           )}
         </Grid>
         <Grid item xs={12}>
@@ -92,7 +91,7 @@ export const Form: FC = () => {
               }}
             />
           ) : (
-            <Typography height={40}>{currentUser?.username}</Typography>
+            <Typography height={40}>{user?.username}</Typography>
           )}
         </Grid>
         {formEnabled && (
@@ -117,3 +116,5 @@ export const Form: FC = () => {
     </>
   )
 }
+
+export default observer(Form)

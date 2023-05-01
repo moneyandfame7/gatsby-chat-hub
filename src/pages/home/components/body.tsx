@@ -1,43 +1,55 @@
 import React, { FC, useState } from 'react'
+import { observer } from 'mobx-react-lite'
 
-import { Divider, Grid, Stack, Typography } from '@mui/material'
+import { Avatar, Divider, Grid, Stack, Typography } from '@mui/material'
 import GoogleIcon from '@mui/icons-material/Google'
 
-import { useAppDispatch, useAppSelector } from '@store'
-
-import { firebaseAuthorization } from '@services/authorization'
-import { selectCurrentUser, selectIsFinishedAuth, setAuthStatus, setUser } from '@store/authorization'
+import { authorizationStore, store } from '@store/root'
 
 import { Button } from '@components/button'
-
 import { Paper } from './paper'
+import { gql, useLazyQuery, useQuery } from '@apollo/client'
+import { useCustomQuery } from '@pages/hook/query'
 
-const Body: FC = () => {
-  const dispatch = useAppDispatch()
-  const currentUser = useAppSelector(selectCurrentUser)
-  const isFinishedAuth = useAppSelector(selectIsFinishedAuth)
-  const [showPaper, setShowPaper] = useState(false)
-
-  const handleGetStart = async () => {
-    if (currentUser && isFinishedAuth) {
-      console.log('ALREADY PARIRYRIPARIRAM')
-    } else if (currentUser && !isFinishedAuth) {
-      setShowPaper(true)
-    } else {
-      /* перевіряти, чи є тут юзер, якщо є - переадресація на іншу сторінку */
-      const user = await firebaseAuthorization.googleLogin()
-      if (user) {
-        dispatch(setUser(user))
-        setTimeout(() => {
-          setShowPaper(true)
-        }, 400)
-      }
+const demo_query = gql`
+  query {
+    users {
+      displayName
+      createdAt
+      email
+      id
+      photo
     }
+  }
+`
+const Body: FC = () => {
+  const { currentUser, setAuthStatus } = authorizationStore
+  const [showPaper, setShowPaper] = useState(false)
+  const handleGetStart = async () => {
+    // if (currentUser && isFinishedAuth) {
+    //   console.log('ALREADY PARIRYRIPARIRAM')
+    // } else if (currentUser && !isFinishedAuth) {
+    //   setShowPaper(true)
+    // } else {
+    //   const { success, errors } = await login()
+    //   if (success) {
+    //     setTimeout(() => {
+    //       setShowPaper(true)
+    //     }, 400)
+    //   } else {
+    //     console.log(errors)
+    //   }
+    // }
+    // const data = await login()
+    // console.log(data)
+    const info = await store.authorization.login()
+
+    console.log(info)
   }
 
   const handleClosePaper = () => {
     setShowPaper(false)
-    dispatch(setAuthStatus(false))
+    setAuthStatus(false)
   }
 
   return (
@@ -81,6 +93,7 @@ const Body: FC = () => {
           <br />
           restrictions
         </Typography>
+        <Typography>{currentUser?.email}</Typography>
         <Typography
           fontSize={24}
           lineHeight="26px"
@@ -116,4 +129,4 @@ const Body: FC = () => {
   )
 }
 
-export default Body
+export default observer(Body)

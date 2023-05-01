@@ -2,8 +2,8 @@ import React, { FC } from 'react'
 import { Dialog, DialogContent, DialogTitle, IconButton, Slide, Typography } from '@mui/material'
 import { TransitionProps } from '@mui/material/transitions'
 import CloseIcon from '@mui/icons-material/Close'
-import { Form } from './form'
 import { Button } from '@components/button'
+import Form from './form'
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {

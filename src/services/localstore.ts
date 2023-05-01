@@ -1,11 +1,10 @@
 export enum LocalKey {
   User = 'user',
-  AuthStatus = 'auth-st'
+  AuthStatus = 'auth-st',
+  AccessToken = 'ac-t',
+  RefreshToken = 'rt-t'
 }
 export class LocalStorage {
-  protected _localUserKey: LocalKey = LocalKey.User
-  protected _localAuthStatusKey: LocalKey = LocalKey.AuthStatus
-
   public get<T>(key: string): T | null {
     const item = localStorage.getItem(key)
     if (!item) {
@@ -21,7 +20,7 @@ export class LocalStorage {
   }
 
   public clear(key: string): void {
-    this.set(key, null)
+    localStorage.removeItem(key)
   }
 }
 

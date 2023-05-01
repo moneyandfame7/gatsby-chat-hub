@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { Provider } from 'react-redux'
+import { ApolloProvider } from '@apollo/client'
 import { GatsbyBrowser } from 'gatsby'
-import { store } from './src/store'
+import { client } from './src/utils/apollo'
 
 export const wrapRootElement: GatsbyBrowser['wrapPageElement'] = ({ element }) => {
-  return <Provider store={store}>{element}</Provider>
+  return <ApolloProvider client={client}>{element}</ApolloProvider>
 }
