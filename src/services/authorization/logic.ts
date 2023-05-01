@@ -1,9 +1,7 @@
 import { FirebaseApp, initializeApp } from 'firebase/app'
 import { GoogleAuthProvider, getAuth, signInWithPopup, signOut } from 'firebase/auth'
 
-import { User } from '@store/authorization'
-
-import { FirebaseConfig } from './config'
+import { FirebaseAuthorization } from './config'
 
 interface Logger {
   user?: User
@@ -53,7 +51,7 @@ class Authorization {
   }
 }
 
-const firebaseConfig = new FirebaseConfig()
+const firebaseConfig = new FirebaseAuthorization()
 
 const firebaseApplication = initializeApp(firebaseConfig)
 
