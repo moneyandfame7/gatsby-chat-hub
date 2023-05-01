@@ -3,6 +3,7 @@ node_modules/
 .cache/
 public
 
+
 # types
 src/gatsby-types.d.ts
 src/env.d.ts
@@ -16,3 +17,5 @@ apollo.config.js
 # Environment
 .env.development
 .env.production
+.DS_Store
+.env.development

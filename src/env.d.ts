@@ -1,11 +1,12 @@
 declare namespace NodeJS {
   interface ProcessEnv {
-    FIREBASE_API_KEY: string
-    FIREBASE_AUTH_DOMAIN: string
-    FIREBASE_DATABASE_URL: string
-    FIREBASE_PROJECT_ID: string
-    FIREBASE_STORAGE_BUCKET: string
-    FIREBASE_MESSAGING_SENDER: string
-    FIREBASE_APP_ID: string
+    GATSBY_FIREBASE_API_KEY: string
+    GATSBY_FIREBASE_AUTH_DOMAIN: string
+    GATSBY_FIREBASE_DATABASE_URL: string
+    GATSBY_FIREBASE_PROJECT_ID: string
+    GATSBY_FIREBASE_STORAGE_BUCKET: string
+    GATSBY_FIREBASE_MESSAGING_SENDER: string
+    GATSBY_FIREBASE_APP_ID: string
+    GATSBY_API_URL: string
   }
 }
