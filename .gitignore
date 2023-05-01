@@ -18,4 +18,3 @@ apollo.config.js
 .env.development
 .env.production
 .DS_Store
-.env.development
