@@ -1,55 +1,59 @@
 import React, { FC, useState } from 'react'
 import { observer } from 'mobx-react-lite'
+import { gql } from '@apollo/client'
 
-import { Avatar, Divider, Grid, Stack, Typography } from '@mui/material'
+import { Divider, Grid, Stack, Typography } from '@mui/material'
 import GoogleIcon from '@mui/icons-material/Google'
 
-import { authorizationStore, store } from '@store/root'
-
 import { Button } from '@components/button'
-import { Paper } from './paper'
-import { gql, useLazyQuery, useQuery } from '@apollo/client'
-import { useCustomQuery } from '@pages/hook/query'
+import { authorizationStore } from '@store/root'
+import Paper from './paper'
+import { GoogleLogin, useGoogleLogin } from '@react-oauth/google'
+import { userFragment } from '@store/authorization'
+import { client } from '@utils/apollo/clients'
 
-const demo_query = gql`
-  query {
-    users {
-      displayName
-      createdAt
-      email
-      id
-      photo
+const protectedQuery = gql`
+  query Me {
+    me {
+      ...AllUserFields
     }
   }
+  ${userFragment}
 `
-const Body: FC = () => {
-  const { currentUser, setAuthStatus } = authorizationStore
-  const [showPaper, setShowPaper] = useState(false)
-  const handleGetStart = async () => {
-    // if (currentUser && isFinishedAuth) {
-    //   console.log('ALREADY PARIRYRIPARIRAM')
-    // } else if (currentUser && !isFinishedAuth) {
-    //   setShowPaper(true)
-    // } else {
-    //   const { success, errors } = await login()
-    //   if (success) {
-    //     setTimeout(() => {
-    //       setShowPaper(true)
-    //     }, 400)
-    //   } else {
-    //     console.log(errors)
-    //   }
-    // }
-    // const data = await login()
-    // console.log(data)
-    const info = await store.authorization.login()
 
-    console.log(info)
+const Body: FC = () => {
+  const { currentUser } = authorizationStore
+  const [showPaper, setShowPaper] = useState(false)
+
+  const login = useGoogleLogin({
+    onSuccess: async creds => {
+      const { success } = await authorizationStore.login(creds)
+      if (success) {
+        setShowPaper(true)
+      }
+    }
+  })
+  const handleGetStart = async () => {
+    if (currentUser) {
+      setShowPaper(true)
+    } else {
+      /* Login, then edit template */
+      login()
+    }
   }
 
   const handleClosePaper = () => {
     setShowPaper(false)
-    setAuthStatus(false)
+  }
+
+  const getProtectedRoute = async () => {
+    try {
+      const { data, errors } = await client.query({
+        query: protectedQuery,
+        fetchPolicy: 'no-cache'
+      })
+      console.log(data, errors)
+    } catch (e) {}
   }
 
   return (
@@ -93,7 +97,6 @@ const Body: FC = () => {
           <br />
           restrictions
         </Typography>
-        <Typography>{currentUser?.email}</Typography>
         <Typography
           fontSize={24}
           lineHeight="26px"
@@ -114,8 +117,11 @@ const Body: FC = () => {
           interesting people from all over the world!
         </Typography>
         <Stack direction="row" alignItems="center" gap={3}>
-          <Button startIcon={<GoogleIcon />} bgcolor="white" textcolor="#1B68D2" autoSize onClick={handleGetStart}>
+          <Button startIcon={<GoogleIcon />} onClick={handleGetStart}>
             Come on, let's talk
+          </Button>
+          <Button onClick={getProtectedRoute} variant="text" sx={{ color: '#fff' }}>
+            Protected route
           </Button>
           <Divider orientation="vertical" flexItem sx={{ backgroundColor: '#FFF' }} />
           <Typography fontWeight={800} sx={{ fontSize: { xs: 16, md: 20 } }} color="#FFF">

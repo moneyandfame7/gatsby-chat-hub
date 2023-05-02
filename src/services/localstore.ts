@@ -1,8 +1,8 @@
 export enum LocalKey {
   User = 'user',
   AuthStatus = 'auth-st',
-  AccessToken = 'ac-t',
-  RefreshToken = 'rt-t'
+  AccessToken = 'access',
+  RefreshToken = 'refresh'
 }
 export class LocalStorage {
   public get<T>(key: string): T | null {

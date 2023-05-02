@@ -8,5 +8,6 @@ declare namespace NodeJS {
     GATSBY_FIREBASE_MESSAGING_SENDER: string
     GATSBY_FIREBASE_APP_ID: string
     GATSBY_API_URL: string
+    GATSBY_GOOGLE_ID: string
   }
 }

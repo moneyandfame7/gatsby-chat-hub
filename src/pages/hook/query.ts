@@ -1,5 +1,5 @@
 import { OperationVariables, useQuery } from '@apollo/client'
-import { client } from '@utils/apollo'
+import { client } from '@utils/apollo/clients'
 import { DocumentNode } from 'graphql'
 
 export const useCustomQuery = <TData, TVariables extends OperationVariables>(

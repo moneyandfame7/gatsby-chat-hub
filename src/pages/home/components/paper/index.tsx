@@ -1,8 +1,14 @@
 import React, { FC } from 'react'
-import { Dialog, DialogContent, DialogTitle, IconButton, Slide, Typography } from '@mui/material'
+import { navigate } from 'gatsby'
+import { observer } from 'mobx-react-lite'
+
+import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Slide } from '@mui/material'
 import { TransitionProps } from '@mui/material/transitions'
 import CloseIcon from '@mui/icons-material/Close'
+
+import { authorizationStore } from '@store/root'
 import { Button } from '@components/button'
+
 import Form from './form'
 
 const Transition = React.forwardRef(function Transition(
@@ -18,7 +24,16 @@ interface PaperProps {
   showPaper: boolean
   handleClosePaper: () => void
 }
-export const Paper: FC<PaperProps> = ({ showPaper, handleClosePaper }) => {
+const Paper: FC<PaperProps> = ({ showPaper, handleClosePaper }) => {
+  const { logout } = authorizationStore
+  const submit = () => {
+    navigate('/chat')
+  }
+
+  const exit = async () => {
+    await logout()
+    handleClosePaper()
+  }
   return (
     <Dialog
       open={showPaper}
@@ -44,15 +59,19 @@ export const Paper: FC<PaperProps> = ({ showPaper, handleClosePaper }) => {
         >
           <CloseIcon />
         </IconButton>
-        {/* @TODO: додати тут кнопку виходу з аккаунту, видалення з localstorage ключа  */}
         Complete the authorization
-        <Button variant="outlined">LOLOLASD</Button>
-        <Button>Loool</Button>
-        <Button variant="text">Loool</Button>
       </DialogTitle>
       <DialogContent>
         <Form />
       </DialogContent>
+      <DialogActions>
+        <Button variant="outlined" color="error" onClick={exit} sx={{ mr: 2 }}>
+          Exit
+        </Button>
+        <Button onClick={submit}>Complete</Button>
+      </DialogActions>
     </Dialog>
   )
 }
+
+export default observer(Paper)
