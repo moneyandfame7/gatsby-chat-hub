@@ -1,8 +1,19 @@
 import * as React from 'react'
 import { ApolloProvider } from '@apollo/client'
+import { GoogleOAuthProvider } from '@react-oauth/google'
 import { GatsbyBrowser } from 'gatsby'
-import { client } from './src/utils/apollo'
+import { configurePersistable } from 'mobx-persist-store'
 
+import { Environment } from './src/utils/environment'
+import { client } from './src/utils/apollo/clients'
 export const wrapRootElement: GatsbyBrowser['wrapPageElement'] = ({ element }) => {
-  return <ApolloProvider client={client}>{element}</ApolloProvider>
+  configurePersistable({
+    storage: localStorage
+    // debugMode: true
+  })
+  return (
+    <ApolloProvider client={client}>
+      <GoogleOAuthProvider clientId={Environment.googleId}>{element}</GoogleOAuthProvider>
+    </ApolloProvider>
+  )
 }

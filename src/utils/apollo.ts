@@ -1,39 +1,34 @@
-import { ApolloClient, ApolloLink, InMemoryCache, createHttpLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
+import {
+  ApolloClient,
+  ApolloLink,
+  FetchResult,
+  GraphQLRequest,
+  InMemoryCache,
+  Observable,
+  createHttpLink
+} from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
+import { getOperationName } from '@apollo/client/utilities'
+import { GraphQLError } from 'graphql'
 
-import { LocalKey, localStore } from '@services/localstore'
+import { refreshAccessMutation } from '@store/authorization'
+import { authorizationStore } from '@store/root'
+import jwtDecode from 'jwt-decode'
+import { JwtPayload } from '@store/authorization/type'
+import { errorLink, httpLink, linkTokenToHeaders } from './apollo/links'
 
 type KeyValue = {
   [key: string]: string | undefined
 }
-const authLink = () =>
-  new ApolloLink((operation, forward) => {
-    const token = localStore.get<string>(LocalKey.AccessToken)
-    if (token) {
-      operation.setContext((context: { headers: KeyValue }) => ({
-        headers: {
-          authorization: token,
-          ...context.headers
-        }
-      }))
-    }
-    return typeof window !== undefined ? forward(operation) : null
-  })
 
-const httpLink = () =>
-  createHttpLink({
-    uri: process.env.GATSBY_API_URL
-  })
+const isRefreshOperation = (operation: GraphQLRequest) => {
+  return operation.operationName === getOperationName(refreshAccessMutation)
+}
 
-// const errorLink = onError(({ graphQLErrors, networkError }) => {
-//   console.log(graphQLErrors)
-//   console.log(networkError)
-// })
+const getTokenForHeaders = (operation: GraphQLRequest) => {
+  const { access, refresh } = authorizationStore.getTokens()
+  return isRefreshOperation(operation) ? refresh : access
+}
 
-// const link = ApolloLink.from([authLink, errorLink, httpLink])
-
-export const client = new ApolloClient({
-  link: ApolloLink.from([authLink(), httpLink()]),
-  cache: new InMemoryCache()
-})
+let pendingAccessTokenPromise: any = null

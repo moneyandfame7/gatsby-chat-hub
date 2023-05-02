@@ -1,19 +1,20 @@
-import { gql } from '@apollo/client'
-import { action, autorun, makeAutoObservable, makeObservable, observable } from 'mobx'
-
-import { LocalKey, localStore } from '@services/localstore'
-import { client } from '@utils/apollo'
-import type { CreateUserInput, LoginResponse, User } from './type'
-import { FirebaseAuthorization } from '@services/firebase'
+import { DocumentNode, gql } from '@apollo/client'
+import { makeAutoObservable } from 'mobx'
 import { makePersistable } from 'mobx-persist-store'
 
-interface AuthorizationStoreInitialValues {
-  currentUser: User | null
-  isFinishedAuth: boolean
-  isLoggedIn: boolean
-}
+import type {
+  AuthLocalStore,
+  AuthResponse,
+  GoogleResponse,
+  AuthLocalStoreTokens,
+  User,
+  AuthInput,
+  AuthTokens
+} from './type'
+import { client, secondaryClient } from '@utils/apollo/clients'
+import { Logger } from '@utils/logger'
 
-const userFragment = gql`
+export const userFragment = gql`
   fragment AllUserFields on User {
     id
     email
@@ -25,8 +26,8 @@ const userFragment = gql`
 `
 
 const loginMutation = gql`
-  mutation Mutation($createUserInput: CreateUserInput!) {
-    login(createUserInput: $createUserInput) {
+  mutation Login($loginInput: AuthInput!) {
+    login(loginInput: $loginInput) {
       access
       refresh
       user {
@@ -37,88 +38,126 @@ const loginMutation = gql`
   ${userFragment}
 `
 
-const test = {
-  storageKey: 'authStore',
-  initialValues: {
-    currentUser: null,
-    isFinishedAuth: false,
-    isLoggedIn: false
+export const refreshAccessMutation = gql`
+  mutation Refresh($refreshInput: AuthInput!) {
+    refresh(refreshInput: $refreshInput) {
+      access
+      refresh
+      user {
+        ...AllUserFields
+      }
+    }
   }
-}
+  ${userFragment}
+`
 
 export class AuthorizationStore {
   public currentUser: User | null = null
-  public isFinishedAuth: boolean = false
-  public isLoggedIn: boolean = false
   public loading: boolean = false
+  public access: string | null = null
+  public refresh: string | null = null
 
-  private firebaseAuth: FirebaseAuthorization = new FirebaseAuthorization()
-  private STORAGE_KEY: string = 'authStore'
-  private initialValues = {
-    currentUser: null,
-    isLoggedIn: false,
-    isFinishedAuth: false
-  }
+  private readonly STORAGE_KEY: string = 'authStore'
   constructor() {
-    makeAutoObservable(this)
+    /**
+     * autoBind - щоб не губилось this і працювали традиційні функції
+     */
+    makeAutoObservable(this, {}, { autoBind: true })
 
     makePersistable(this, {
       name: this.STORAGE_KEY,
-      properties: ['currentUser', 'isFinishedAuth', 'isLoggedIn'],
+      properties: ['currentUser', 'access', 'refresh'],
       storage: localStorage
     })
   }
 
-  public setUser = (user: User): void => {
-    this.currentUser = user
-    localStore.set(LocalKey.User, user)
-  }
-
-  public removeUser = (): void => {
-    this.currentUser = null
-    localStore.clear(LocalKey.User)
-  }
-
-  public setAuthStatus = (status: boolean): void => {
-    this.isFinishedAuth = status
-    localStore.set(LocalKey.AuthStatus, status)
-  }
-
-  private setLoading = (value: boolean) => {
-    this.loading = value
-  }
-
-  public login = async () => {
-    const profile = await this.firebaseAuth.googleLogin()
-
-    if (!profile) {
-      throw new Error('Error with Google authorization')
+  private updateStore(options: AuthLocalStore | null) {
+    if (options) {
+      this.setUser(options.user)
+      this.setTokens({ access: options.access, refresh: options.refresh })
+    } else {
+      this.setUser(null)
+      this.setTokens({ access: null, refresh: null })
     }
+  }
 
-    const { data, errors } = await client.mutate<LoginResponse, CreateUserInput>({
+  /**
+   * Authorization cases
+   **/
+  public async login(credentials: GoogleResponse) {
+    if (!credentials) {
+      Logger.error({ title: 'Error with google auth' })
+      return { success: false }
+    }
+    const { data, errors } = await client.mutate<AuthResponse<'login'>, AuthInput<'login'>>({
       mutation: loginMutation,
       variables: {
-        createUserInput: profile
+        loginInput: {
+          token: credentials.access_token
+        }
       }
     })
 
     if (data) {
-      console.log('DATA >>>>>>>', data)
+      this.updateStore(data.login)
 
-      this.setUser(data.login.user)
-      localStore.set(LocalKey.AccessToken, data.login.access)
-      localStore.set(LocalKey.RefreshToken, data.login.refresh)
-
-      return {
-        success: true,
-        errors: null,
-        data
-      }
+      return { success: true }
     }
+    return { success: false }
+  }
+
+  public logout() {
+    this.updateStore(null)
+  }
+
+  public getState() {
     return {
-      success: false,
-      errors,
-      data
+      currentUser: this.currentUser,
+      ...this.getTokens()
     }
+  }
+
+  public async refreshAccessToken(): Promise<string | null> {
+    if (!this.refresh) {
+      this.logout()
+      Logger.error({ title: 'Unauthorized' })
+      return null
+    }
+
+    const { data, errors } = await secondaryClient.mutate<AuthResponse<'refresh'>, AuthInput<'refresh'>>({
+      mutation: refreshAccessMutation,
+      variables: {
+        refreshInput: {
+          token: this.refresh
+        }
+      }
+    })
+    if (data) {
+      this.updateStore(data.refresh)
+      Logger.info({ title: 'Successfully refresh', variant: 'successfully' })
+
+      return data.refresh.access
+    }
+    Logger.error({ title: 'Error when refresh token', value: errors })
+    this.logout()
+    return null
+  }
+
+  private setTokens({ access, refresh }: AuthLocalStoreTokens) {
+    this.access = access
+    this.refresh = refresh
+  }
+  public getTokens(): AuthLocalStoreTokens {
+    return {
+      access: this.access,
+      refresh: this.refresh
+    }
+  }
+
+  /**
+   * User manage
+   **/
+  public setUser(user: User | null): void {
+    this.currentUser = user
   }
 }
