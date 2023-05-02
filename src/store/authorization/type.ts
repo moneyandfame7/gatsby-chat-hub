@@ -1,6 +1,6 @@
 import { TokenResponse } from '@react-oauth/google'
 
-import { Nullable } from '@utils/types'
+import { Nullable } from 'types/utils'
 
 export interface User {
   id: string

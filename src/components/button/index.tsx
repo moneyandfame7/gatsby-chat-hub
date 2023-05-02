@@ -2,19 +2,50 @@ import React, { FC } from 'react'
 import { navigate } from 'gatsby'
 
 import { LoadingButton, LoadingButtonProps } from '@mui/lab'
+import { alpha, styled, useTheme } from '@mui/material'
+
+type ButtonColor = 'primary' | 'white'
 
 interface ButtonProps extends LoadingButtonProps {
-  to?: string
+  textColor?: string /* textcolor || string */
+  backgroundColor?: ButtonColor /* ButtonColor || string */
 }
-
-export const Button: FC<ButtonProps> = ({ to, ...props }) => {
-  const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    if (to) {
-      navigate(to)
+const handleButtonColor = ({ textColor, backgroundColor }: ButtonProps) => {
+  const theme = useTheme()
+  switch (backgroundColor) {
+    case 'primary': {
+      const color = theme.palette.primary.main
+      return {
+        backgroundColor: color,
+        color: textColor || theme.palette.getContrastText(color),
+        '&:hover': {
+          backgroundColor: alpha(color, 0.85)
+        }
+      }
     }
-    if (props.onClick) {
-      props.onClick(e)
+
+    case 'white': {
+      const color = '#fff'
+      return {
+        backgroundColor: color,
+        color: textColor || theme.palette.getContrastText(color),
+        '&:hover': {
+          backgroundColor: alpha(color, 0.85)
+        }
+      }
     }
   }
-  return <LoadingButton variant="contained" {...props} onClick={onClick} />
+}
+const StyledButton = styled(LoadingButton)<ButtonProps>(({ theme, textColor, backgroundColor = 'primary' }) => ({
+  ...handleButtonColor({ textColor, backgroundColor }),
+  '&.MuiButton-sizeLarge': {
+    padding: '15px 40px',
+    fontSize: '20px',
+    fontWeight: 800
+  },
+  fontWeight: 600
+}))
+
+export const Button: FC<ButtonProps> = ({ ...props }) => {
+  return <StyledButton {...props} />
 }

@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { gql } from '@apollo/client'
 
-import { Divider, Grid, Stack, Typography } from '@mui/material'
+import { Divider, Grid, Stack, Typography, alpha, darken, styled, useMediaQuery, useTheme } from '@mui/material'
 import GoogleIcon from '@mui/icons-material/Google'
 
 import { Button } from '@components/button'
@@ -11,6 +11,7 @@ import Paper from './paper'
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google'
 import { userFragment } from '@store/authorization'
 import { client } from '@utils/apollo/clients'
+import { LoadingButton, LoadingButtonProps } from '@mui/lab'
 
 const protectedQuery = gql`
   query Me {
@@ -24,7 +25,7 @@ const protectedQuery = gql`
 const Body: FC = () => {
   const { currentUser } = authorizationStore
   const [showPaper, setShowPaper] = useState(false)
-
+  const isMobile = useMediaQuery('(max-width:900px)')
   const login = useGoogleLogin({
     onSuccess: async creds => {
       const { success } = await authorizationStore.login(creds)
@@ -55,6 +56,7 @@ const Body: FC = () => {
       console.log(data, errors)
     } catch (e) {}
   }
+  const theme = useTheme()
 
   return (
     <>
@@ -117,12 +119,18 @@ const Body: FC = () => {
           interesting people from all over the world!
         </Typography>
         <Stack direction="row" alignItems="center" gap={3}>
-          <Button startIcon={<GoogleIcon />} onClick={handleGetStart}>
+          <Button
+            backgroundColor="white"
+            size={isMobile ? 'small' : 'large'}
+            textColor={theme.palette.primary.main}
+            startIcon={<GoogleIcon />}
+            onClick={handleGetStart}
+          >
             Come on, let's talk
           </Button>
-          <Button onClick={getProtectedRoute} variant="text" sx={{ color: '#fff' }}>
+          {/* <Button onClick={getProtectedRoute} variant="text" sx={{ color: '#fff' }}>
             Protected route
-          </Button>
+          </Button> */}
           <Divider orientation="vertical" flexItem sx={{ backgroundColor: '#FFF' }} />
           <Typography fontWeight={800} sx={{ fontSize: { xs: 16, md: 20 } }} color="#FFF">
             ChatHub

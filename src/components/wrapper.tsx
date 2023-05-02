@@ -1,4 +1,3 @@
-import { StaticQuery, graphql } from 'gatsby'
 import React, { FC, PropsWithChildren, useEffect } from 'react'
 
 const Wrapper: FC<PropsWithChildren> = ({ children }) => {
