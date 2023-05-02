@@ -65,7 +65,7 @@ const Paper: FC<PaperProps> = ({ showPaper, handleClosePaper }) => {
         <Form />
       </DialogContent>
       <DialogActions>
-        <Button variant="outlined" color="error" onClick={exit} sx={{ mr: 2 }}>
+        <Button backgroundColor="white" textColor="#333" onClick={exit} sx={{ mr: 2 }}>
           Exit
         </Button>
         <Button onClick={submit}>Complete</Button>
