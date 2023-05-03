@@ -7,11 +7,9 @@ interface PageHeadParams {
 }
 type PageHeadFC = (params: PageHeadParams) => HeadFC
 
-const pageHead: PageHeadFC = ({ title, postfix = true }) => {
+export const pageHead: PageHeadFC = ({ title, postfix = true }) => {
   return props => {
     const pageTitle = postfix ? `${title} | ChatHub` : title
     return <title>{pageTitle}</title>
   }
 }
-
-export default pageHead

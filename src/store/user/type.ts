@@ -1,17 +1,23 @@
 import { TokenResponse } from '@react-oauth/google'
 
-import { Nullable } from 'types/utils'
+import { Nullable } from '@types'
 
 export interface User {
   id: string
   email: string
-  username: string
+  username: string | null
   displayName: string
   createdAt: Date
   photo: string
 
   /* @TODO: fix any */
   messages: any[]
+}
+
+export interface CreateUsernameInput {
+  createUsernameInput: {
+    username: string
+  }
 }
 
 export interface AuthTokens {
