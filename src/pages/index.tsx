@@ -1,17 +1,17 @@
 import * as React from 'react'
+import { observer } from 'mobx-react-lite'
+import { Box } from '@chakra-ui/react'
+/* services */
+import { userStore } from '@store/root'
 
-import { pageHead } from '@components'
-import { HomeAnimation, HomeBody, HomeWrapper } from '@pages/home/components'
+/* ui */
+import { pageHead, Authorization, Chat } from '@components'
 
-const HomePage: React.FC = () => {
-  return (
-    <HomeWrapper>
-      <HomeBody />
-      <HomeAnimation />
-    </HomeWrapper>
-  )
+const Root: React.FC = () => {
+  const { currentUser, isAuthorized } = userStore
+  return <Box>{currentUser?.username && isAuthorized ? <Chat /> : <Authorization />}</Box>
 }
 
-export default HomePage
+export default observer(Root)
 
 export const Head = pageHead({ title: 'Home' })

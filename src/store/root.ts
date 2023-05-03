@@ -1,8 +1,3 @@
-import { AuthorizationStore } from './authorization'
+import { UserStore } from './user'
 
-// export const store = Object.freeze({
-//   authorization: new AuthorizationStore()
-// })
-
-// export const counterStore = new CounterStore()
-export const authorizationStore = new AuthorizationStore()
+export const userStore = new UserStore()
