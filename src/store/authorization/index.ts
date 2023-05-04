@@ -19,6 +19,7 @@ import type {
   JwtPayload
 } from './types'
 import { UserStore } from '@store/user'
+import { hasWindow } from '@utils/functions'
 
 export class AuthorizationStore implements IAuthorizationStore {
   /* must be public for persist store */
@@ -41,7 +42,7 @@ export class AuthorizationStore implements IAuthorizationStore {
     makePersistable(this, {
       name: this.STORAGE_KEY,
       properties: ['accessToken', 'refreshToken'],
-      storage: typeof window !== undefined ? localStorage : undefined
+      storage: hasWindow() ? window.localStorage : undefined
     })
   }
 

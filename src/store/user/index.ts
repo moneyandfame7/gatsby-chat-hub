@@ -9,6 +9,7 @@ import type { AuthResponse } from '@store/authorization/types'
 import { CREATE_USERNAME_MUTATION } from './graphql'
 import type { User, CreateUsernameInput, IUserStore } from './type'
 import { AuthorizationStore } from '@store/authorization'
+import { hasWindow } from '@utils/functions'
 
 export class UserStore implements IUserStore {
   public user: NullableField<User> = null
@@ -26,7 +27,7 @@ export class UserStore implements IUserStore {
     makePersistable(this, {
       name: this.STORAGE_KEY,
       properties: ['user'],
-      storage: typeof window !== undefined ? localStorage : undefined
+      storage: hasWindow() ? window.localStorage : undefined
     })
   }
   public setUser(user: NullableField<User>): void {
