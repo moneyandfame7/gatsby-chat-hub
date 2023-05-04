@@ -8,6 +8,9 @@ const config: GatsbyConfig = {
   siteMetadata: {
     title: `ChatHub | Live chat`
   },
+  flags: {
+    DEV_SSR: true
+  },
   graphqlTypegen: true,
   plugins: [
     {
