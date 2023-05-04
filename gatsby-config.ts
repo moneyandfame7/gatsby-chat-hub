@@ -23,7 +23,7 @@ const config: GatsbyConfig = {
         theme_color: `#a2466c`,
         display: `standalone`,
         icon: 'src/images/logo.png',
-        descriptions:
+        description:
           'ChatHub is a web-based chat application that enables users to connect with each other instantly and chat in real-time using a simple and user-friendly interface.'
       }
     },
