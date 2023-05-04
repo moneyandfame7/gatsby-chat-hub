@@ -1,29 +1,53 @@
 {
-  "name": "chat-hub",
-  "version": "1.0.0",
-  "private": true,
-  "description": "chat-hub",
-  "author": "moneyandfame7",
-  "keywords": [
-    "gatsby"
-  ],
-  "scripts": {
-    "develop": "gatsby develop",
-    "start": "gatsby develop",
-    "build": "gatsby build",
-    "serve": "gatsby serve",
-    "clean": "gatsby clean",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "gatsby": "^5.9.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "@types/node": "^18.15.13",
-    "@types/react": "^18.0.38",
-    "@types/react-dom": "^18.0.11",
-    "typescript": "^5.0.4"
-  }
+	"name": "chat-hub",
+	"version": "1.0.0",
+	"private": true,
+	"description": "chat-hub",
+	"author": "moneyandfame7",
+	"keywords": [
+		"gatsby"
+	],
+	"scripts": {
+		"develop": "gatsby develop --o",
+		"start": "gatsby develop",
+		"build": "gatsby build",
+		"serve": "gatsby serve",
+		"clean": "gatsby clean",
+		"typecheck": "tsc --noEmit",
+		"lint": "eslint --ext .tsx,.ts src",
+		"lint:fix": "eslint --ext .tsx,.ts src --fix"
+	},
+	"dependencies": {
+		"@apollo/client": "^3.7.13",
+		"@chakra-ui/gatsby-plugin": "^3.1.3",
+		"@chakra-ui/react": "^2.6.0",
+		"@emotion/react": "^11.10.8",
+		"@emotion/styled": "^11.10.8",
+		"@react-icons/all-files": "^4.1.0",
+		"@react-oauth/google": "^0.11.0",
+		"dotenv": "^16.0.3",
+		"framer-motion": "^10.12.7",
+		"gatsby": "^5.9.0",
+		"gatsby-plugin-alias-imports": "^1.0.5",
+		"gatsby-plugin-manifest": "^5.9.0",
+		"gatsby-plugin-react-svg": "^3.3.0",
+		"graphql": "^16.6.0",
+		"jwt-decode": "^3.1.2",
+		"mobx": "^6.9.0",
+		"mobx-persist-store": "^1.1.3",
+		"mobx-react-lite": "^3.4.3",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"react-lottie": "^1.2.3"
+	},
+	"devDependencies": {
+		"@types/node": "^18.15.13",
+		"@types/react": "^18.0.38",
+		"@types/react-dom": "^18.0.11",
+		"@types/react-lottie": "^1.2.6",
+		"eslint": "^8.39.0",
+		"eslint-plugin-unused-imports": "^2.0.0",
+		"prettier": "^2.8.8",
+		"typescript": "^5.0.4"
+	}
 }
