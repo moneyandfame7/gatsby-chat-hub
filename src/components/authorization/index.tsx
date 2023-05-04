@@ -11,11 +11,12 @@ import { CreateUsername } from './ui/create-username'
 import { Login } from './ui/login'
 
 export const Authorization: FC = observer(() => {
-  const { isAuthorized, handleChange, inputError, submit, googleLogin } = useAuthorization()
+  const { isLoggedIn, handleChange, inputError, submit, googleLogin } = useAuthorization()
+
   return (
     <Center height="100vh">
       <Stack spacing={4} align="center">
-        {isAuthorized ? (
+        {isLoggedIn ? (
           <CreateUsername inputError={inputError} submit={submit} handleChange={handleChange} />
         ) : (
           <Login googleLogin={googleLogin} />

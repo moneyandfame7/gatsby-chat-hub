@@ -1,77 +1,23 @@
-import { gql } from '@apollo/client'
-import { makeAutoObservable } from 'mobx'
+import { autorun, makeAutoObservable, reaction } from 'mobx'
 import { makePersistable } from 'mobx-persist-store'
 
-import type {
-  AuthLocalStore,
-  AuthResponse,
-  GoogleResponse,
-  AuthLocalStoreTokens,
-  User,
-  AuthInput,
-  AuthTokens,
-  CreateUsernameInput
-} from './type'
-import { client, secondaryClient } from '@utils/apollo/clients'
+import { client } from '@utils/apollo/clients'
+import { RootStore } from '@store/root'
+import type { NullableField } from '@types'
+import type { AuthResponse } from '@store/authorization/types'
 
-const userFragment = gql`
-  fragment AllUserFields on User {
-    id
-    email
-    displayName
-    username
-    photo
-    createdAt
-  }
-`
+import { CREATE_USERNAME_MUTATION } from './graphql'
+import type { User, CreateUsernameInput, IUserStore } from './type'
+import { AuthorizationStore } from '@store/authorization'
 
-const loginMutation = gql`
-  mutation Login($loginInput: AuthInput!) {
-    login(loginInput: $loginInput) {
-      access
-      refresh
-      user {
-        ...AllUserFields
-      }
-    }
-  }
-  ${userFragment}
-`
-
-const refreshAccessMutation = gql`
-  mutation Refresh($refreshInput: AuthInput!) {
-    refresh(refreshInput: $refreshInput) {
-      access
-      refresh
-      user {
-        ...AllUserFields
-      }
-    }
-  }
-  ${userFragment}
-`
-
-const createUsernameMutation = gql`
-  mutation CreateUsername($createUsernameInput: CreateUsernameInput!) {
-    createUsername(createUsernameInput: $createUsernameInput) {
-      access
-      refresh
-      user {
-        ...AllUserFields
-      }
-    }
-  }
-  ${userFragment}
-`
-
-export class UserStore {
-  public currentUser: User | null = null
+export class UserStore implements IUserStore {
+  public user: NullableField<User> = null
   public loading: boolean = false
-  public access: string | null = null
-  public refresh: string | null = null
 
-  private readonly STORAGE_KEY: string = 'userStore'
-  constructor() {
+  private readonly authorizationStore: AuthorizationStore
+  public readonly STORAGE_KEY: string = 'userStore'
+  constructor(readonly rootStore: RootStore) {
+    this.authorizationStore = rootStore.authorizationStore
     /**
      * autoBind - щоб не губилось this і працювали традиційні функції
      */
@@ -79,120 +25,28 @@ export class UserStore {
 
     makePersistable(this, {
       name: this.STORAGE_KEY,
-      properties: ['currentUser', 'access', 'refresh'],
+      properties: ['user'],
       storage: localStorage
     })
   }
-
-  private updateStore(options: AuthLocalStore | null) {
-    if (options) {
-      this.setUser(options.user)
-      this.setTokens({ access: options.access, refresh: options.refresh })
-    } else {
-      this.setUser(null)
-      this.setTokens({ access: null, refresh: null })
-    }
-  }
-
-  /**
-   * Authorization cases
-   **/
-  public async login(credentials: GoogleResponse) {
-    if (!credentials) {
-      return { success: false }
-    }
-    const { data, errors } = await client.mutate<AuthResponse<'login'>, AuthInput<'login'>>({
-      mutation: loginMutation,
-      variables: {
-        loginInput: {
-          token: credentials.access_token
-        }
-      }
-    })
-
-    if (data) {
-      this.updateStore(data.login)
-
-      return { success: true }
-    }
-    return { success: false }
-  }
-
-  public logout() {
-    this.updateStore(null)
-  }
-
-  public getState() {
-    return {
-      currentUser: this.currentUser,
-      ...this.getTokens()
-    }
-  }
-
-  public async refreshAccessToken(): Promise<string | null> {
-    if (!this.refresh) {
-      this.logout()
-      return null
-    }
-
-    const { data, errors } = await secondaryClient.mutate<AuthResponse<'refresh'>, AuthInput<'refresh'>>({
-      mutation: refreshAccessMutation,
-      variables: {
-        refreshInput: {
-          token: this.refresh
-        }
-      }
-    })
-    if (data) {
-      this.updateStore(data.refresh)
-
-      return data.refresh.access
-    }
-    this.logout()
-    return null
-  }
-
-  private setTokens({ access, refresh }: AuthLocalStoreTokens) {
-    this.access = access
-    this.refresh = refresh
-  }
-
-  public getTokens(): AuthLocalStoreTokens {
-    return {
-      access: this.access,
-      refresh: this.refresh
-    }
-  }
-
-  public get isAuthorized() {
-    return !!this.currentUser && !!this.access && this.refresh
-  }
-
-  /**
-   * User manage
-   **/
-  public setUser(user: User | null): void {
-    this.currentUser = user
+  public setUser(user: NullableField<User>): void {
+    this.user = user
   }
 
   public async createUsername(username: string) {
-    try {
-      const { data, errors } = await client.mutate<AuthResponse<'createUsername'>, CreateUsernameInput>({
-        mutation: createUsernameMutation,
-        variables: {
-          createUsernameInput: {
-            username
-          }
+    const { data, errors } = await client.mutate<AuthResponse<'createUsername'>, CreateUsernameInput>({
+      mutation: CREATE_USERNAME_MUTATION,
+      variables: {
+        createUsernameInput: {
+          username
         }
-      })
-      if (data) {
-        this.updateStore(data.createUsername)
-
-        return { success: true }
       }
-      return { success: false }
-    } catch (e) {
-      return { success: false }
+    })
+    if (data) {
+      this.authorizationStore.updateCredentials(data.createUsername)
+
+      return { success: true, error: null }
     }
+    return { success: false, error: 'Sdsds' }
   }
 }

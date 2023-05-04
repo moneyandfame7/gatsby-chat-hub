@@ -1,15 +1,17 @@
-import * as React from 'react'
+import React, { type FC } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Box } from '@chakra-ui/react'
+
 /* services */
-import { userStore } from '@store/root'
+import { useStores } from '@store/provider'
 
 /* ui */
 import { pageHead, Authorization, Chat } from '@components'
 
 const Root: React.FC = () => {
-  const { currentUser, isAuthorized } = userStore
-  return <Box>{currentUser?.username && isAuthorized ? <Chat /> : <Authorization />}</Box>
+  const { userStore, authorizationStore } = useStores()
+
+  return <Box>{userStore.user?.username && authorizationStore.isLoggedIn ? <Chat /> : <Authorization />}</Box>
 }
 
 export default observer(Root)

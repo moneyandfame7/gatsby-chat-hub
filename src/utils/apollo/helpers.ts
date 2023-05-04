@@ -1,17 +1,19 @@
-import jwtDecode from 'jwt-decode'
-
-import { JwtPayload } from '@store/user/type'
-import { userStore } from '@store/root'
+import { rootStore } from '@store/root'
 
 export const getAccessToken = () => {
-  const authTokenState = userStore.getState()
-  const currentNumericDate = Math.round(Date.now() / 1000)
+  const { authorizationStore } = rootStore
 
-  if (!authTokenState.access && !authTokenState.refresh && !authTokenState.currentUser) {
-    return null
+  switch (true) {
+    /* якщо немає токенів - повертаємо null */
+    case !authorizationStore.isLoggedIn:
+      return null
+
+    /* якщо все гуд - просто повертаємо access token */
+    case authorizationStore.isValidAccessToken:
+      return authorizationStore.accessToken
+
+    /* повертаємо рефрешнутий access token */
+    default:
+      return authorizationStore.refresh()
   }
-  if (authTokenState.access && currentNumericDate < jwtDecode<JwtPayload>(authTokenState.access).exp) {
-    return authTokenState.access
-  }
-  return userStore.refreshAccessToken()
 }

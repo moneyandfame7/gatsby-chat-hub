@@ -1,9 +1,10 @@
-import { useGoogleLogin } from '@react-oauth/google'
-import { userStore } from '@store/root'
 import { useEffect, useState } from 'react'
+import { useGoogleLogin } from '@react-oauth/google'
+
+import { useStores } from '@store/provider'
 
 export const useAuthorization = () => {
-  const { isAuthorized, login } = userStore
+  const { authorizationStore, userStore } = useStores()
   const [username, setUsername] = useState('')
   const [inputError, setInputError] = useState('')
 
@@ -27,9 +28,9 @@ export const useAuthorization = () => {
 
   const googleLogin = useGoogleLogin({
     onSuccess: async creds => {
-      const { success } = await login(creds)
+      const { success } = await authorizationStore.login(creds)
       if (success) {
-        console.log('ok')
+        /*  */
       }
     }
   })
@@ -38,7 +39,7 @@ export const useAuthorization = () => {
     if (!inputError) {
       const { success } = await userStore.createUsername(username)
       if (success) {
-        console.log('successfully')
+        /*  */
       }
     }
   }
@@ -57,6 +58,6 @@ export const useAuthorization = () => {
     submit,
     handleChange,
     googleLogin,
-    isAuthorized
+    isLoggedIn: authorizationStore.isLoggedIn
   }
 }

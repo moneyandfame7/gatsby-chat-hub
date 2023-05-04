@@ -42,10 +42,10 @@ const config: GatsbyConfig = {
       }
     },
     {
-      resolve: '@chakra-ui/gatsby-plugin'
-      // options: {
-      //   initialColorMode: 'dark'
-      // }
+      resolve: '@chakra-ui/gatsby-plugin',
+      options: {
+        resetCSS: true
+      }
     },
     {
       resolve: 'gatsby-plugin-react-svg',
