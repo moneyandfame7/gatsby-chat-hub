@@ -8,16 +8,11 @@ const config: GatsbyConfig = {
   siteMetadata: {
     title: `ChatHub | Live chat`
   },
-  flags: {
-    DEV_SSR: true
-  },
   graphqlTypegen: true,
   plugins: [
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
-        name: 'ChatHub - online web chat',
-        short_name: 'ChatHub',
         start_url: '/',
         background_color: `#f7f0eb`,
         theme_color: `#a2466c`,
