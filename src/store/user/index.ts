@@ -26,7 +26,7 @@ export class UserStore implements IUserStore {
     makePersistable(this, {
       name: this.STORAGE_KEY,
       properties: ['user'],
-      storage: localStorage
+      storage: typeof window !== undefined ? localStorage : undefined
     })
   }
   public setUser(user: NullableField<User>): void {

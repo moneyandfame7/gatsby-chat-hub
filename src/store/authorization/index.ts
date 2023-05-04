@@ -41,7 +41,7 @@ export class AuthorizationStore implements IAuthorizationStore {
     makePersistable(this, {
       name: this.STORAGE_KEY,
       properties: ['accessToken', 'refreshToken'],
-      storage: localStorage
+      storage: typeof window !== undefined ? localStorage : undefined
     })
   }
 
