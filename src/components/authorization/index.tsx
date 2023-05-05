@@ -15,7 +15,7 @@ export const Authorization: FC = observer(() => {
 
   return (
     <Center height="100vh">
-      <Stack spacing={4} align="center">
+      <Stack spacing={4} align="center" minW="370px">
         {isLoggedIn ? (
           <CreateUsername inputError={inputError} submit={submit} handleChange={handleChange} />
         ) : (

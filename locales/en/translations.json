@@ -1,0 +1,17 @@
+{
+  "Home": "Home",
+  "authorization": {
+    "createUsername": "Create username",
+    "enterUsername": "Enter username",
+    "logout": "Logout",
+    "login": "Continue with Google"
+  },
+  "error": {
+    "shortUsername": "Username must be at least 3 characters long",
+    "longUsername": "Username cannot be longer than 30 characters",
+    "onlyEnglish": "English letters only"
+  },
+  "common": {
+    "save": "Save"
+  }
+}
