@@ -24,3 +24,7 @@ export const wrapRootElement: GatsbyBrowser['wrapPageElement'] = ({ element }) =
     </ApolloProvider>
   )
 }
+
+export const onRouteUpdate: GatsbyBrowser['onRouteUpdate'] = args => {
+  console.log(args)
+}

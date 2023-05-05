@@ -9,6 +9,7 @@ const config: GatsbyConfig = {
     title: `ChatHub | Live chat`
   },
   graphqlTypegen: true,
+  trailingSlash: 'always',
   plugins: [
     {
       resolve: 'gatsby-plugin-manifest',
@@ -51,6 +52,22 @@ const config: GatsbyConfig = {
         rule: {
           include: /assets/
         }
+      }
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        path: `${__dirname}/locales`,
+        name: `locale`
+      }
+    },
+    {
+      resolve: `gatsby-plugin-react-i18next`,
+      options: {
+        localeJsonSourceName: `locale`, // name given to `gatsby-source-filesystem` plugin.
+        languages: [`en`, `uk`],
+        trailingSlash: 'always',
+        redirect: '/'
       }
     }
   ]
