@@ -2,13 +2,13 @@ import React, { type FC } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Box } from '@chakra-ui/react'
 import { graphql } from 'gatsby'
-
 /* services */
 import { useStores } from '@store/provider'
 
 /* ui */
 import { pageHead, Authorization, Chat } from '@components'
 import { Header } from '@components/header'
+import { Link } from 'gatsby-plugin-react-i18next'
 
 const Root: FC = () => {
   const { userStore, authorizationStore } = useStores()
@@ -16,6 +16,7 @@ const Root: FC = () => {
   return (
     <Box>
       <Header />
+
       {userStore.user?.username && authorizationStore.isLoggedIn ? <Chat /> : <Authorization />}
     </Box>
   )

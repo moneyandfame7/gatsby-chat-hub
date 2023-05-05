@@ -9,6 +9,7 @@ import { useAuthorization } from './hook'
 /* ui */
 import { CreateUsername } from './ui/create-username'
 import { Login } from './ui/login'
+import Wrapper from '@components/wrapper'
 
 export const Authorization: FC = observer(() => {
   const { isLoggedIn, handleChange, inputError, submit, googleLogin } = useAuthorization()
