@@ -28,6 +28,7 @@ const config: GatsbyConfig = {
       options: {
         alias: {
           '@components': path.resolve(__dirname, 'src/components'),
+          '@modules': path.resolve(__dirname, 'src/modules'),
           '@pages': path.resolve(__dirname, 'src/pages'),
           '@hooks': path.resolve(__dirname, 'src/hooks'),
           '@images': path.resolve(__dirname, 'src/images'),
@@ -43,7 +44,9 @@ const config: GatsbyConfig = {
     {
       resolve: '@chakra-ui/gatsby-plugin',
       options: {
-        resetCSS: true
+        resetCSS: true,
+        isUsingColorMode: true,
+        portalZIndex: 100
       }
     },
     {
@@ -52,22 +55,6 @@ const config: GatsbyConfig = {
         rule: {
           include: /assets/
         }
-      }
-    },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        path: `${__dirname}/locales`,
-        name: `locale`
-      }
-    },
-    {
-      resolve: `gatsby-plugin-react-i18next`,
-      options: {
-        localeJsonSourceName: `locale`, // name given to `gatsby-source-filesystem` plugin.
-        languages: [`en`, `uk`],
-        trailingSlash: 'always',
-        redirect: '/'
       }
     }
   ]

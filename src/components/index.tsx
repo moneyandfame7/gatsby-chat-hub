@@ -1,5 +1,9 @@
+/* For Gatsby Head API */
 export * from './page-head'
-export * from './wrapper'
+
+/* Only auth users */
+export * from './protected-route'
+
+/* Other */
 export * from './logo'
-export * from './authorization'
-export * from './chat'
+export * from './context-menu'

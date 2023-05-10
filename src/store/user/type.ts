@@ -1,29 +1,40 @@
-import type { AuthStoreOperationResponse } from '@store/authorization/types'
 import type { NullableField } from '@types'
 
 export interface User {
   id: string
   email: string
   username: NullableField<string>
-  displayName: string
   createdAt: Date
   photo: string
 
   /* @TODO: fix any */
+  /* або не фікс, а прибрати, бо сам юзер буде приходити без звʼязків */
   messages: any[]
 }
 
+export interface UserOperationWithUsername {
+  username: string
+}
+
 export interface CreateUsernameInput {
-  createUsernameInput: {
-    username: string
-  }
+  username: string
+}
+
+export interface SearchUsersInput {
+  username: string
+}
+export interface SearchUsersResponse {
+  searchUsers: Array<SearchedUser>
+}
+export interface SearchedUser {
+  id: string
+  username: string
+  photo: string
 }
 
 export interface IUserStore {
   user: NullableField<User>
-  loading: boolean
   STORAGE_KEY: string
 
   setUser: (user: NullableField<User>) => void
-  createUsername: (username: string) => Promise<AuthStoreOperationResponse>
 }

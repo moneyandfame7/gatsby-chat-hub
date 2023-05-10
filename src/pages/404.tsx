@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Link, PageProps } from 'gatsby'
+import { PageProps } from 'gatsby'
 import { pageHead } from '@components'
 
 const NotFoundPage: React.FC<PageProps> = () => {

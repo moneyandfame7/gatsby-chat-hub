@@ -1,12 +1,14 @@
+/* lib */
 import { makeAutoObservable } from 'mobx'
 import { makePersistable } from 'mobx-persist-store'
 import jwtDecode from 'jwt-decode'
 
+/* serivces  */
 import { RootStore } from '@store/root'
 import { client, secondaryClient } from '@utils/apollo/clients'
 import type { NullableField } from '@types'
-
 import { LOGIN_MUTATION, REFRESH_MUTATION } from './graphql'
+
 import type {
   AccessToken,
   AuthInput,
@@ -18,25 +20,19 @@ import type {
   IAuthorizationStore,
   JwtPayload
 } from './types'
-import { UserStore } from '@store/user'
 import { hasWindow } from '@utils/functions'
 
+/**
+ * @TODO handle error
+ */
+
 export class AuthorizationStore implements IAuthorizationStore {
-  /* must be public for persist store */
+  /* public for persist store */
   public accessToken: NullableField<string> = null
   public refreshToken: NullableField<string> = null
-  private _loading: boolean = false
 
-  private readonly userStore: UserStore
   private readonly STORAGE_KEY: string = 'authStore'
-  // @TODO мейбі зробити loading в корневом store?
   constructor(readonly rootStore: RootStore) {
-    /**
-     * спочатку зробив ось так: this.rootStore.userStore.doSmth()
-     * зараз: this.userStore.doSmth()
-     */
-    this.userStore = rootStore.userStore
-
     makeAutoObservable(this, {}, { autoBind: true })
 
     makePersistable(this, {
@@ -53,13 +49,11 @@ export class AuthorizationStore implements IAuthorizationStore {
   public get isLoggedIn() {
     return !!this.refreshToken && !!this.rootStore.userStore.user
   }
-  public get loading() {
-    return this._loading
-  }
   public get isValidAccessToken() {
     const currentNumericDate = Math.round(Date.now() / 1000)
 
-    return this.accessToken && currentNumericDate < jwtDecode<JwtPayload>(this.accessToken).exp
+    /* показати це, я думав схуяли не працює - а тут поверталась просто строка */
+    return !!this.accessToken && currentNumericDate < jwtDecode<JwtPayload>(this.accessToken).exp
   }
 
   /* Setters */
@@ -82,7 +76,7 @@ export class AuthorizationStore implements IAuthorizationStore {
 
   /* Auth operations */
   public async login(credentials: GoogleResponse): Promise<AuthStoreOperationResponse> {
-    const { data, errors } = await client.mutate<AuthResponse<'login'>, AuthInput<'login'>>({
+    const { data } = await client.mutate<AuthResponse<'login'>, AuthInput<'login'>>({
       mutation: LOGIN_MUTATION,
       variables: {
         loginInput: {
@@ -94,15 +88,11 @@ export class AuthorizationStore implements IAuthorizationStore {
       this.updateCredentials(data.login)
       return { success: true, error: null }
     }
-
-    // @TODO handle errors from server
     return { success: false, error: 'Erorr with google authorization' }
   }
-
   public logout(): void {
     this.updateCredentials(null)
   }
-
   public async refresh(): Promise<NullableField<AccessToken>> {
     if (!this.refreshToken) {
       this.logout()

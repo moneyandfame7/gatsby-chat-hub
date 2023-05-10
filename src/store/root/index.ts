@@ -8,7 +8,7 @@ export class RootStore implements IRootStore {
   public readonly authorizationStore: AuthorizationStore
 
   constructor() {
-    this.userStore = new UserStore(this)
+    this.userStore = new UserStore()
     this.authorizationStore = new AuthorizationStore(this)
   }
 }
