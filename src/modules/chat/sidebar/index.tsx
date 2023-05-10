@@ -1,5 +1,5 @@
 /* lib  */
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Box, HStack, IconButton, Input, InputGroup, InputLeftElement, MenuButton } from '@chakra-ui/react'
 import { HamburgerIcon, SearchIcon } from '@chakra-ui/icons'
 import { BiGroup } from '@react-icons/all-files/bi/BiGroup'
@@ -12,7 +12,9 @@ import { useStores } from '@store/provider'
 /* ui  */
 import { ContextMenuItem, ContextMenu } from '@components'
 import { ConversationsTabs } from './tabs'
-import { CreateConversationModal } from './modal'
+import { CreateConversation } from './modal'
+import { AnimatePresence, Variants, motion } from 'framer-motion'
+import { ConversationContext } from '../layout'
 
 const ConversationsSearch: React.FC = () => {
   const EL_POSITION = '30%'
@@ -50,10 +52,9 @@ const ConversationsSearch: React.FC = () => {
           children={<SearchIcon color="gray.600" fontSize={12} />}
         />
         <Input
-          _focusVisible={{ borderColor: '#454B55' }}
+          _focusVisible={{ borderColor: 'primary' }}
           borderRadius={12}
           cursor="default"
-          type="search"
           variant="filled"
           onChange={handleChangeSearch}
           placeholder="Search"
@@ -92,9 +93,8 @@ const ConversationsSearch: React.FC = () => {
 }
 const DropdownMenu: React.FC = () => {
   const { authorizationStore } = useStores()
-  const [open, setOpen] = useState(false)
-  const onOpen = () => setOpen(true)
-  const onClose = () => setOpen(false)
+
+  const { onConversationCreateOpen } = useContext(ConversationContext)
   return (
     <Box>
       <ContextMenu
@@ -114,7 +114,7 @@ const DropdownMenu: React.FC = () => {
           />
         }
       >
-        <ContextMenuItem icon={<BiGroup size="20px" color="#707579" />} onClick={onOpen}>
+        <ContextMenuItem icon={<BiGroup size="20px" color="#707579" />} onClick={onConversationCreateOpen}>
           New chat
         </ContextMenuItem>
         <ContextMenuItem
@@ -127,7 +127,7 @@ const DropdownMenu: React.FC = () => {
           Log out
         </ContextMenuItem>
       </ContextMenu>
-      <CreateConversationModal isOpen={open} onClose={onClose} onOpen={onOpen} />
+      {/* <CreateConversation isOpen={createConversationOpen} onClose={onClose} onOpen={onOpen} /> */}
     </Box>
   )
 }
@@ -139,7 +139,22 @@ const ConversationsHeader: React.FC = () => {
     </HStack>
   )
 }
+
 export const ConversationsSidebar: React.FC = () => {
+  const { isConversationCreateOpen } = useContext(ConversationContext)
+
+  const mainContainer: Variants = {
+    open: {
+      scale: 1,
+      opacity: 1,
+      transition: { delay: 0.1 }
+    },
+    hidden: {
+      scale: 0.5,
+      opacity: 0
+    }
+  }
+
   return (
     <Box
       bg="white.alpha"
@@ -149,8 +164,11 @@ export const ConversationsSidebar: React.FC = () => {
       w={{ base: 'full', sm: '390px' }}
       overflowX="hidden"
     >
-      <ConversationsHeader />
-      <ConversationsTabs />
+      <motion.div variants={mainContainer} initial="open" animate={isConversationCreateOpen ? 'hidden' : 'open'}>
+        <ConversationsHeader key={1} />
+        <ConversationsTabs key={2} />
+      </motion.div>
+      <AnimatePresence mode="sync">{isConversationCreateOpen && <CreateConversation key={3} />}</AnimatePresence>
     </Box>
   )
 }

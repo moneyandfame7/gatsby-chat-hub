@@ -4,7 +4,7 @@ export const hasWindow = () => typeof window !== 'undefined'
 
 export const formatDate = (date: Date) => {
   const momentDate = moment(date)
-  /*  */
+
   // Якщо це сьогодні -  13:22
   if (momentDate.isSame(moment(), 'day')) {
     return momentDate.format('HH:mm')

@@ -1,45 +1,118 @@
 /* lib  */
-import React, { useEffect, useState } from 'react'
+import React, { memo, useCallback, useContext, useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
 import { navigate } from 'gatsby'
 import toast from 'react-hot-toast'
-
+import { Variants } from 'framer-motion'
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  Stack,
   Input,
-  Button,
-  Tooltip,
-  Badge
+  IconButton,
+  HStack,
+  Text,
+  Checkbox,
+  VStack,
+  Avatar,
+  InputGroup,
+  InputRightElement
 } from '@chakra-ui/react'
+import { ArrowBackIcon } from '@chakra-ui/icons'
 
 /* services  */
 import { useDebounce } from '@hooks'
 import { useStores } from '@store/provider'
 import { SEARCH_USERS } from '@store/user/graphql'
-import { CREATE_CONVERSATION, CreateConversationInput, CreateConversationResponse } from '@utils/graphql/conversations'
-import type { SearchUsersInput, SearchUsersResponse, SearchedUser } from '@store/user/type'
+import {
+  CREATE_CONVERSATION,
+  CreateConversationInput,
+  CreateConversationResponse,
+  Participant
+} from '@utils/graphql/conversations'
+import type { SearchUsersInput, SearchUsersResponse } from '@store/user/type'
 
 /* ui  */
-import { UserSearchList } from './search-list'
-import { Participants } from './participants'
+import { Animated, Loader } from '@components'
+import { ConversationContext } from '@modules/chat/layout'
+import { recommendations } from '@store/recommendations'
+import { NullableField } from '@types'
 
 interface ConversationModalProps {
-  onOpen: () => void
-  isOpen: boolean
-  onClose: () => void
+  onOpen?: () => void
+  isOpen?: boolean
+  onClose?: () => void
+  toggle?: () => void
 }
 
-export const CreateConversationModal: React.FC<ConversationModalProps> = ({ onClose, onOpen, isOpen }) => {
+interface SearchedUsersListProps {
+  withCache: boolean
+  users?: Participant[]
+  selectParticipant: (p: Participant) => void
+  participants: Participant[]
+}
+
+interface UsersListProps {
+  users: Participant[]
+  selectParticipant: (p: Participant) => void
+  participants: Participant[]
+}
+const UsersList: React.FC<UsersListProps> = ({ users, selectParticipant, participants }) => {
+  return (
+    <React.Fragment>
+      {users.map(user => (
+        <HStack width="100%" key={user.id} borderRadius={8} _hover={{ bg: 'blackAlpha.50' }} cursor="pointer" py={1}>
+          <Checkbox
+            onChange={() => {
+              selectParticipant(user)
+            }}
+            colorScheme="purple"
+            px={3}
+            value={user.id}
+            isChecked={participants.includes(user)}
+          />
+          <Avatar fontSize={18} src={user.photo} />
+          <VStack align="start" userSelect="none">
+            <Text fontSize="sm" fontWeight={500}>
+              {user.username}
+            </Text>
+            <Text margin="0px !important" fontSize="sm" color="text.secondary">
+              {new Date().toTimeString()}
+            </Text>
+          </VStack>
+        </HStack>
+      ))}
+    </React.Fragment>
+  )
+}
+const SearchedUsersList: React.FC<SearchedUsersListProps> = memo(
+  ({ withCache, participants, selectParticipant, users }) => {
+    const showResult = () => {
+      const { recentUsers } = recommendations
+
+      switch (true) {
+        case withCache && recentUsers.length > 0:
+          return (
+            <VStack align="start" width="100%">
+              Clear recent
+              <UsersList users={recentUsers} participants={participants} selectParticipant={selectParticipant} />
+            </VStack>
+          )
+        case !!users && users?.length > 0:
+          return <UsersList users={users!} participants={participants} selectParticipant={selectParticipant} />
+        default:
+          return null
+      }
+    }
+
+    const finalResult = showResult()
+
+    return <>{showResult() || 'Empty '}</>
+  }
+)
+export const CreateConversation: React.FC<ConversationModalProps> = ({ onClose, onOpen, isOpen, toggle }) => {
   const [username, setUsername] = useState('')
-  const [participants, setParticipants] = useState<SearchedUser[]>([])
   const { userStore } = useStores()
-  const [searchUsers, { data, loading, error }] = useLazyQuery<SearchUsersResponse, SearchUsersInput>(SEARCH_USERS)
+  const [searchUsers, { data, loading: searchLoading }] = useLazyQuery<SearchUsersResponse, SearchUsersInput>(
+    SEARCH_USERS
+  )
   const [createConversation, { loading: createConversationLoading }] = useMutation<
     CreateConversationResponse,
     CreateConversationInput
@@ -67,97 +140,116 @@ export const CreateConversationModal: React.FC<ConversationModalProps> = ({ onCl
        */
       setUsername('')
       setParticipants([])
-      onClose()
+      onClose && onClose()
     } catch (e: any) {
       console.log({ e })
       toast.error(e.message)
     }
   }
 
-  const onSearch = async (e: React.FormEvent) => {
-    e.preventDefault()
-    await searchUsers({ variables: { username } })
-  }
-
-  const addParticipant = (user: SearchedUser) => {
-    setParticipants(prev => [...prev, user])
-  }
-
-  const removeParticipant = (id: string) => {
-    setParticipants(prev => prev.filter(participant => participant.id !== id))
-  }
-
   const handleChangeSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value)
   }
   const debouncedUsername = useDebounce(username, 500)
+
   useEffect(() => {
     ;(async () => {
       if (debouncedUsername.length > 0) {
-        const data = await searchUsers({ variables: { username: debouncedUsername } })
+        const { data } = await searchUsers({ variables: { username: debouncedUsername } })
+
+        if (data && data.searchUsers.length > 0) {
+          recommendations.updateRecentUsers(data.searchUsers)
+        }
       }
     })()
   }, [debouncedUsername])
 
+  const { onConversationCreateClose } = useContext(ConversationContext)
+  const otherContainer: Variants = {
+    open: {
+      x: 0,
+      transition: { delay: 0.1, duration: 0.15 }
+    },
+    hidden: {
+      x: '100%',
+      transition: { duration: 0.2 }
+    }
+  }
+  const [participants, setParticipants] = useState<Participant[]>([])
+
+  const selectParticipant = (participant: Participant) => {
+    if (participants.includes(participant)) {
+      setParticipants(participants.filter(p => p.id !== participant.id))
+    } else {
+      setParticipants(prev => [...prev, participant])
+    }
+  }
+
+  /* в окремий компонент */
+
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
-        <ModalOverlay />
-        <ModalContent pb={4} bg="blue.300">
-          <ModalHeader>Select users</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <form onSubmit={onSearch}>
-              <Stack spacing={4}>
-                <Input placeholder="Enter a username" value={username} onChange={handleChangeSearch} />
-                <Button
-                  type="submit"
-                  color="whiteAlpha.800"
-                  colorScheme="whiteAlpha"
-                  isDisabled={!username}
-                  isLoading={loading}
-                >
-                  Search
-                </Button>
-              </Stack>
-            </form>
-            {data?.searchUsers && (
-              <UserSearchList users={data.searchUsers} addParticipant={addParticipant} participants={participants} />
-            )}
+      <Animated
+        pos="absolute"
+        top={0}
+        left={0}
+        zIndex={1}
+        height="100%"
+        width="100%"
+        /* @ts-ignore  */
+        variants={otherContainer}
+        p={2}
+        initial="hidden"
+        animate="open"
+        exit="hidden"
+      >
+        <HStack>
+          <IconButton
+            icon={<ArrowBackIcon />}
+            aria-label="Close create conversation menu"
+            bg="transparent"
+            borderRadius="50%"
+            color="text.secondary"
+            fontSize={22}
+            _hover={{
+              bg: 'blackAlpha.50'
+            }}
+            onClick={onConversationCreateClose}
+          />
+          <Text flex={1} fontSize="lg" fontWeight={500}>
+            Add Participants
+          </Text>
+        </HStack>
+        <HStack>
+          {participants.map(p => (
+            <Text key={p.id}>{p.username}</Text>
+          ))}
+        </HStack>
+        <InputGroup>
+          <Input
+            onChange={handleChangeSearch}
+            pl={3}
+            variant="flushed"
+            placeholder="Who would you like to add?"
+            _placeholder={{ fontSize: 14 }}
+            focusBorderColor="#9BA0FD"
+          />
+          {searchLoading && (
+            <InputRightElement>
+              <Loader />
+            </InputRightElement>
+          )}
+        </InputGroup>
 
-            <>
-              {participants.length !== 0 && (
-                <Participants participants={participants} removeParticipant={removeParticipant} />
-              )}
-              <Tooltip label={participants.length < 1 ? 'Please select users' : ''} hasArrow>
-                <Button
-                  width="100%"
-                  mt={6}
-                  onClick={onCreateConversation}
-                  isDisabled={createConversationLoading || participants.length < 1}
-                  colorScheme="purple"
-                  position="relative"
-                >
-                  Create Conversation
-                  <Badge
-                    position="absolute"
-                    borderRadius="50%"
-                    fontSize="medium"
-                    px="10px"
-                    py="5px"
-                    top="-10px"
-                    right="-10px"
-                    variant="solid"
-                    colorScheme="purple"
-                  >
-                    {participants.length}
-                  </Badge>
-                </Button>
-              </Tooltip>
-            </>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+        <VStack maxH="85vh" align="start" overflowY="scroll" py={2}>
+          <SearchedUsersList
+            withCache
+            participants={participants}
+            selectParticipant={selectParticipant}
+            users={data?.searchUsers}
+          />
+        </VStack>
+      </Animated>
     </>
   )
 }

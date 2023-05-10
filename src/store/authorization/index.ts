@@ -27,7 +27,6 @@ import { hasWindow } from '@utils/functions'
  */
 
 export class AuthorizationStore implements IAuthorizationStore {
-  /* public for persist store */
   public accessToken: NullableField<string> = null
   public refreshToken: NullableField<string> = null
 
@@ -52,7 +51,6 @@ export class AuthorizationStore implements IAuthorizationStore {
   public get isValidAccessToken() {
     const currentNumericDate = Math.round(Date.now() / 1000)
 
-    /* показати це, я думав схуяли не працює - а тут поверталась просто строка */
     return !!this.accessToken && currentNumericDate < jwtDecode<JwtPayload>(this.accessToken).exp
   }
 
@@ -114,24 +112,16 @@ export class AuthorizationStore implements IAuthorizationStore {
       }
     }
 
-    /* Handle error here */
-
     this.logout()
     return null
   }
-
   public updateCredentials(credentials: NullableField<AuthStoreState>) {
     if (credentials) {
       this.rootStore.userStore.setUser(credentials.user)
       this.setTokens({
-        /* @TODO: розказати, як я змінив назву токенів з access, refresh до accessToken і refreshToken і теж хвилин 20 їбався */
         accessToken: credentials.accessToken,
         refreshToken: credentials.refreshToken
       })
-    } else {
-      /* @TODO: показати, що я як даун годину намагався вирішити трабл*/
-      this.rootStore.userStore.setUser(null)
-      this.setTokens(null)
     }
   }
 }

@@ -29,4 +29,4 @@ const ConversationPage: React.FC<PageProps> = ({ location }) => {
 
 export default ConversationPage
 
-export const Head = pageHead({ title: 'ChatHub' })
+export const Head = pageHead({ title: 'ChatHub', postfix: false })

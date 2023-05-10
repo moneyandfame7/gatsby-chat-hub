@@ -30,10 +30,15 @@ const theme = extendTheme(
         secondary: '#707579',
         icon: 'rgb(112,117,121)'
       },
-      primary: {
-        default: '#6232e6'
-      },
+
       red: '#E53835'
+    },
+    semanticTokens: {
+      colors: {
+        primary: {
+          default: '#8774E1'
+        }
+      }
     },
     styles: {
       global: () => ({

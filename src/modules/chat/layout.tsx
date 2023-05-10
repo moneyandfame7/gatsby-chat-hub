@@ -12,18 +12,37 @@ interface ConversationContextValues {
   onConversationClose: () => void
   onConversationOpen: () => void
 
+  isConversationCreateOpen: boolean
+  onConversationCreateOpen: () => void
+  onConversationCreateClose: () => void
+
   isInfoOpen: boolean
   toggleInfo: () => void
 }
+
 export const ConversationContext = createContext<ConversationContextValues>({} as ConversationContextValues)
 
 export const ConversationLayout: FC<PropsWithChildren> = ({ children }) => {
   const { isOpen: isConversationOpen, onClose: onConversationClose, onOpen: onConversationOpen } = useDisclosure()
   const { isOpen: isInfoOpen, onToggle: toggleInfo } = useDisclosure()
+  const {
+    isOpen: isConversationCreateOpen,
+    onClose: onConversationCreateClose,
+    onOpen: onConversationCreateOpen
+  } = useDisclosure()
 
   return (
     <ConversationContext.Provider
-      value={{ isConversationOpen, onConversationClose, onConversationOpen, isInfoOpen, toggleInfo }}
+      value={{
+        isConversationOpen,
+        onConversationClose,
+        onConversationOpen,
+        isInfoOpen,
+        toggleInfo,
+        isConversationCreateOpen,
+        onConversationCreateClose,
+        onConversationCreateOpen
+      }}
     >
       <Protected>
         <HStack>

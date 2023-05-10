@@ -25,7 +25,11 @@ export const Conversation: React.FC<ConversationProps> = ({ id }) => {
   const { data } = useQuery<ConversationByIdData, ConversationByIdInput>(CONVERSATION_ID_QUERY, {
     variables: { id }
   })
-
+  useEffect(() => {
+    if (data) {
+      /* set participant id to localstorage for hint on create chat or search */
+    }
+  }, [data])
   useEffect(() => {
     if (id) {
       onConversationOpen()

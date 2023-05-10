@@ -1,4 +1,5 @@
 import type { NullableField } from '@types'
+import type { Participant } from '@utils/graphql/conversations'
 
 export interface User {
   id: string
@@ -24,12 +25,7 @@ export interface SearchUsersInput {
   username: string
 }
 export interface SearchUsersResponse {
-  searchUsers: Array<SearchedUser>
-}
-export interface SearchedUser {
-  id: string
-  username: string
-  photo: string
+  searchUsers: Array<Participant>
 }
 
 export interface IUserStore {

@@ -1,7 +1,7 @@
 /* lib  */
 import React, { useEffect } from 'react'
 import { useQuery } from '@apollo/client'
-
+import Lottie from 'react-lottie-player'
 import {
   chakra,
   Tab,
@@ -30,6 +30,9 @@ import {
 /* ui  */
 import { ConversationsList } from './list'
 
+/* assets  */
+import emptyFolderAnimation from '@utils/animations/51382-astronaut-light-theme.json'
+
 const StyledTab = chakra(Tab, {
   baseStyle: {
     borderRadius: '5px',
@@ -44,20 +47,26 @@ const StyledTab = chakra(Tab, {
 export const ConversationsTabs: React.FC = () => {
   const showConversationList = (loading: boolean, conversations?: Conversation[]) => {
     switch (true) {
+      case !!conversations && conversations.length > 0:
+        return <ConversationsList conversations={conversations!} />
       case loading:
         return (
           <Center h="70vh">
             <CircularProgress isIndeterminate color="purple" trackColor="transparent" />
           </Center>
         )
-      case !conversations:
+      default:
         return (
-          <Center h="70vh">
-            <Text fontSize="xl">Empty data</Text>
+          <Center h="50vh" flexDir="column" userSelect="none">
+            <Lottie play animationData={emptyFolderAnimation} style={{ height: 200, width: 200 }} />
+            <Text fontSize="xl" fontWeight={600}>
+              Folder is empty
+            </Text>
+            <Text fontSize="sm" color="text.secondary">
+              No chats currently belong to this folder.
+            </Text>
           </Center>
         )
-      default:
-        return <ConversationsList conversations={conversations!} />
     }
   }
   /* -- GRAPHQL -- */
@@ -94,7 +103,7 @@ export const ConversationsTabs: React.FC = () => {
           <StyledTab>All</StyledTab>
           <StyledTab gap={2}>
             Unread
-            <Badge>{unread?.conversations.length}</Badge>
+            {!!unread?.conversations.length && <Badge>{unread?.conversations.length}</Badge>}
           </StyledTab>
         </TabList>
         <TabIndicator mt="-1.5px" height="2px" bg="#8774E1" borderRadius="1px" />
