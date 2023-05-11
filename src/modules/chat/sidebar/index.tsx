@@ -1,5 +1,5 @@
 /* lib  */
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { Box, HStack, IconButton, Input, InputGroup, InputLeftElement, MenuButton } from '@chakra-ui/react'
 import { HamburgerIcon, SearchIcon } from '@chakra-ui/icons'
 import { BiGroup } from '@react-icons/all-files/bi/BiGroup'
@@ -15,6 +15,7 @@ import { ConversationsTabs } from './tabs'
 import { CreateConversation } from './modal'
 import { AnimatePresence, Variants, motion } from 'framer-motion'
 import { ConversationContext } from '../layout'
+import { LeftColumnContent } from './helpers/enum'
 
 const ConversationsSearch: React.FC = () => {
   const EL_POSITION = '30%'
@@ -55,6 +56,12 @@ const ConversationsSearch: React.FC = () => {
           _focusVisible={{ borderColor: 'primary' }}
           borderRadius={12}
           cursor="default"
+          onKeyDown={e => {
+            if (e.code === 'Escape') {
+              e.currentTarget.blur()
+              e.currentTarget.value = ''
+            }
+          }}
           variant="filled"
           onChange={handleChangeSearch}
           placeholder="Search"
@@ -120,9 +127,7 @@ const DropdownMenu: React.FC = () => {
         <ContextMenuItem
           icon={<BiLogOut color="#E53835" size="20px" />}
           color="red"
-          onClick={() => {
-            authorizationStore.logout()
-          }}
+          onClick={authorizationStore.logout}
         >
           Log out
         </ContextMenuItem>
@@ -140,9 +145,27 @@ const ConversationsHeader: React.FC = () => {
   )
 }
 
+enum ContentType {
+  Main,
+  NewConversation,
+  Settings
+}
 export const ConversationsSidebar: React.FC = () => {
+  const isFirstTabActive = false
+  const [content, setContent] = useState<LeftColumnContent>(LeftColumnContent.ConversationList)
   const { isConversationCreateOpen } = useContext(ConversationContext)
 
+  let contentType: ContentType = ContentType.Main
+  switch (content) {
+    case LeftColumnContent.NewConversationStep1:
+    case LeftColumnContent.NewConversationStep2:
+      contentType = ContentType.NewConversation
+      break
+    case LeftColumnContent.Settings:
+      contentType = ContentType.Settings
+      break
+  }
+  const handleReset = useCallback(() => {}, [content, isFirstTabActive])
   const mainContainer: Variants = {
     open: {
       scale: 1,
@@ -154,6 +177,17 @@ export const ConversationsSidebar: React.FC = () => {
       opacity: 0
     }
   }
+
+  // const renderContent = () => {
+  //   switch (contentType) {
+  //     case ContentType.NewConversation:
+  //       return <CreateConversation />
+  //     case ContentType.Settings:
+  //       return <Settings />
+  //     default:
+  //       return <LeftMain />
+  //   }
+  // }
 
   return (
     <Box

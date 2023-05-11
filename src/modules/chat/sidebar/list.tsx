@@ -24,7 +24,7 @@ export const ConversationsList: React.FC<ConversationsListProps> = ({ conversati
       pos="relative"
       _hover={{
         '::-webkit-scrollbar-thumb': {
-          bg: 'whiteAlpha.300'
+          bg: 'blackAlpha.300'
         }
       }}
       sx={{

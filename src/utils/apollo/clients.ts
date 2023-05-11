@@ -4,7 +4,7 @@ import { InMemoryCache, ApolloClient, ApolloLink } from '@apollo/client'
 /* services  */
 import { httpLink, errorLink, linkTokenToHeaders, withSubLink } from './links'
 
-const cache = new InMemoryCache()
+const cache = new InMemoryCache({})
 export const secondaryClient = new ApolloClient({
   link: httpLink,
   cache

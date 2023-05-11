@@ -59,7 +59,7 @@ export const useCreateUsername = () => {
           }
         )
       } catch (e: any) {
-        console.log({ e })
+        console.warn(e)
       }
     }
   }
