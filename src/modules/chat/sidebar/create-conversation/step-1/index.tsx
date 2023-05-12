@@ -148,9 +148,6 @@ export const CreateConversationStep1: React.FC = () => {
     })()
   }, [debouncedUsername])
 
-  useEffect(() => {
-    console.log({ searchedUsers })
-  }, [])
   return (
     /* @TODO SlideAnimated винести окремо */
     <Animated
