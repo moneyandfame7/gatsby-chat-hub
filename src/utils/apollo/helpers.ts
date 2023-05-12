@@ -43,8 +43,7 @@ async function getRefreshedAccessTokenPromise() {
     const data = await authorizationStore.refresh()
     return data?.accessToken
   } catch (e) {
-    authorizationStore.logout()
-    console.log({ e })
+    console.warn(e)
     return e
   }
 }

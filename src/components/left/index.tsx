@@ -1,5 +1,5 @@
 /* lib  */
-import React, { useContext, useEffect, useState } from 'react'
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { Box, HStack, IconButton, Input, InputGroup, InputLeftElement, MenuButton } from '@chakra-ui/react'
 import { HamburgerIcon, SearchIcon } from '@chakra-ui/icons'
 import { BiGroup } from '@react-icons/all-files/bi/BiGroup'
@@ -11,10 +11,18 @@ import { useStores } from '@store/provider'
 
 /* ui  */
 import { ContextMenuItem, ContextMenu } from '@components'
-import { ConversationsTabs } from './tabs'
-import { CreateConversation } from './modal'
+import { ConversationsTabs } from '../../modules/chat/sidebar/tabs'
+import { CreateConversation } from '../../modules/chat/sidebar/modal'
 import { AnimatePresence, Variants, motion } from 'framer-motion'
-import { ConversationContext } from '../layout'
+import { ConversationContext } from '../../modules/chat/layout'
+import { LeftColumnContent } from '../../modules/chat/sidebar/helpers/enum'
+import { Settings } from '@components/left/settings'
+import { LeftMain } from '@components/left/main'
+import { Conversations } from '@components/left/main/conversations'
+import { search } from '@store/search'
+import { observer, useLocalObservable } from 'mobx-react-lite'
+import { ContentGroup, LeftColumnUiStore } from '@store/ui/left'
+import { autorun } from 'mobx'
 
 const ConversationsSearch: React.FC = () => {
   const EL_POSITION = '30%'
@@ -55,6 +63,12 @@ const ConversationsSearch: React.FC = () => {
           _focusVisible={{ borderColor: 'primary' }}
           borderRadius={12}
           cursor="default"
+          onKeyDown={e => {
+            if (e.code === 'Escape') {
+              e.currentTarget.blur()
+              e.currentTarget.value = ''
+            }
+          }}
           variant="filled"
           onChange={handleChangeSearch}
           placeholder="Search"
@@ -120,14 +134,11 @@ const DropdownMenu: React.FC = () => {
         <ContextMenuItem
           icon={<BiLogOut color="#E53835" size="20px" />}
           color="red"
-          onClick={() => {
-            authorizationStore.logout()
-          }}
+          onClick={authorizationStore.logout}
         >
           Log out
         </ContextMenuItem>
       </ContextMenu>
-      {/* <CreateConversation isOpen={createConversationOpen} onClose={onClose} onOpen={onOpen} /> */}
     </Box>
   )
 }
@@ -140,35 +151,67 @@ const ConversationsHeader: React.FC = () => {
   )
 }
 
-export const ConversationsSidebar: React.FC = () => {
-  const { isConversationCreateOpen } = useContext(ConversationContext)
+export const LeftColumn: React.FC = observer(() => {
+  const leftColumnUiStore = useLocalObservable(() => new LeftColumnUiStore())
 
-  const mainContainer: Variants = {
-    open: {
-      scale: 1,
-      opacity: 1,
-      transition: { delay: 0.1 }
+  const [globalSearchQuery, setGlobalSearchQuery] = useState<string>('')
+  const [contactsQuery, setContactsQuery] = useState<string>('')
+
+  const { searchByQueryGlobal } = search
+
+  const handleSearchQuery = useCallback(
+    (query: string) => {
+      if (leftColumnUiStore.content === LeftColumnContent.Contacts) {
+        setContactsQuery(query)
+        return
+      }
+
+      /* leftColumnUiStore.setContent(LeftColumnContent.GlobalSearch) */
+
+      searchByQueryGlobal(query)
     },
-    hidden: {
-      scale: 0.5,
-      opacity: 0
+    [leftColumnUiStore.content]
+  )
+
+  function renderContent() {
+    switch (leftColumnUiStore.contentGroup) {
+      case ContentGroup.Settings:
+        return <Settings leftColumnUiStore={leftColumnUiStore} />
+      case ContentGroup.NewConversation:
+        return <CreateConversation leftColumnUiStore={leftColumnUiStore} />
+      default:
+        return <LeftMain leftColumnUiStore={leftColumnUiStore} handleSearchQuery={handleSearchQuery} />
     }
   }
 
+  const handlePressEscape = useCallback((e: KeyboardEvent) => {
+    /* e.repeat for prevent keydown holding */
+    if ((e.code === 'Escape' || e.key === 'Escape') && !e.repeat) {
+      e.preventDefault()
+      console.log('[REMOVED CONTENT]:', leftColumnUiStore.contentName)
+      leftColumnUiStore.handleResetContent()
+    }
+  }, [])
+
+  useEffect(() => {
+    document.addEventListener('keydown', handlePressEscape, false)
+
+    return () => {
+      document.removeEventListener('keydown', handlePressEscape, false)
+    }
+  }, [])
+
   return (
-    <Box
-      bg="white.alpha"
-      backdropFilter="auto"
-      backdropBlur="10px"
-      h="100vh"
-      w={{ base: 'full', sm: '390px' }}
-      overflowX="hidden"
-    >
-      <motion.div variants={mainContainer} initial="open" animate={isConversationCreateOpen ? 'hidden' : 'open'}>
+    <Box bg="white.alpha" backdropFilter="auto" backdropBlur="10px" height="100vh" w={{ base: 'full', sm: '390px' }}>
+      <AnimatePresence initial={false}>{renderContent()}</AnimatePresence>
+      {/**
+       * @TODO Main conversation list мусить бути в motion div, а інші - в запхати в AnimatePresence?
+       */}
+      {/* <motion.div variants={mainContainer} initial="open" animate={isConversationCreateOpen ? 'hidden' : 'open'}>
         <ConversationsHeader key={1} />
         <ConversationsTabs key={2} />
       </motion.div>
-      <AnimatePresence mode="sync">{isConversationCreateOpen && <CreateConversation key={3} />}</AnimatePresence>
+      <AnimatePresence mode="sync">{isConversationCreateOpen && <CreateConversation key={3} />}</AnimatePresence> */}
     </Box>
   )
-}
+})

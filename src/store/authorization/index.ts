@@ -21,6 +21,9 @@ import type {
   JwtPayload
 } from './types'
 import { hasWindow } from '@utils/functions'
+import { navigate } from 'gatsby'
+import { ROUTES } from '@utils/constants'
+import { cache } from '@store/cache'
 
 /**
  * @TODO handle error
@@ -90,10 +93,10 @@ export class AuthorizationStore implements IAuthorizationStore {
   }
   public logout(): void {
     this.updateCredentials(null)
+    cache.clear()
   }
   public async refresh(): Promise<NullableField<AccessToken>> {
     if (!this.refreshToken) {
-      this.logout()
       return null
     }
     const { data, errors } = await secondaryClient.mutate<AuthResponse<'refresh'>, AuthInput<'refresh'>>({
@@ -122,6 +125,9 @@ export class AuthorizationStore implements IAuthorizationStore {
         accessToken: credentials.accessToken,
         refreshToken: credentials.refreshToken
       })
+    } else {
+      this.rootStore.userStore.setUser(null)
+      this.setTokens(null)
     }
   }
 }

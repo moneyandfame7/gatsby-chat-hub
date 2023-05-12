@@ -1,6 +1,6 @@
 /* lib  */
 import React, { PropsWithChildren } from 'react'
-import { Menu, MenuItem, MenuList, PlacementWithLogical, chakra } from '@chakra-ui/react'
+import { Menu, MenuItem, MenuList, PlacementWithLogical, Portal, chakra } from '@chakra-ui/react'
 
 export const ContextMenuList = chakra(MenuList, {
   baseStyle: {
@@ -37,7 +37,9 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ placement, menuButton 
   return (
     <Menu placement={placement}>
       {menuButton}
-      <ContextMenuList>{children}</ContextMenuList>
+      <Portal>
+        <ContextMenuList>{children}</ContextMenuList>
+      </Portal>
     </Menu>
   )
 }

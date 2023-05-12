@@ -4,7 +4,7 @@ import { HStack, useDisclosure } from '@chakra-ui/react'
 
 /* services  */
 import { Protected } from '@components/protected-route'
-import { ConversationsSidebar } from './sidebar'
+import { LeftColumn } from '../../components/left'
 import { ConversationInformation } from './information'
 
 interface ConversationContextValues {
@@ -46,7 +46,7 @@ export const ConversationLayout: FC<PropsWithChildren> = ({ children }) => {
     >
       <Protected>
         <HStack>
-          <ConversationsSidebar />
+          <LeftColumn />
           {children}
           <ConversationInformation />
         </HStack>

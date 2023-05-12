@@ -1,9 +1,5 @@
 {
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
-  ],
+  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:@typescript-eslint/recommended"],
   "plugins": ["react", "@typescript-eslint", "unused-imports"],
   "settings": {
     "react": {
@@ -21,14 +17,11 @@
 
     "no-multi-spaces": ["error"],
     "no-unneeded-ternary": ["error"],
-    "@typescript-eslint/consistent-type-imports": [
-      "error",
-      { "fixStyle": "inline-type-imports" }
-    ],
+    "@typescript-eslint/consistent-type-imports": ["error", { "fixStyle": "inline-type-imports" }],
     "@typescript-eslint/no-extra-semi": ["off"],
     "prefer-const": "error",
 
-    "no-console": "warn",
+    "no-console": "error",
     "no-trailing-spaces": ["error"],
     "quotes": ["error", "single"],
     "jsx-quotes": ["warn", "prefer-double"]

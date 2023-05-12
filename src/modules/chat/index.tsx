@@ -8,4 +8,4 @@ export * from './conversation/index'
 export * from './information/index'
 
 /* Conversation sidebar list */
-export * from './sidebar/index'
+export * from '../../components/left/index'

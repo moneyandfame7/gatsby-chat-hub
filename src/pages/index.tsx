@@ -15,7 +15,6 @@ import { ROUTES } from '@utils/constants'
 const Root: FC<PageProps> = ({ location }) => {
   const reachLoc = useLocation()
   const constraintsRef = useRef(null)
-  console.log({ reachLoc }, { location })
 
   return (
     <Center minH="100vh" gap={5}>

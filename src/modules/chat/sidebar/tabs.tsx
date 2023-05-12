@@ -71,7 +71,16 @@ export const ConversationsTabs: React.FC = () => {
   }
   /* -- GRAPHQL -- */
   /* query for unread and all  */
-  const { data: all, loading: allLoad, subscribeToMore } = useQuery<ConversationsData>(CONVERSATIONS_QUERY, { client })
+  /**
+   * @TODO Fetch policy
+   */
+  const {
+    data: all,
+    loading: allLoad,
+    subscribeToMore
+  } = useQuery<ConversationsData>(CONVERSATIONS_QUERY, {
+    fetchPolicy: 'cache-and-network'
+  })
   const { data: unread, loading: unreadLoad } = useQuery<ConversationsData>(CONVERSATIONS_QUERY)
 
   const subscribeToNewConversations = () => {

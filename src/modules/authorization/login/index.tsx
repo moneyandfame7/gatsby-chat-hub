@@ -7,11 +7,11 @@ import { FcGoogle } from '@react-icons/all-files/fc/FcGoogle'
 import { useLogin } from './hook'
 
 export const GoogleLogin: FC = () => {
-  const { login } = useLogin()
+  const { login, loading } = useLogin()
 
   return (
     <>
-      <Button colorScheme="purple" leftIcon={<FcGoogle />} onClick={() => login()} size="md">
+      <Button isLoading={loading} colorScheme="purple" leftIcon={<FcGoogle />} onClick={() => login()} size="md">
         Continue with Google
       </Button>
     </>
