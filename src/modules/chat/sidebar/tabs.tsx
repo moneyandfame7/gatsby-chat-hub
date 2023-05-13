@@ -33,17 +33,6 @@ import { ConversationsList } from './list'
 /* assets  */
 import emptyFolderAnimation from '@utils/animations/51382-astronaut-light-theme.json'
 
-const StyledTab = chakra(Tab, {
-  baseStyle: {
-    borderRadius: '5px',
-    _selected: { color: '#8774E1' },
-    fontWeight: 500,
-    fontSize: 14,
-    _hover: { bg: 'blackAlpha.100' },
-    padding: '10px 30px'
-  }
-})
-
 export const ConversationsTabs: React.FC = () => {
   const showConversationList = (loading: boolean, conversations?: Conversation[]) => {
     switch (true) {

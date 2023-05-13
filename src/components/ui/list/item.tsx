@@ -17,7 +17,6 @@ const ListItemWrapper: React.FC<ListItemWrapper> = ({ ...props }) => {
       userSelect="none"
       as={Link}
       {...props}
-      // to={ROUTES.chat(conversation.id)}
     />
   )
 }
