@@ -4,7 +4,7 @@ import { MenuButton, IconButton, Box, Menu, Portal } from '@chakra-ui/react'
 
 /* ui  */
 import { NewChatIcon, LogoutIcon, ContactsIcon, MenuIcon } from '@components/ui'
-import { Animated, ContextMenu, ContextMenuItem, ContextMenuList } from '..'
+import { Animated, StyledMenu, StyledMenuItem, StyledMenuList } from '..'
 import { Variants } from 'framer-motion'
 
 interface LeftDropdownMenuProps {
@@ -25,22 +25,22 @@ export const LeftDropdownMenu: React.FC<LeftDropdownMenuProps> = ({ onNewChatSel
   const menuItems = useMemo(
     () => (
       <>
-        <ContextMenuItem icon={<NewChatIcon />} onClick={onNewChatSelect}>
+        <StyledMenuItem icon={<NewChatIcon />} onClick={onNewChatSelect}>
           New chat
-        </ContextMenuItem>
-        <ContextMenuItem icon={<ContactsIcon />} onClick={onNewChatSelect}>
+        </StyledMenuItem>
+        <StyledMenuItem icon={<ContactsIcon />} onClick={onNewChatSelect}>
           Contacts
-        </ContextMenuItem>
-        <ContextMenuItem icon={<LogoutIcon />} onClick={onLogOutSelect}>
+        </StyledMenuItem>
+        <StyledMenuItem icon={<LogoutIcon />} onClick={onLogOutSelect}>
           Log out
-        </ContextMenuItem>
+        </StyledMenuItem>
       </>
     ),
     []
   )
   return (
     <Animated variants={ICON_ROTATE_ANIMATION} initial="hidden" animate="open" exit="hidden">
-      <ContextMenu
+      <StyledMenu
         menuButton={
           <MenuButton
             as={IconButton}
@@ -58,7 +58,7 @@ export const LeftDropdownMenu: React.FC<LeftDropdownMenuProps> = ({ onNewChatSel
         }
       >
         {menuItems}
-      </ContextMenu>
+      </StyledMenu>
     </Animated>
   )
 }

@@ -60,8 +60,8 @@ export const FADE_ANIMATION: Variants = {
 export const LeftMain: React.FC<LeftMainProps> = observer(({ leftColumnUiStore, handleSearchQuery }) => {
   const renderContent = useCallback(() => {
     switch (leftColumnUiStore.content) {
-      case LeftColumnContent.ConversationList:
-        return <Conversations key={LeftColumnContent.ConversationList} />
+      case LeftColumnContent.Conversations:
+        return <Conversations key={LeftColumnContent.Conversations} />
       case LeftColumnContent.GlobalSearch:
         return <LeftSearch leftColumnUiStore={leftColumnUiStore} key={LeftColumnContent.GlobalSearch} />
       case LeftColumnContent.Contacts:

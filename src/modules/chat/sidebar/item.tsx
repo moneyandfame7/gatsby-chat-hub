@@ -14,7 +14,7 @@ import { Conversation } from '@utils/graphql/conversations'
 import { ROUTES } from '@utils/constants'
 
 /* ui */
-import { ContextMenuItem, ContextMenuList } from '@components'
+import { ContextMenuItem, StyledMenuList } from '@components'
 
 interface ConversationItemProps {
   conversation: Conversation
@@ -54,7 +54,7 @@ export const ConversationItem: React.FC<ConversationItemProps> = memo(({ convers
   return (
     <ChakraUiContextMenu<HTMLDivElement>
       renderMenu={() => (
-        <ContextMenuList>
+        <StyledMenuList>
           <ContextMenuItem
             icon={<RxOpenInNewWindow size={21} color="#707579" />}
             onClick={() => {
@@ -74,7 +74,7 @@ export const ConversationItem: React.FC<ConversationItemProps> = memo(({ convers
           >
             Delete
           </ContextMenuItem>
-        </ContextMenuList>
+        </StyledMenuList>
       )}
     >
       {ref => (

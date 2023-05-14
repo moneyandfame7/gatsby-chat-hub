@@ -12,5 +12,11 @@ export * from './buttons/icon-button'
 /* layout  */
 export * from './layout/scrollable'
 
+/* overlay */
+export * from './overlay/context-menu'
+export * from './overlay/menu'
+export * from './overlay/backdrop'
+
 /* other  */
 export * from './list'
+export * from './list/item'

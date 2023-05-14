@@ -6,6 +6,6 @@ export * from './protected-route'
 
 /* Other */
 export * from './logo'
-export * from './context-menu'
+export * from './ui/overlay/menu'
 export * from './animated'
 export * from './loader'

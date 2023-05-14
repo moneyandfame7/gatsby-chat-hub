@@ -12,7 +12,7 @@ import { useIsMobileScreen } from '@hooks'
 import { ConversationContext } from '../layout'
 
 /* ui  */
-import { ContextMenu, ContextMenuItem } from '@components'
+import { StyledMenu, StyledMenuItem } from '@components'
 import { ConversationAvatar } from '../sidebar/item'
 
 interface MessagesHeaderProps {
@@ -71,7 +71,7 @@ export const ConversationHeader: FC<MessagesHeaderProps> = ({ conversation }) =>
               </HStack>
             </Box>
             <Box>
-              <ContextMenu
+              <StyledMenu
                 placement="bottom-end"
                 menuButton={
                   <MenuButton
@@ -88,10 +88,10 @@ export const ConversationHeader: FC<MessagesHeaderProps> = ({ conversation }) =>
                   />
                 }
               >
-                <ContextMenuItem color="red" icon={<DeleteIcon fontSize={15} color="red" />}>
+                <StyledMenuItem color="red" icon={<DeleteIcon fontSize={15} color="red" />}>
                   Delete chat
-                </ContextMenuItem>
-              </ContextMenu>
+                </StyledMenuItem>
+              </StyledMenu>
             </Box>
           </>
         ) : (
