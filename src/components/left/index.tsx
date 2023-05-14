@@ -1,5 +1,5 @@
 /* lib  */
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { Box, HStack, IconButton, Input, InputGroup, InputLeftElement, MenuButton } from '@chakra-ui/react'
 import { HamburgerIcon, SearchIcon } from '@chakra-ui/icons'
 import { BiGroup } from '@react-icons/all-files/bi/BiGroup'
@@ -10,19 +10,16 @@ import { useDebounce } from '@hooks'
 import { useStores } from '@store/provider'
 
 /* ui  */
-import { ContextMenuItem, ContextMenu } from '@components'
-import { ConversationsTabs } from '../../modules/chat/sidebar/tabs'
+import { StyledMenuItem, StyledMenu } from '@components'
 import { CreateConversation } from '../../modules/chat/sidebar/modal'
-import { AnimatePresence, Variants, motion } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import { ConversationContext } from '../../modules/chat/layout'
 import { LeftColumnContent } from '../../modules/chat/sidebar/helpers/enum'
 import { Settings } from '@components/left/settings'
 import { LeftMain } from '@components/left/main'
-import { Conversations } from '@components/left/main/conversations'
 import { search } from '@store/search'
 import { observer, useLocalObservable } from 'mobx-react-lite'
 import { ContentGroup, LeftColumnUiStore } from '@store/ui/left'
-import { autorun } from 'mobx'
 
 const ConversationsSearch: React.FC = () => {
   const EL_POSITION = '30%'
@@ -111,7 +108,7 @@ const DropdownMenu: React.FC = () => {
   const { onConversationCreateOpen } = useContext(ConversationContext)
   return (
     <Box>
-      <ContextMenu
+      <StyledMenu
         menuButton={
           <MenuButton
             as={IconButton}
@@ -128,17 +125,13 @@ const DropdownMenu: React.FC = () => {
           />
         }
       >
-        <ContextMenuItem icon={<BiGroup size="20px" color="#707579" />} onClick={onConversationCreateOpen}>
+        <StyledMenuItem icon={<BiGroup size="20px" color="#707579" />} onClick={onConversationCreateOpen}>
           New chat
-        </ContextMenuItem>
-        <ContextMenuItem
-          icon={<BiLogOut color="#E53835" size="20px" />}
-          color="red"
-          onClick={authorizationStore.logout}
-        >
+        </StyledMenuItem>
+        <StyledMenuItem icon={<BiLogOut color="#E53835" size="20px" />} color="red" onClick={authorizationStore.logout}>
           Log out
-        </ContextMenuItem>
-      </ContextMenu>
+        </StyledMenuItem>
+      </StyledMenu>
     </Box>
   )
 }
@@ -202,7 +195,7 @@ export const LeftColumn: React.FC = observer(() => {
   }, [])
 
   return (
-    <Box bg="white.alpha" backdropFilter="auto" backdropBlur="10px" height="100vh" w={{ base: 'full', sm: '390px' }}>
+    <Box bg="white" backdropFilter="auto" backdropBlur="10px" height="100vh" w={{ base: 'full', sm: '390px' }}>
       <AnimatePresence initial={false}>{renderContent()}</AnimatePresence>
       {/**
        * @TODO Main conversation list мусить бути в motion div, а інші - в запхати в AnimatePresence?

@@ -44,7 +44,7 @@ export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ handleC
 
   const renderContentActionButton = useCallback(() => {
     switch (leftColumnUiStore.content) {
-      case LeftColumnContent.ConversationList:
+      case LeftColumnContent.Conversations:
         return <LeftDropdownMenu onLogOutSelect={handleLogoutSelect} onNewChatSelect={handleNewChatSelect} />
       default:
         return <LeftGoBack onClick={handleGoBack} />

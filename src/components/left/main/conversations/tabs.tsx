@@ -16,10 +16,9 @@ import Lottie from 'react-lottie-player'
 
 import { Conversation } from '@utils/graphql/conversations'
 import emptyFolderAnimation from '@utils/animations/51382-astronaut-light-theme.json'
-import { ListItem } from '@components/ui/list/item'
-import { ROUTES } from '@utils/constants'
 import { AnimatePresence, Variants } from 'framer-motion'
-import { Animated } from '@components/animated'
+import { Animated } from '@components'
+import { ConversationsList } from './list'
 
 const StyledTab = chakra(Tab, {
   baseStyle: {
@@ -31,25 +30,6 @@ const StyledTab = chakra(Tab, {
     padding: '10px 30px'
   }
 })
-
-interface ConversationsListProps {
-  conversations: Conversation[]
-}
-const ConversationsList: React.FC<ConversationsListProps> = ({ conversations }) => {
-  return (
-    <>
-      {conversations.map(c => (
-        <ListItem
-          key={c.id}
-          avatar={c.participants[0].photo}
-          title={c.participants[0].username}
-          to={ROUTES.chat(c.id)}
-          subtitle="Lorem ipsum dorem lasldlasdlalsdlasld"
-        />
-      ))}
-    </>
-  )
-}
 
 interface ConversationsTabsProps {
   all?: Conversation[]

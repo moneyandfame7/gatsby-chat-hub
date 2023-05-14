@@ -9,7 +9,7 @@ export enum ContentGroup {
 export class LeftColumnUiStore {
   public content: LeftColumnContent
   constructor() {
-    this.content = LeftColumnContent.ConversationList
+    this.content = LeftColumnContent.Conversations
     makeAutoObservable(this, {}, { autoBind: true })
 
     autorun(() => {
@@ -44,10 +44,10 @@ export class LeftColumnUiStore {
       case LeftColumnContent.GlobalSearch:
       case LeftColumnContent.Settings:
       case LeftColumnContent.Contacts:
-        this.setContent(LeftColumnContent.ConversationList)
+        this.setContent(LeftColumnContent.Conversations)
         break
 
-      case LeftColumnContent.ConversationList:
+      case LeftColumnContent.Conversations:
         this.setContent(LeftColumnContent.GlobalSearch)
         break
     }

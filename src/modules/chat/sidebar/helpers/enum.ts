@@ -1,7 +1,7 @@
 // isFirstChatFolderActive: activeChatFolder === 0,
 
 export enum LeftColumnContent {
-  ConversationList,
+  Conversations,
   GlobalSearch,
   Settings,
   Contacts,

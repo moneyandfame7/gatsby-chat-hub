@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'gatsby'
-import { HStack, VStack, Badge, StackProps, Avatar, Text } from '@chakra-ui/react'
+import { HStack, VStack, Badge, StackProps, Avatar, Text, Box } from '@chakra-ui/react'
 
 interface ListItemWrapper extends StackProps {
   to: string
@@ -10,7 +10,7 @@ const ListItemWrapper: React.FC<ListItemWrapper> = ({ ...props }) => {
   return (
     <HStack
       borderRadius={8}
-      _hover={{ bg: 'gray.100' }}
+      _hover={{ bg: 'gray.50' }}
       cursor="pointer"
       p="9px"
       w="full"
