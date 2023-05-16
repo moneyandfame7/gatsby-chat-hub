@@ -1,35 +1,13 @@
 /* lib */
-import React, { useRef, type FC, useState, useEffect, PropsWithChildren, useContext } from 'react'
+import React, { useRef, type FC } from 'react'
 import { navigate, PageProps } from 'gatsby'
-import { useLocation } from '@reach/router'
 import { observer } from 'mobx-react-lite'
-import { Box, BoxProps, Button, Center, Menu, MenuItem, MenuList, ModalOverlay, Text } from '@chakra-ui/react'
+import { Center, Text } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
 
 /* services */
-import { ContextMenuContext, ContextMenuItem, StyledMenuList, pageHead } from '@components'
+import { pageHead } from '@components'
 import { ROUTES } from '@utils/constants'
-import { DeleteIcon } from '@chakra-ui/icons'
-import { MdOutlineMarkChatRead, MdOutlineMarkChatUnread } from 'react-icons/md'
-import { RxOpenInNewWindow } from 'react-icons/rx'
-import { Conversation } from '@utils/graphql/conversations'
-
-/* ui */
-
-/**
- *
- * @TODO винести бекдроп в окремий компонент плюс доробити менюшку
- *
- */
-
-export const ContextMenuTrigger: React.FC<PropsWithChildren> = ({ children }) => {
-  const { openMenu } = useContext(ContextMenuContext)
-  return (
-    <Box data-component-name="ContextMenuTrigger" onContextMenu={openMenu}>
-      {children}
-    </Box>
-  )
-}
 
 const Root: FC<PageProps> = ({ location }) => {
   const constraintsRef = useRef(null)

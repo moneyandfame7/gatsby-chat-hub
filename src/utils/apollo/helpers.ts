@@ -32,7 +32,6 @@ export const getAccessToken = async () => {
 
     /* повертаємо рефрешнутий access token */
     default:
-      console.log('Has been refreshed token')
       return authorizationStore.refresh()
   }
 }

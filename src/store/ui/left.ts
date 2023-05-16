@@ -1,5 +1,5 @@
 import { LeftColumnContent } from '@modules/chat/sidebar/helpers/enum'
-import { autorun, makeAutoObservable, makeObservable } from 'mobx'
+import { makeAutoObservable } from 'mobx'
 
 export enum ContentGroup {
   Settings,
@@ -11,10 +11,6 @@ export class LeftColumnUiStore {
   constructor() {
     this.content = LeftColumnContent.Conversations
     makeAutoObservable(this, {}, { autoBind: true })
-
-    autorun(() => {
-      console.log('[CHANGE CONTENT]:', this.contentName)
-    })
   }
 
   public get contentGroup(): ContentGroup {
@@ -35,6 +31,7 @@ export class LeftColumnUiStore {
   }
 
   public handleResetContent(): void {
+    console.log('[OLD CONTENT]:', LeftColumnContent[this.content])
     switch (this.content) {
       case LeftColumnContent.NewConversationStep2:
         this.setContent(LeftColumnContent.NewConversationStep1)
@@ -53,6 +50,8 @@ export class LeftColumnUiStore {
     }
   }
   public setContent(c: LeftColumnContent): void {
+    console.log('[NEW CONTENT]:', LeftColumnContent[c])
+
     this.content = c
   }
 }

@@ -10,7 +10,8 @@ import {
   Center,
   CircularProgress,
   Text,
-  Badge
+  Badge,
+  Box
 } from '@chakra-ui/react'
 import Lottie from 'react-lottie-player'
 
@@ -91,12 +92,28 @@ export const ConversationsTabs: React.FC<ConversationsTabsProps> = ({ all, allLo
       <TabIndicator mt="-1.5px" height="3px" bg="#8774E1" borderRadius="1px" _hover={{ height: '3px' }} />
       <TabPanels overflowX="hidden" height="100%" my={2}>
         <TabPanel p={0} as={AnimatePresence} initial={false} mode="popLayout">
-          <Animated custom={index} variants={variants} initial="hidden" animate="open" exit="hidden">
+          <Animated
+            custom={index}
+            variants={variants}
+            initial="hidden"
+            animate="open"
+            exit="hidden"
+            data-component-name="Animated"
+            p={0}
+          >
             {renderTab(allLoading, all)}
           </Animated>
         </TabPanel>
         <TabPanel p={0} as={AnimatePresence} initial={false} mode="popLayout">
-          <Animated custom={index} variants={variants} initial="hidden" animate="open" exit="hidden">
+          <Animated
+            custom={index}
+            variants={variants}
+            initial="hidden"
+            animate="open"
+            exit="hidden"
+            data-component-name="Animated"
+            p={0}
+          >
             {renderTab(unreadLoading, unread)}
           </Animated>
         </TabPanel>

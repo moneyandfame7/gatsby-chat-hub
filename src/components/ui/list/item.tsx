@@ -1,21 +1,28 @@
 import React from 'react'
-import { Link } from 'gatsby'
-import { HStack, VStack, Badge, StackProps, Avatar, Text, Box } from '@chakra-ui/react'
+import { useLocation } from '@reach/router'
+import { HStack, VStack, Badge, StackProps, Avatar, Text, Divider } from '@chakra-ui/react'
+import { navigate } from 'gatsby'
 
 interface ListItemWrapper extends StackProps {
   to: string
   children: React.ReactNode
+  isActive: boolean
 }
-const ListItemWrapper: React.FC<ListItemWrapper> = ({ ...props }) => {
+const ListItemWrapper: React.FC<ListItemWrapper> = ({ isActive, to, ...props }) => {
+  const { pathname, hash } = useLocation()
   return (
     <HStack
-      borderRadius={8}
-      _hover={{ bg: 'gray.50' }}
+      bg={isActive ? 'purple.200' : 'none'}
+      _hover={{ bg: isActive ? 'purple.200' : 'gray.50' }}
       cursor="pointer"
       p="9px"
       w="full"
       userSelect="none"
-      as={Link}
+      onClick={e => {
+        if (pathname + hash !== to) {
+          navigate(to)
+        }
+      }}
       {...props}
     />
   )
@@ -33,8 +40,9 @@ interface ListItemTitleProps {
   date?: string
   title: string
   other?: string
+  isActive: boolean
 }
-const ListItemContent: React.FC<ListItemTitleProps> = ({ title, other, subtitle, date }) => {
+const ListItemContent: React.FC<ListItemTitleProps> = ({ isActive, title, other, subtitle, date }) => {
   return (
     <VStack align="start" flex={1}>
       <HStack justify="space-between" w="full">
@@ -63,6 +71,7 @@ const ListItemContent: React.FC<ListItemTitleProps> = ({ title, other, subtitle,
           </Badge>
         )}
       </HStack>
+      <Divider borderColor={isActive ? 'transparent' : 'inherit'} />
     </VStack>
   )
 }
@@ -72,12 +81,13 @@ interface ListItemProps {
   title: string
   subtitle: string
   date?: string
+  isActive: boolean
 }
-export const ListItem: React.FC<ListItemProps> = ({ avatar, title, subtitle, date, to }) => {
+export const ListItem: React.FC<ListItemProps> = ({ isActive, avatar, title, subtitle, date, to }) => {
   return (
-    <ListItemWrapper to={to}>
+    <ListItemWrapper to={to} isActive={isActive}>
       <ListItemAvatar src={avatar} />
-      <ListItemContent title={title} subtitle={subtitle} date={date} />
+      <ListItemContent isActive={isActive} title={title} subtitle={subtitle} date={date} />
     </ListItemWrapper>
   )
 }

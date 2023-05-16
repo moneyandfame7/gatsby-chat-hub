@@ -1,6 +1,6 @@
 /* lib  */
-import React, { useCallback, useMemo } from 'react'
-import { Box, HStack } from '@chakra-ui/react'
+import React, { useCallback } from 'react'
+import { HStack } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
 
 /* services  */
@@ -14,20 +14,36 @@ import { AnimatePresence } from 'framer-motion'
 import { LeftDropdownMenu } from '../menu'
 import { LeftGoBack } from '../go-back'
 
-interface LeftMainHeaderProps extends LeftColumnUI {
-  handleChangeQuery: (e: React.ChangeEvent<HTMLInputElement>) => void
-}
-export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ handleChangeQuery, leftColumnUiStore }) => {
-  const { authorizationStore } = useStores()
+interface LeftMainHeaderProps extends LeftColumnUI {}
+export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ leftColumnUiStore }) => {
+  const { authorizationStore, searchStore } = useStores()
 
-  const searchInputPlaceholder = leftColumnUiStore.content === LeftColumnContent.Contacts ? 'Search contacts' : 'Search'
+  const handleSearchQuery = useCallback(
+    (query: string) => {
+      if (!Boolean(query)) {
+        return
+      }
+
+      if (leftColumnUiStore.content === LeftColumnContent.Contacts) {
+        searchStore.executeSearchQuery({ type: 'contacts', query })
+        return
+      }
+
+      searchStore.executeSearchQuery({ type: 'global', query })
+    },
+    [leftColumnUiStore.content, searchStore.executeSearchQuery]
+  )
+  const searchInputPlaceholder =
+    leftColumnUiStore.content === LeftColumnContent.Contacts ? 'Search contacts' : 'Search (⌘K)'
 
   const isSearchInputFocused =
     leftColumnUiStore.content === LeftColumnContent.Contacts ||
     leftColumnUiStore.content === LeftColumnContent.GlobalSearch
 
   const handleFocusInput = () => {
-    leftColumnUiStore.setContent(LeftColumnContent.GlobalSearch)
+    if (leftColumnUiStore.content !== LeftColumnContent.GlobalSearch) {
+      leftColumnUiStore.setContent(LeftColumnContent.GlobalSearch)
+    }
   }
 
   const handleLogoutSelect = () => {
@@ -55,9 +71,10 @@ export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ handleC
     <HStack justify="space-between" px={2} py={3}>
       <AnimatePresence initial={false}>{renderContentActionButton()}</AnimatePresence>
       <SearchInput
+        isLoading={searchStore.isLoading}
         isFocused={isSearchInputFocused}
         handleFocus={handleFocusInput}
-        handleChange={handleChangeQuery}
+        handleChange={handleSearchQuery}
         placeholder={searchInputPlaceholder}
       />
     </HStack>

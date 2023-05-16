@@ -1,6 +1,8 @@
 /* lib  */
-import React, { PropsWithChildren } from 'react'
+import React, { PropsWithChildren, useState } from 'react'
 import { Menu, MenuItem, MenuList, PlacementWithLogical, Portal, chakra } from '@chakra-ui/react'
+import { Backdrop } from './backdrop'
+import { KeyboardEventKey } from '@utils/constants'
 
 export const StyledMenuList = chakra(MenuList, {
   baseStyle: {
@@ -34,12 +36,31 @@ interface StyledMenuProps extends PropsWithChildren {
 }
 
 export const StyledMenu: React.FC<StyledMenuProps> = ({ placement, menuButton = null, children }) => {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const handleOpen = () => {
+    setIsOpen(true)
+  }
+  const handleClose = () => {
+    setIsOpen(false)
+  }
   return (
-    <Menu placement={placement}>
+    <Menu isLazy placement={placement} isOpen={isOpen} onOpen={handleOpen} onClose={handleClose}>
       {menuButton}
+
       <Portal>
-        <StyledMenuList>{children}</StyledMenuList>
+        <StyledMenuList
+          onKeyDown={e => {
+            if (e.code === KeyboardEventKey.Escape) {
+              e.stopPropagation()
+              handleClose()
+            }
+          }}
+        >
+          {children}
+        </StyledMenuList>
       </Portal>
+      {isOpen && <Backdrop onClick={handleClose} />}
     </Menu>
   )
 }

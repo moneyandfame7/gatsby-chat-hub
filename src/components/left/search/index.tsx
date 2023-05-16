@@ -1,10 +1,10 @@
-import { Animated } from '@components'
-import React, { useEffect } from 'react'
-import { FADE_ANIMATION } from '../main'
-import { usePresence } from 'framer-motion'
+import React from 'react'
 import { observer } from 'mobx-react-lite'
-import { LeftColumnUI } from '../settings'
 import LoremIpsum from 'react-lorem-ipsum'
+
+import { Animated } from '@components'
+import { FADE_ANIMATION } from '../main'
+import { LeftColumnUI } from '../settings'
 
 interface LeftSearchProps extends LeftColumnUI {}
 export const LeftSearch: React.FC<LeftSearchProps> = observer(({ leftColumnUiStore }) => {

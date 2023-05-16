@@ -21,8 +21,6 @@ import type {
   JwtPayload
 } from './types'
 import { hasWindow } from '@utils/functions'
-import { navigate } from 'gatsby'
-import { ROUTES } from '@utils/constants'
 import { cache } from '@store/cache'
 
 /**
@@ -94,6 +92,7 @@ export class AuthorizationStore implements IAuthorizationStore {
   public logout(): void {
     this.updateCredentials(null)
     cache.clear()
+    client.clearStore()
   }
   public async refresh(): Promise<NullableField<AccessToken>> {
     if (!this.refreshToken) {

@@ -1,6 +1,6 @@
 /* lib */
 import React, { PropsWithChildren, createContext, useContext, useEffect, useRef, useState } from 'react'
-import { Box, Menu, MenuItemProps, Portal } from '@chakra-ui/react'
+import { Box, Menu, MenuItemProps } from '@chakra-ui/react'
 
 /* ui  */
 import { StyledMenuItem, StyledMenuList } from './menu'
@@ -49,7 +49,8 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ renderItems, children 
         let y = e.clientY + MENU_PADDING
         Object.assign(popper.style, {
           top: `${y}px`,
-          left: `${x}px`
+          left: `${x}px`,
+          position: 'fixed'
         })
       }
     }
@@ -69,12 +70,10 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ renderItems, children 
       </Box>
 
       <Menu isLazy isOpen={isOpen}>
-        <Portal>
-          <StyledMenuList ref={menuRef}>
-            {/* menu items here */}
-            {renderItems}
-          </StyledMenuList>
-        </Portal>
+        <StyledMenuList ref={menuRef}>
+          {/* menu items here */}
+          {renderItems}
+        </StyledMenuList>
       </Menu>
     </ContextMenuContext.Provider>
   )

@@ -1,11 +1,10 @@
 /**
  * The main group of the column, which includes: Search, ConversationList, Contacts
  */
-/* ib */
+/* lib */
 import React, { useCallback } from 'react'
-import { Box } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
-import { AnimatePresence, Variants, motion } from 'framer-motion'
+import { AnimatePresence, Variants } from 'framer-motion'
 
 /* services  */
 import { LeftColumnContent } from '@modules/chat/sidebar/helpers/enum'
@@ -19,9 +18,7 @@ import { LeftMainHeader } from './header'
 import { LeftColumnUI } from '../settings'
 import { Scrollable } from '@components/ui'
 
-interface LeftMainProps extends LeftColumnUI {
-  handleSearchQuery: (query: string) => void
-}
+interface LeftMainProps extends LeftColumnUI {}
 export const SCALE_ANIMATION: Variants = {
   open: {
     scale: 1,
@@ -57,7 +54,7 @@ export const FADE_ANIMATION: Variants = {
   }
 }
 
-export const LeftMain: React.FC<LeftMainProps> = observer(({ leftColumnUiStore, handleSearchQuery }) => {
+export const LeftMain: React.FC<LeftMainProps> = observer(({ leftColumnUiStore }) => {
   const renderContent = useCallback(() => {
     switch (leftColumnUiStore.content) {
       case LeftColumnContent.Conversations:
@@ -71,14 +68,6 @@ export const LeftMain: React.FC<LeftMainProps> = observer(({ leftColumnUiStore, 
     }
   }, [leftColumnUiStore.content])
 
-  const handleChangeQuery = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      console.log(e.currentTarget.value)
-      handleSearchQuery(e.currentTarget.value)
-    },
-    [handleSearchQuery]
-  )
-
   return (
     <Animated
       // variants={SCALE_ANIMATION}
@@ -91,12 +80,7 @@ export const LeftMain: React.FC<LeftMainProps> = observer(({ leftColumnUiStore, 
       height="100%"
       pos="relative"
     >
-      <LeftMainHeader handleChangeQuery={handleChangeQuery} leftColumnUiStore={leftColumnUiStore} />
-
-      {/**
-       * @TODO винести анімований блок в окремий компонент, в пропсах анімації, або розбити на різні компоненти +
-       * задати паддінг і так далі
-       */}
+      <LeftMainHeader leftColumnUiStore={leftColumnUiStore} />
       <Scrollable pos="relative" id="LeftWrapper" height="100%" width="100%" overflowY="scroll">
         <AnimatePresence initial={false}>{renderContent()}</AnimatePresence>
       </Scrollable>

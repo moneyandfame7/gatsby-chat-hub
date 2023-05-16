@@ -6,7 +6,7 @@ import { Box, Slide, VStack } from '@chakra-ui/react'
 
 /* services  */
 import { CONVERSATION_ID_QUERY, ConversationByIdData, ConversationByIdInput } from '@utils/graphql/conversations'
-import { useIsMobileScreen, usePressEsc } from '@hooks'
+import { useIsMobileScreen } from '@hooks'
 
 /* ui  */
 import { ConversationHeader } from './header'
@@ -17,11 +17,6 @@ interface ConversationProps {
 }
 
 export const Conversation: React.FC<ConversationProps> = ({ id }) => {
-  const onPressEsc = () => {
-    onConversationClose()
-    navigate(location.pathname)
-  }
-
   // usePressEsc(onPressEsc)
   const { isConversationOpen, onConversationClose, onConversationOpen } = useContext(ConversationContext)
 
@@ -42,8 +37,25 @@ export const Conversation: React.FC<ConversationProps> = ({ id }) => {
     }
   }, [id])
 
+  const handlePressEscape = (e: KeyboardEvent) => {
+    /* e.repeat for prevent keydown holding */
+    if ((e.code === 'Escape' || e.key === 'Escape') && !e.repeat) {
+      e.stopPropagation()
+      onConversationClose()
+      navigate(location.pathname)
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('keydown', handlePressEscape, false)
+
+    return () => {
+      document.removeEventListener('keydown', handlePressEscape, false)
+    }
+  }, [])
+
   return (
-    <VStack h="100vh" flex={1} margin="0px !important">
+    <VStack h="100vh" flex={1} margin="0px !important" border="1px solid" borderColor="gray.200">
       {/* винести в окремий компонент з назвою ConversationWrapper */}
       {isMobileScreen ? (
         <Slide direction="right" in={isConversationOpen} style={{ zIndex: 10 }}>

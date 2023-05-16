@@ -15,6 +15,9 @@ const ConversationPage: React.FC<PageProps> = ({ location }) => {
   return (
     <ConversationLayout>
       {currentConversationId ? (
+        /**
+         * @TODO validate id, if not uuid then not open chat?
+         */
         <Conversation id={currentConversationId} />
       ) : (
         <Center height="100vh" display={{ base: 'none', md: 'flex' }} flex={1}>

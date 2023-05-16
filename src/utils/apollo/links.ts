@@ -55,7 +55,6 @@ export const errorLink = onError(({ graphQLErrors, networkError }) => {
 export const linkTokenToHeaders = setContext(async ({ operationName }, { headers }) => {
   const accessToken = await getAccessTokenPromise()
 
-  console.log({ operationName })
   return {
     headers: {
       ...headers,

@@ -1,7 +1,7 @@
 import ms from 'milliseconds'
 import { Conversation, Participant } from '@utils/graphql/conversations'
 import { uniqBy } from 'lodash'
-import { LocalStorage } from '@store/recommendations'
+import { LocalStorage } from './localstorage'
 
 interface CacheStoreOptions {
   name: string

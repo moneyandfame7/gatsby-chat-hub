@@ -14,7 +14,7 @@ import { Conversation } from '@utils/graphql/conversations'
 import { ROUTES } from '@utils/constants'
 
 /* ui */
-import { ContextMenuItem, StyledMenuList } from '@components'
+import { StyledMenuItem, StyledMenuList } from '@components'
 
 interface ConversationItemProps {
   conversation: Conversation
@@ -55,17 +55,17 @@ export const ConversationItem: React.FC<ConversationItemProps> = memo(({ convers
     <ChakraUiContextMenu<HTMLDivElement>
       renderMenu={() => (
         <StyledMenuList>
-          <ContextMenuItem
+          <StyledMenuItem
             icon={<RxOpenInNewWindow size={21} color="#707579" />}
             onClick={() => {
               window.open(`http://localhost:8000/${ROUTES.chat(conversation.id)}`, '_blank')
             }}
           >
             Open in new tab
-          </ContextMenuItem>
-          <ContextMenuItem icon={<MdOutlineMarkChatRead size={20} color="#707579" />}>Mark as read</ContextMenuItem>
-          <ContextMenuItem icon={<MdOutlineMarkChatUnread size={20} color="#707579" />}>Mark as unread</ContextMenuItem>
-          <ContextMenuItem
+          </StyledMenuItem>
+          <StyledMenuItem icon={<MdOutlineMarkChatRead size={20} color="#707579" />}>Mark as read</StyledMenuItem>
+          <StyledMenuItem icon={<MdOutlineMarkChatUnread size={20} color="#707579" />}>Mark as unread</StyledMenuItem>
+          <StyledMenuItem
             color="red"
             icon={<DeleteIcon fontSize={20} color="red" />}
             onClick={() => {
@@ -73,7 +73,7 @@ export const ConversationItem: React.FC<ConversationItemProps> = memo(({ convers
             }}
           >
             Delete
-          </ContextMenuItem>
+          </StyledMenuItem>
         </StyledMenuList>
       )}
     >

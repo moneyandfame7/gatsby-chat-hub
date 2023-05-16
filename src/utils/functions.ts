@@ -18,3 +18,10 @@ export const formatDate = (date: Date) => {
     return momentDate.format('MMM D')
   }
 }
+
+export const isChatOpen = () => {
+  if (window.location) {
+    return window.location.hash.length > 3
+  }
+  return false
+}

@@ -13,6 +13,7 @@ import { ContextMenu, ContextMenuItem, ListItem } from '@components/ui'
 import { PropsWithConversation } from '@types'
 import { formatDate } from '@utils/functions'
 import { ROUTES } from '@utils/constants'
+import { useLocation } from '@reach/router'
 
 interface ConversationContextMenuProps extends PropsWithChildren {
   conversation?: Conversation
@@ -32,6 +33,8 @@ const ConversationContextMenu: React.FC<ConversationContextMenuProps> = ({ conve
 }
 
 export const ConversationItem: React.FC<PropsWithConversation> = ({ conversation }) => {
+  const { hash } = useLocation()
+  const activeConversationId = hash.split('#')[1]
   const getDateForConversation = (c: Conversation) => {
     if (c?.lastMessage) {
       return c.lastMessage.createdAt
@@ -41,6 +44,7 @@ export const ConversationItem: React.FC<PropsWithConversation> = ({ conversation
   return (
     <ConversationContextMenu>
       <ListItem
+        isActive={activeConversationId === conversation.id}
         date={formatDate(getDateForConversation(conversation))}
         key={conversation.id}
         avatar={conversation.participants[0].photo}
