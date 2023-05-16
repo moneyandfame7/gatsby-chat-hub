@@ -20,7 +20,7 @@ export const formatDate = (date: Date) => {
 }
 
 export const isChatOpen = () => {
-  if (window.location) {
+  if (hasWindow()) {
     return window.location.hash.length > 3
   }
   return false

@@ -6,10 +6,14 @@ import { observer } from 'mobx-react-lite'
 /* services */
 import { useStores } from '@store/provider'
 import { ROUTES } from '@utils/constants'
+import { hasWindow } from '@utils/functions'
 
 /* ui */
 
 export const Protected: FC<PropsWithChildren> = observer(({ children }) => {
+  if (!hasWindow()) {
+    return null
+  }
   const { authorizationStore, userStore } = useStores()
   if (!authorizationStore.isValidAccessToken) {
     ;(async () => {
