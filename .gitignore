@@ -6,8 +6,8 @@ public
 
 # types
 src/gatsby-types.d.ts
-src/env.d.ts
-src/file.d.ts
+env.d.ts
+file.d.ts
 
 # configs
 

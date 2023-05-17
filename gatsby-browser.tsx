@@ -1,39 +1,22 @@
-/* lib  */
 import * as React from 'react'
-import { GatsbyBrowser } from 'gatsby'
-import { ApolloProvider } from '@apollo/client'
-import { GoogleOAuthProvider } from '@react-oauth/google'
-import { configurePersistable } from 'mobx-persist-store'
-import { Toaster } from 'react-hot-toast'
 
-/* services  */
-import { StoreProvider } from './src/store/provider'
-import { Environment } from './src/utils/environment'
-import { rootStore } from './src/store/root'
-import { client } from './src/utils/apollo/clients'
-import { hasWindow } from './src/utils/functions'
+import { GatsbyBrowser } from 'gatsby'
+
+import { ApolloProvider } from '@apollo/client'
+
+import { client } from './src/services/apollo/clients'
+import { StoreProvider } from './src/services/store/provider'
+import { rootStore } from './src/services/store/root'
 
 export const wrapRootElement: GatsbyBrowser['wrapPageElement'] = ({ element }) => {
-  configurePersistable({
-    storage: hasWindow() ? window.localStorage : undefined
-  })
-
-  return (
-    <ApolloProvider client={client}>
-      <GoogleOAuthProvider clientId={Environment.googleId}>
-        <StoreProvider store={rootStore}>{element}</StoreProvider>
-      </GoogleOAuthProvider>
-    </ApolloProvider>
-  )
+	return (
+		<ApolloProvider client={client}>
+			<StoreProvider store={rootStore}>{element}</StoreProvider>
+		</ApolloProvider>
+	)
 }
 
-export const wrapPageElement: GatsbyBrowser['wrapPageElement'] = ({ element, props }) => {
-  return (
-    <>
-      <Toaster />
-      {element}
-    </>
-  )
+export const onRouteUpdate: GatsbyBrowser['onRouteUpdate'] = (args) => {
+	// eslint-disable-next-line no-console
+	console.log('Route updated')
 }
-
-export const onRouteUpdate: GatsbyBrowser['onRouteUpdate'] = args => {}
