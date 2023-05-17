@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 
 import { GatsbyBrowser } from 'gatsby'
 
@@ -19,9 +19,4 @@ export const wrapRootElement: GatsbyBrowser['wrapRootElement'] = ({ element }) =
 
 export const wrapPageElement: GatsbyBrowser['wrapPageElement'] = ({ element }) => {
 	return <ClientOnly>{element}</ClientOnly>
-}
-
-export const onRouteUpdate: GatsbyBrowser['onRouteUpdate'] = (args) => {
-	// eslint-disable-next-line no-console
-	console.log('Route updated')
 }
