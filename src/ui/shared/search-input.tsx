@@ -5,10 +5,10 @@ import { AnimatePresence } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
 import { IconButton } from '@ui/shared/buttons'
-import { Loader } from '@ui/shared/loaders'
+import { Loader, SecondaryLoader } from '@ui/shared/loaders'
 
 import { SCALE_ANIMATION } from '../../containers/left/main'
-import { Animated } from '../animation'
+import { Animation } from '../animation'
 import { CloseIcon, SearchIcon } from '../icons'
 
 /* ui */
@@ -92,37 +92,29 @@ export const SearchInput: React.FC<SearchInputProps> = observer(
 
 				<AnimatePresence initial={false}>
 					{Boolean(inputValue) && !isLoading && (
-						<Animated
-							variants={SCALE_ANIMATION}
-							initial='hidden'
-							animate='open'
-							exit='hidden'
-							key='AnimatedClearButton'
-						>
+						<Animation.Scale key='AnimatedClearButton'>
 							<InputRightElement>
 								<IconButton
-									height='16px'
-									minWidth='16px'
+									height='17px'
+									minWidth='17px'
 									padding={0}
 									bg='blackAlpha.500'
 									_hover={{
 										bg: 'blackAlpha.500',
 									}}
-									size='sm'
-									zIndex={2}
 									icon={<CloseIcon color='#fff' fontSize='10px' strokeWidth='3px' />}
 									onClick={handleClearInputValue}
 									aria-label='Clear search query'
 								/>
 							</InputRightElement>
-						</Animated>
+						</Animation.Scale>
 					)}
 					{isLoading && (
-						<Animated variants={SCALE_ANIMATION} initial='hidden' animate='open' exit='hidden' key='AnimatedLoader'>
+						<Animation.Scale key='AnimatedLoader'>
 							<InputRightElement>
 								<Loader size='small' />
 							</InputRightElement>
-						</Animated>
+						</Animation.Scale>
 					)}
 				</AnimatePresence>
 			</InputGroup>

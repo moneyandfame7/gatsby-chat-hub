@@ -16,7 +16,7 @@ import {
 import { AnimatePresence, Variants } from 'framer-motion'
 import Lottie from 'react-lottie-player'
 
-import { Animated } from '@ui/animation'
+import { Animation } from '@ui/animation'
 
 import { Conversation } from '@utils/graphql/conversations'
 
@@ -43,16 +43,6 @@ interface ConversationsTabsProps {
 	unreadLoading: boolean
 }
 
-const variants: Variants = {
-	hidden: (i: number) => ({
-		x: i === 0 ? '-100%' : '100%',
-		transition: { duration: 0.25, ease: 'easeInOut' },
-	}),
-	open: (i: number) => ({
-		x: 0,
-		transition: { duration: 0.25, ease: 'easeInOut' },
-	}),
-}
 export const ConversationsTabs: React.FC<ConversationsTabsProps> = ({ all, allLoading, unread, unreadLoading }) => {
 	const renderTab = (loading: boolean, conversations?: Conversation[]) => {
 		if (loading) {
@@ -95,30 +85,14 @@ export const ConversationsTabs: React.FC<ConversationsTabsProps> = ({ all, allLo
 			<TabIndicator mt='-1.5px' height='3px' bg='#8774E1' borderRadius='1px' _hover={{ height: '3px' }} />
 			<TabPanels overflowX='hidden' height='100%' my={2}>
 				<TabPanel p={0} as={AnimatePresence} initial={false} mode='popLayout'>
-					<Animated
-						custom={index}
-						variants={variants}
-						initial='hidden'
-						animate='open'
-						exit='hidden'
-						data-component-name='Animated'
-						p={0}
-					>
+					<Animation.Slide custom='left' data-component-name='Animated' p={0}>
 						{renderTab(allLoading, all)}
-					</Animated>
+					</Animation.Slide>
 				</TabPanel>
 				<TabPanel p={0} as={AnimatePresence} initial={false} mode='popLayout'>
-					<Animated
-						custom={index}
-						variants={variants}
-						initial='hidden'
-						animate='open'
-						exit='hidden'
-						data-component-name='Animated'
-						p={0}
-					>
+					<Animation.Slide custom='right' data-component-name='Animated' p={0}>
 						{renderTab(unreadLoading, unread)}
-					</Animated>
+					</Animation.Slide>
 				</TabPanel>
 			</TabPanels>
 		</Tabs>

@@ -5,50 +5,16 @@ import { observer } from 'mobx-react-lite'
 
 import { LeftColumnContent } from '@services/store'
 
-import { Animated } from '@ui/animation'
+import { Animation } from '@ui/animation'
 import { Scrollable } from '@ui/overlay'
 
-import { LeftSearch } from '../search'
 import { LeftColumnUI } from '../settings'
-import { ContactList } from './contact-list'
+import { ContactList } from './contacts'
 import { Conversations } from './conversations'
 import { LeftMainHeader } from './header'
+import { LeftSearch } from './search'
 
 interface LeftMainProps extends LeftColumnUI {}
-export const SCALE_ANIMATION: Variants = {
-	open: {
-		scale: 1,
-		opacity: 1,
-		transition: { duration: 0.1 },
-	},
-	hidden: {
-		opacity: 0,
-		scale: 0.9,
-		transition: { duration: 0.1 },
-	},
-}
-export const SLIDE_ANIMATION: Variants = {
-	open: {
-		x: 0,
-		transition: { delay: 0.1, duration: 0.15 },
-	},
-	hidden: {
-		x: '100%',
-		transition: { duration: 0.2 },
-	},
-}
-export const FADE_ANIMATION: Variants = {
-	open: {
-		opacity: 1,
-		scale: 1,
-		transition: { duration: 0.1 },
-	},
-	hidden: {
-		opacity: 0,
-		scale: 0.8,
-		transition: { duration: 0.1 },
-	},
-}
 
 export const LeftMain: React.FC<LeftMainProps> = observer(({ leftColumnUiStore }) => {
 	const renderContent = useCallback(() => {
@@ -65,7 +31,7 @@ export const LeftMain: React.FC<LeftMainProps> = observer(({ leftColumnUiStore }
 	}, [leftColumnUiStore.content])
 
 	return (
-		<Animated
+		<Animation
 			// variants={SCALE_ANIMATION}
 			initial='hidden'
 			animate='open'
@@ -80,6 +46,6 @@ export const LeftMain: React.FC<LeftMainProps> = observer(({ leftColumnUiStore }
 			<Scrollable pos='relative' id='LeftWrapper' height='100%' width='100%' overflowY='scroll'>
 				<AnimatePresence initial={false}>{renderContent()}</AnimatePresence>
 			</Scrollable>
-		</Animated>
+		</Animation>
 	)
 })
