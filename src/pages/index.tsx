@@ -4,11 +4,11 @@ import React, { type FC } from 'react'
 import { Link, PageProps } from 'gatsby'
 
 import { Center } from '@chakra-ui/react'
+import { pageHead } from '@components/page-head'
 import { observer } from 'mobx-react-lite'
 
 /* services */
 import { ROUTES } from '@utils/constants'
-import { pageHead } from '@utils/page-head'
 
 const Root: FC<PageProps> = ({ location }) => {
 	return (

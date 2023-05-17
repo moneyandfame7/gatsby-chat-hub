@@ -36,6 +36,7 @@ const config: GatsbyConfig = {
 					'@services': path.resolve(__dirname, 'src/services'),
 					'@ui': path.resolve(__dirname, 'src/ui'),
 					'@utils': path.resolve(__dirname, 'src/utils'),
+					'@components': path.resolve(__dirname, 'src/components'),
 				},
 				extensions: ['js'],
 			},
