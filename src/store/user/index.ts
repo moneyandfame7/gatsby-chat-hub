@@ -1,24 +1,17 @@
-import { autorun, makeAutoObservable, reaction } from 'mobx'
+/* lib  */
+import { makeAutoObservable } from 'mobx'
 import { makePersistable } from 'mobx-persist-store'
 
-import { client } from '@utils/apollo/clients'
-import { RootStore } from '@store/root'
-import type { NullableField } from '@types'
-import type { AuthResponse } from '@store/authorization/types'
-
-import { CREATE_USERNAME_MUTATION } from './graphql'
-import type { User, CreateUsernameInput, IUserStore } from './type'
-import { AuthorizationStore } from '@store/authorization'
+/* services  */
 import { hasWindow } from '@utils/functions'
+import type { NullableField } from '@types'
+import type { User, IUserStore } from './type'
 
 export class UserStore implements IUserStore {
   public user: NullableField<User> = null
-  public loading: boolean = false
 
-  private readonly authorizationStore: AuthorizationStore
   public readonly STORAGE_KEY: string = 'userStore'
-  constructor(readonly rootStore: RootStore) {
-    this.authorizationStore = rootStore.authorizationStore
+  constructor() {
     /**
      * autoBind - щоб не губилось this і працювали традиційні функції
      */
@@ -32,22 +25,5 @@ export class UserStore implements IUserStore {
   }
   public setUser(user: NullableField<User>): void {
     this.user = user
-  }
-
-  public async createUsername(username: string) {
-    const { data, errors } = await client.mutate<AuthResponse<'createUsername'>, CreateUsernameInput>({
-      mutation: CREATE_USERNAME_MUTATION,
-      variables: {
-        createUsernameInput: {
-          username
-        }
-      }
-    })
-    if (data) {
-      this.authorizationStore.updateCredentials(data.createUsername)
-
-      return { success: true, error: null }
-    }
-    return { success: false, error: 'Sdsds' }
   }
 }

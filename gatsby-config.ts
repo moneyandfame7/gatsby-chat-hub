@@ -9,6 +9,10 @@ const config: GatsbyConfig = {
     title: `ChatHub | Live chat`
   },
   graphqlTypegen: true,
+  trailingSlash: 'always',
+  flags: {
+    DEV_SSR: true
+  },
   plugins: [
     {
       resolve: 'gatsby-plugin-manifest',
@@ -27,6 +31,7 @@ const config: GatsbyConfig = {
       options: {
         alias: {
           '@components': path.resolve(__dirname, 'src/components'),
+          '@modules': path.resolve(__dirname, 'src/modules'),
           '@pages': path.resolve(__dirname, 'src/pages'),
           '@hooks': path.resolve(__dirname, 'src/hooks'),
           '@images': path.resolve(__dirname, 'src/images'),
@@ -42,7 +47,9 @@ const config: GatsbyConfig = {
     {
       resolve: '@chakra-ui/gatsby-plugin',
       options: {
-        resetCSS: true
+        resetCSS: true,
+        isUsingColorMode: true,
+        portalZIndex: 100
       }
     },
     {

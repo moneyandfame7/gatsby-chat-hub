@@ -1,4 +1,7 @@
+/* lib  */
 import React, { type FC, type PropsWithChildren, createContext, useContext } from 'react'
+
+/* services  */
 import { RootStore } from '../store/root'
 
 const StoreContext = createContext<RootStore>({} as RootStore)

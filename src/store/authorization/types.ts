@@ -1,8 +1,6 @@
-import { TokenResponse } from '@react-oauth/google'
-import { User } from '@store/user/type'
-import { Nullable, NullableField } from '@types'
-
-/* @TODO: переробити createUsername на confirmAuthorization */
+import type { TokenResponse } from '@react-oauth/google'
+import type { User } from '@store/user/type'
+import type { NullableObj, NullableField } from '@types'
 
 export interface AuthStoreOperationResponse {
   success: boolean
@@ -33,8 +31,8 @@ interface AuthResponseFields extends AuthTokens {
 export type GoogleResponse = Omit<TokenResponse, 'error' | 'error_description' | 'error_uri'>
 
 /* In Mobx Store and LocalStorage */
-export type AuthStoreState = Nullable<AuthResponseFields>
-export type AuthStoreTokens = Nullable<AuthTokens>
+export type AuthStoreState = NullableObj<AuthResponseFields>
+export type AuthStoreTokens = NullableObj<AuthTokens>
 
 /* Login, refresh mutations */
 export type AuthInput<T extends string> = {
@@ -59,7 +57,6 @@ export interface IAuthorizationStore {
   refreshToken: NullableField<string>
   tokens: AuthStoreTokens
   isLoggedIn: boolean
-  loading: boolean
 
   login: (credentials: GoogleResponse) => Promise<AuthStoreOperationResponse>
   logout: () => void
