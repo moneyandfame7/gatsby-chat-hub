@@ -6,6 +6,3 @@ export * from './conversation/index'
 
 /* Conversation information */
 export * from './information/index'
-
-/* Conversation sidebar list */
-export * from '../../components/left/index'

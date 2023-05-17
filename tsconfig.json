@@ -1,35 +1,37 @@
 {
-  "compilerOptions": {
-    "baseUrl": "src",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "jsx": "react",
-    "lib": ["dom", "esnext"],
-    "module": "esnext",
-    "moduleResolution": "node",
-    "skipLibCheck": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "strictNullChecks": true,
-    "resolveJsonModule": true,
-    "strict": true,
-    "target": "esnext",
-    "paths": {
-      "@components/*": ["components/*"],
-      "@components": ["components"],
-      "@pages/*": ["pages/*"],
-      "@assets/*": ["assets/*"],
-      "@modules": ["modules"],
-      "@modules/*": ["modules/*"],
-      "@pages": ["pages"],
-      "@hooks": ["hooks"],
-      "@images/*": ["images/*"],
-      "@types": ["types"],
-      "@utils/*": ["utils/*"],
-      "@utils": ["utils"],
-      "@store": ["store"],
-      "@store/*": ["store/*"]
-    }
-  },
-  "include": ["./src/**/*", "./gatsby-node.ts", "./gatsby-config.ts", "./plugins/**/*"]
+	"compilerOptions": {
+		"baseUrl": "src",
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"jsx": "react",
+		"lib": ["dom", "esnext"],
+		"module": "esnext",
+		"moduleResolution": "node",
+		"skipLibCheck": true,
+		"noImplicitAny": true,
+		"noImplicitThis": true,
+		"strictNullChecks": true,
+		"resolveJsonModule": true,
+		"strict": true,
+		"target": "esnext",
+		"paths": {
+			"@ui/*": ["ui/*"],
+			"@ui": ["ui"],
+
+			"@containers/*": ["containers/*"],
+			"@containers": ["containers"],
+
+			"@services/*": ["services/*"],
+			"@services": ["services"],
+
+			"@modules": ["modules"],
+			"@modules/*": ["modules/*"],
+
+			"@assets/*": ["assets/*"],
+
+			"@utils/*": ["utils/*"],
+			"@utils": ["utils"]
+		}
+	},
+	"include": ["./src/**/*", "./gatsby-node.ts", "./gatsby-config.ts", "./plugins/**/*"]
 }
