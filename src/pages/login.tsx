@@ -16,7 +16,9 @@ import { pageHead } from '@utils/page-head'
 
 const Login: FC = observer(() => {
 	const { authorizationStore, userStore } = useStores()
-
+	if (!authorizationStore || !userStore) {
+		return null
+	}
 	useEffect(() => {
 		if (authorizationStore.isLoggedIn && userStore.user?.username) {
 			navigate(ROUTES.chat())
