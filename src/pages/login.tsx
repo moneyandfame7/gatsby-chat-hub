@@ -11,6 +11,8 @@ import { pageHead } from '@components'
 
 /* ui */
 import { CreateUsername, GoogleLogin } from '@modules/authorization'
+import { GoogleOAuthProvider } from '@react-oauth/google'
+import { Environment } from '@utils/environment'
 
 const Login: FC = observer(() => {
   const { authorizationStore, userStore } = useStores()
@@ -22,11 +24,13 @@ const Login: FC = observer(() => {
   }, [authorizationStore.isLoggedIn, userStore.user?.username])
 
   return (
-    <Center height="100vh">
-      <Stack spacing={4} align="center" minW="370px">
-        {authorizationStore.isLoggedIn && !userStore.user?.username ? <CreateUsername /> : <GoogleLogin />}
-      </Stack>
-    </Center>
+    <GoogleOAuthProvider clientId={Environment.googleId}>
+      <Center height="100vh">
+        <Stack spacing={4} align="center" minW="370px">
+          {authorizationStore.isLoggedIn && !userStore.user?.username ? <CreateUsername /> : <GoogleLogin />}
+        </Stack>
+      </Center>
+    </GoogleOAuthProvider>
   )
 })
 

@@ -10,6 +10,9 @@ const config: GatsbyConfig = {
   },
   graphqlTypegen: true,
   trailingSlash: 'always',
+  flags: {
+    DEV_SSR: true
+  },
   plugins: [
     {
       resolve: 'gatsby-plugin-manifest',
