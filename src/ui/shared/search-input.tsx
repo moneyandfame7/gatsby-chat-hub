@@ -5,9 +5,8 @@ import { AnimatePresence } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
 import { IconButton } from '@ui/shared/buttons'
-import { Loader, SecondaryLoader } from '@ui/shared/loaders'
+import { Loader } from '@ui/shared/loaders'
 
-import { SCALE_ANIMATION } from '../../containers/left/main'
 import { Animation } from '../animation'
 import { CloseIcon, SearchIcon } from '../icons'
 
