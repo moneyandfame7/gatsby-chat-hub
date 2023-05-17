@@ -1,11 +1,9 @@
 /* lib  */
 import React from 'react'
 
-import { Animated } from '@ui/animation'
+import { Animation } from '@ui/animation'
 import { ArrowBack } from '@ui/icons'
 import { IconButton } from '@ui/shared/buttons'
-
-import { ICON_ROTATE_ANIMATION } from './menu'
 
 interface LeftGoBackProps {
 	onClick: () => void
@@ -13,8 +11,8 @@ interface LeftGoBackProps {
 
 export const LeftGoBack: React.FC<LeftGoBackProps> = ({ onClick }) => {
 	return (
-		<Animated variants={ICON_ROTATE_ANIMATION} initial='hidden' animate='open' exit='hidden'>
+		<Animation.Rotate>
 			<IconButton onClick={onClick} icon={<ArrowBack />} aria-label='Return to conversations list' />
-		</Animated>
+		</Animation.Rotate>
 	)
 }
