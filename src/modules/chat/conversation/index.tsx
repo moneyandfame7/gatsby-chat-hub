@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 
 import { useQuery } from '@apollo/client'
 import { Box, Slide, VStack } from '@chakra-ui/react'
@@ -24,6 +24,7 @@ export const Conversation: React.FC<ConversationProps> = ({ id }) => {
 
 	const { data } = useQuery<ConversationByIdData, ConversationByIdInput>(CONVERSATION_ID_QUERY, {
 		variables: { id },
+		fetchPolicy: 'cache-first',
 	})
 	useEffect(() => {
 		if (data) {

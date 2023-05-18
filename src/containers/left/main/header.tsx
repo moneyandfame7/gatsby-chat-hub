@@ -46,8 +46,8 @@ export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ leftCol
 		}
 	}
 
-	const handleLogoutSelect = () => {
-		authorizationStore.logout()
+	const handleLogoutSelect = async () => {
+		await authorizationStore.logout()
 	}
 
 	const handleNewChatSelect = () => {

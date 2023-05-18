@@ -17,6 +17,7 @@ import { AnimatePresence } from 'framer-motion'
 import Lottie from 'react-lottie-player'
 
 import { Animation } from '@ui/animation'
+import { Loader } from '@ui/shared/loaders'
 
 import { Conversation } from '@utils/graphql/conversations'
 
@@ -48,8 +49,8 @@ export const ConversationsTabs: React.FC<ConversationsTabsProps> = ({ all, allLo
 	const renderTab = (loading: boolean, conversations?: Conversation[]) => {
 		if (loading) {
 			return (
-				<Center h='100%'>
-					<CircularProgress isIndeterminate color='purple' trackColor='transparent' />
+				<Center height='100%'>
+					<Loader />
 				</Center>
 			)
 		}
