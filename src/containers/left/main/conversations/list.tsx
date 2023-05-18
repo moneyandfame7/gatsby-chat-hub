@@ -6,12 +6,13 @@ import { ConversationItem } from './item'
 
 interface ConversationsListProps {
 	conversations: Conversation[]
+	containerRef: React.RefObject<HTMLDivElement>
 }
-export const ConversationsList: React.FC<ConversationsListProps> = ({ conversations }) => {
+export const ConversationsList: React.FC<ConversationsListProps> = ({ conversations, containerRef }) => {
 	return (
 		<>
 			{conversations.map((c) => (
-				<ConversationItem key={c.id} conversation={c} />
+				<ConversationItem containerRef={containerRef} key={c.id} conversation={c} />
 			))}
 		</>
 	)

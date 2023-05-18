@@ -1,7 +1,7 @@
 /* lib */
 import React, { PropsWithChildren, createContext, useContext, useEffect, useRef, useState } from 'react'
 
-import { Box, Menu, MenuItemProps } from '@chakra-ui/react'
+import { Box, Menu, MenuItemProps, Portal } from '@chakra-ui/react'
 
 import { Backdrop } from './backdrop'
 
@@ -30,8 +30,9 @@ export const ContextMenuItem: React.FC<MenuItemProps> = ({ onClick, ...props }) 
 
 interface ContextMenuProps extends PropsWithChildren {
 	renderItems: React.ReactElement
+	containerRef: React.RefObject<HTMLDivElement>
 }
-export const ContextMenu: React.FC<ContextMenuProps> = ({ renderItems, children }) => {
+export const ContextMenu: React.FC<ContextMenuProps> = ({ renderItems, children, containerRef }) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const menuRef = useRef<HTMLDivElement>(null)
 	const MENU_PADDING = 20
@@ -41,20 +42,30 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ renderItems, children 
 			e.preventDefault()
 			setIsOpen(true)
 			const popper = menuRef.current?.parentElement
-			const menuWidth = menuRef.current?.parentElement?.clientWidth
-
-			if (!menuWidth) {
+			// 33*4+16+2 33 - height of 1 el, 4 - count of elements, 16 - menu padding, 2 - borders px
+			if (!popper || !containerRef.current?.parentElement) {
 				return
 			}
-			if (popper) {
-				const x = e.clientX + MENU_PADDING
-				const y = e.clientY + MENU_PADDING
-				Object.assign(popper.style, {
-					top: `${y}px`,
-					left: `${x}px`,
-					position: 'fixed',
-				})
+
+			const { width: menuWidth, height: menuHeight } = popper.getBoundingClientRect()
+			const { width: containerWidth, height: containerHeight } =
+				containerRef.current.parentElement.getBoundingClientRect()
+
+			let x = e.clientX + MENU_PADDING
+			let y = e.clientY + MENU_PADDING
+
+			if (menuWidth + x >= containerWidth) {
+				x = containerWidth - menuWidth - MENU_PADDING
 			}
+
+			if (menuHeight * 2 + y >= containerHeight) {
+				y = y - menuHeight - MENU_PADDING * 2
+			}
+			Object.assign(popper.style, {
+				top: `${y}px`,
+				left: `${x}px`,
+				position: 'fixed',
+			})
 		}
 	}
 	const closeMenu = () => {
@@ -67,15 +78,17 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ renderItems, children 
 	return (
 		<ContextMenuContext.Provider value={{ closeMenu, openMenu, isOpen }}>
 			{isOpen && <Backdrop onMouseDown={closeMenu} date-component-name='Backdrop' />}
-			<Box onContextMenu={openMenu} data-component='ContextMenuTrigger'>
+			<Box ref={containerRef} onContextMenu={openMenu} data-component='ContextMenuTrigger'>
 				{children}
 			</Box>
 
-			<Menu isLazy isOpen={isOpen}>
-				<StyledMenuList ref={menuRef}>
-					{/* menu items here */}
-					{renderItems}
-				</StyledMenuList>
+			<Menu isOpen={isOpen}>
+				<Portal>
+					<StyledMenuList ref={menuRef}>
+						{/* menu items here */}
+						{renderItems}
+					</StyledMenuList>
+				</Portal>
 			</Menu>
 		</ContextMenuContext.Provider>
 	)
