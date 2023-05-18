@@ -44,7 +44,7 @@ export const LeftMain: React.FC<LeftMainProps> = observer(({ leftColumnUiStore }
 		>
 			<LeftMainHeader leftColumnUiStore={leftColumnUiStore} />
 			<Scrollable pos='relative' id='LeftWrapper' height='100%' width='100%' overflowY='scroll'>
-				<AnimatePresence initial={false}>{renderContent()}</AnimatePresence>
+				<AnimatePresence initial>{renderContent()}</AnimatePresence>
 			</Scrollable>
 		</Animation>
 	)

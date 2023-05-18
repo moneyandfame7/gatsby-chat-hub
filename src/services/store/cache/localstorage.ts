@@ -5,10 +5,10 @@ interface LocalStorageConfiguration {
 	name: string
 
 	/* in ms */
-	expiresIn: number
+	// expiresIn: number
 
 	/*  */
-	encrypt: boolean
+	// encrypt: boolean
 }
 
 export class LocalStorage<Storage> {
@@ -40,7 +40,7 @@ export class LocalStorage<Storage> {
 	}
 
 	public clear = () => {
-		ls.set(this.configuration.name, {})
+		ls.remove(this.configuration.name)
 	}
 
 	private init = () => {

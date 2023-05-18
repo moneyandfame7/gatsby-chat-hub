@@ -8,7 +8,6 @@ import { client, secondaryClient } from '@services/apollo/clients'
 import { hasWindow } from '@utils/functions'
 import type { NullableField } from '@utils/types'
 
-import { cache } from '../cache'
 import { RootStore } from '../root'
 import { LOGIN_MUTATION, REFRESH_MUTATION } from './graphql'
 import type {
@@ -85,14 +84,14 @@ export class AuthorizationStore implements IAuthorizationStore {
 		})
 		if (data) {
 			this.updateCredentials(data.login)
+			this.rootStore.cacheStore.update({ currentUser: data.login.user })
 			return { success: true, error: null }
 		}
 		return { success: false, error: 'Erorr with google authorization' }
 	}
-	public logout(): void {
+	public async logout(): Promise<void> {
 		this.updateCredentials(null)
-		cache.clear()
-		client.clearStore()
+		this.rootStore.cacheStore.clear()
 	}
 	public async refresh(): Promise<NullableField<AccessToken>> {
 		if (!this.refreshToken) {

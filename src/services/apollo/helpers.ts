@@ -24,7 +24,7 @@ export const getAccessToken = async () => {
 	switch (true) {
 		/* якщо немає токенів - повертаємо null */
 		case !authorizationStore.isLoggedIn:
-			authorizationStore.logout()
+			await authorizationStore.logout()
 			return null
 
 		/* якщо все гуд - просто повертаємо access token */
