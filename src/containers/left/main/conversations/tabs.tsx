@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef } from 'react'
 
 import {
 	Badge,
@@ -13,7 +13,7 @@ import {
 	Text,
 	chakra,
 } from '@chakra-ui/react'
-import { AnimatePresence, Variants } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import Lottie from 'react-lottie-player'
 
 import { Animation } from '@ui/animation'
@@ -44,6 +44,7 @@ interface ConversationsTabsProps {
 }
 
 export const ConversationsTabs: React.FC<ConversationsTabsProps> = ({ all, allLoading, unread, unreadLoading }) => {
+	const containerRef = useRef(null)
 	const renderTab = (loading: boolean, conversations?: Conversation[]) => {
 		if (loading) {
 			return (
@@ -53,7 +54,7 @@ export const ConversationsTabs: React.FC<ConversationsTabsProps> = ({ all, allLo
 			)
 		}
 		if (conversations && conversations.length > 0) {
-			return <ConversationsList conversations={conversations} />
+			return <ConversationsList containerRef={containerRef} conversations={conversations} />
 		}
 		return (
 			<Center h='50vh' flexDir='column' userSelect='none'>
@@ -68,13 +69,8 @@ export const ConversationsTabs: React.FC<ConversationsTabsProps> = ({ all, allLo
 		)
 	}
 
-	const [index, setIndex] = useState(0)
-
-	const handleChangeTab = (i: number) => {
-		setIndex(i)
-	}
 	return (
-		<Tabs isLazy onChange={handleChangeTab} position='relative' variant='unstyled' defaultIndex={0}>
+		<Tabs isLazy position='relative' variant='unstyled' defaultIndex={0}>
 			<TabList px={2} overflowX='auto' boxShadow='0 2px 2px rgb(114 114 114 / 17%)' height='100%'>
 				<StyledTab>All</StyledTab>
 				<StyledTab gap={2}>
@@ -85,12 +81,12 @@ export const ConversationsTabs: React.FC<ConversationsTabsProps> = ({ all, allLo
 			<TabIndicator mt='-1.5px' height='3px' bg='#8774E1' borderRadius='1px' _hover={{ height: '3px' }} />
 			<TabPanels overflowX='hidden' height='100%' my={2}>
 				<TabPanel p={0} as={AnimatePresence} initial={false} mode='popLayout'>
-					<Animation.Slide custom='left' data-component-name='Animated' p={0}>
+					<Animation.Slide custom='left' data-component-name='Animated' p={0} ref={containerRef}>
 						{renderTab(allLoading, all)}
 					</Animation.Slide>
 				</TabPanel>
 				<TabPanel p={0} as={AnimatePresence} initial={false} mode='popLayout'>
-					<Animation.Slide custom='right' data-component-name='Animated' p={0}>
+					<Animation.Slide custom='right' data-component-name='Animated' p={0} ref={containerRef}>
 						{renderTab(unreadLoading, unread)}
 					</Animation.Slide>
 				</TabPanel>
