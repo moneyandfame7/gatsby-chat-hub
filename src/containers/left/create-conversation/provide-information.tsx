@@ -27,7 +27,7 @@ export const ProvideInformation: React.FC<ProvideInformationProps & LeftColumnUI
 	handleGoBack,
 	leftColumnUiStore,
 }) => {
-	const { userStore } = useStores()
+	const { userStore, authorizationStore } = useStores()
 	const [name, setName] = useState<string>('')
 	const [description, setDescription] = useState<string>('')
 
@@ -40,14 +40,16 @@ export const ProvideInformation: React.FC<ProvideInformationProps & LeftColumnUI
 	}
 
 	const handleSubmit = async () => {
-		const response = await createConversation(
-			{ currentUser: userStore.user || undefined },
-			{
-				participantsIds: participants.map((p) => p.id),
-				name,
-				description,
-			}
-		)
+		if (!userStore.user) {
+			authorizationStore.logout()
+			return
+		}
+
+		const response = await createConversation({
+			participantsIds: [userStore.user.id, ...participants.map((p) => p.id)],
+			name,
+			description,
+		})
 		if (response?.data) {
 			leftColumnUiStore.setContent(LeftColumnContent.Conversations)
 			navigate(ROUTES.chat(response.data.createConversation.conversationId))

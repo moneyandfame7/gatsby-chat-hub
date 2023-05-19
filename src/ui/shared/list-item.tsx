@@ -51,7 +51,15 @@ const ListItemContent: React.FC<ListItemTitleProps> = ({ isActive, title, other,
 	return (
 		<VStack align='start' flex={1}>
 			<HStack justify='space-between' w='full'>
-				<Text fontSize={16} fontWeight={500}>
+				<Text
+					fontSize={16}
+					fontWeight={500}
+					w='30px'
+					flex={1}
+					overflowX='hidden'
+					textOverflow='ellipsis'
+					whiteSpace='nowrap'
+				>
 					{title}
 				</Text>
 				<Text fontSize={12} color='text.secondary'>

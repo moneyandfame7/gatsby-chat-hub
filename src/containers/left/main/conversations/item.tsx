@@ -69,7 +69,6 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({ conversation
 		}
 		return c.createdAt
 	}
-	console.log({ conversation })
 	return (
 		<ConversationContextMenu containerRef={containerRef} conversation={conversation}>
 			<ListItem
