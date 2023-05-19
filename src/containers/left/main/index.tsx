@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 
+import { Box } from '@chakra-ui/react'
 import { AnimatePresence, Variants } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
@@ -34,7 +35,7 @@ export const LeftMain: React.FC<LeftMainProps> = observer(({ leftColumnUiStore }
 		<Animation.Scale display='flex' flexDirection='column' height='100%' pos='relative'>
 			<LeftMainHeader leftColumnUiStore={leftColumnUiStore} />
 			<Scrollable pos='relative' id='LeftWrapper' height='100%' width='100%' overflowY='scroll'>
-				<AnimatePresence initial>{renderContent()}</AnimatePresence>
+				<AnimatePresence initial={false}>{renderContent()}</AnimatePresence>
 			</Scrollable>
 		</Animation.Scale>
 	)

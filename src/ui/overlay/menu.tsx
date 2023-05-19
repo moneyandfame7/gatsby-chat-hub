@@ -13,7 +13,7 @@ export const StyledMenuList = chakra(MenuList, {
 		px: 1,
 		bg: 'rgb(255 255 255 / 73%)',
 		backdropFilter: 'auto',
-		backdropBlur: '10px',
+		backdropBlur: '4px',
 		borderRadius: 10,
 	},
 })
@@ -48,7 +48,7 @@ export const StyledMenu: React.FC<StyledMenuProps> = ({ placement, menuButton = 
 		setIsOpen(false)
 	}
 	return (
-		<Menu isLazy placement={placement} isOpen={isOpen} onOpen={handleOpen} onClose={handleClose}>
+		<Menu placement={placement} isOpen={isOpen} onOpen={handleOpen} onClose={handleClose}>
 			{menuButton}
 
 			<Portal>

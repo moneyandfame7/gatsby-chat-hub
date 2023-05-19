@@ -1,8 +1,8 @@
 /* lib  */
 import React from 'react'
 
-import { CircularProgress, CircularProgressProps } from '@chakra-ui/react'
+import { CircularProgress, CircularProgressProps, Spinner, SpinnerProps } from '@chakra-ui/react'
 
-export const SecondaryLoader: React.FC<CircularProgressProps> = ({ ...props }) => {
-	return <CircularProgress isIndeterminate color='purple' trackColor='none' size='20px' {...props} />
+export const SecondaryLoader: React.FC<SpinnerProps> = ({ ...props }) => {
+	return <Spinner speed='0.8s' thickness='1.5px' color='#FDD764' size='md' {...props} />
 }

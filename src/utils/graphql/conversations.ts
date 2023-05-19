@@ -1,6 +1,8 @@
 import { gql } from '@apollo/client'
 import { DocumentNode } from 'graphql'
 
+import { AvatarVariants } from '@services/actions/ui/conversations'
+
 import type { NullableField } from '@utils/types'
 
 /**
@@ -23,6 +25,7 @@ export interface Conversation {
 	createdAt: Date
 	name: string
 	description?: string
+	avatarVariant?: AvatarVariants
 	/* Count of unread messages */
 	unreadMessages: number
 	participants: Participant[]
@@ -45,6 +48,7 @@ export const CONVERSATION_FRAGMENT: DocumentNode = gql`
 		createdAt
 		name
 		description
+		avatarVariant
 		lastMessage {
 			text
 			updatedAt

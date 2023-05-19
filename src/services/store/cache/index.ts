@@ -9,15 +9,10 @@ import { Conversation, Participant } from '@utils/graphql/conversations'
 
 import type { User } from '../user/type'
 
-interface Message {}
-
 interface GlobalCache {
 	currentUser?: User
 	recentSearchedUsers: Participant[]
 	conversations: Conversation[]
-	messages?: {
-		byChatId?: Record<string, Message>
-	}
 }
 
 const initialState: GlobalCache = {
@@ -25,6 +20,10 @@ const initialState: GlobalCache = {
 	conversations: [],
 }
 const MAX_LENGTH = 20
+
+export const selectConversationById = (id: string) => (state: GlobalCache) =>
+	state.conversations.find((c) => c.id === id)
+
 export class CacheStore {
 	public globalCache: GlobalCache = initialState
 
@@ -60,7 +59,8 @@ export class CacheStore {
 		this.globalCache.conversations = payload
 	}
 
-	public getGlobalCache = () => {
-		return toJS(this.globalCache)
+	public updateConversationById(payload: Conversation) {
+		const withoutUpdated = this.globalCache.conversations.filter((c) => c.id !== payload.id)
+		this.globalCache.conversations = [...withoutUpdated, payload]
 	}
 }

@@ -7,18 +7,22 @@ import { Avatar, Box, CircularProgress, HStack, IconButton, MenuButton, Text, VS
 import { useLocation } from '@reach/router'
 import { MdOutlineMoreVert } from 'react-icons/md'
 
+import { useConversationAvatar } from '@services/actions/ui/conversations'
 import { useIsMobileScreen } from '@services/hooks'
+import { useStores } from '@services/store'
 
 import { StyledMenu, StyledMenuItem } from '@ui/overlay'
+import { ListItemAvatar } from '@ui/shared/list-item'
 
 import { Conversation } from '@utils/graphql/conversations'
 
 import { ConversationContext } from '../layout'
 
 interface MessagesHeaderProps {
-	conversation?: Conversation
+	conversation: Conversation
 }
 export const ConversationHeader: FC<MessagesHeaderProps> = ({ conversation }) => {
+	const { userStore } = useStores()
 	const isMobileScreen = useIsMobileScreen()
 	const location = useLocation()
 	const { onConversationClose, toggleInfo } = useContext(ConversationContext)
@@ -37,6 +41,8 @@ export const ConversationHeader: FC<MessagesHeaderProps> = ({ conversation }) =>
 			return 'Last seen in'
 		}
 	}, [conversation])
+
+	const conversationAvatar = useConversationAvatar(conversation)
 	return (
 		<HStack
 			bg='white'
@@ -68,10 +74,11 @@ export const ConversationHeader: FC<MessagesHeaderProps> = ({ conversation }) =>
 					<Box flex={1}>
 						<HStack cursor='pointer' onClick={toggleInfo} width='max-content'>
 							{/* @todo переробити avatar */}
-							<Avatar src={conversation.participants[0].photo} />
+							<ListItemAvatar {...conversationAvatar} />
 							<VStack align='start'>
 								<Text fontSize='md' fontWeight={500} color='text.primary'>
-									{conversation?.participants[0].username}
+									{conversation.name ||
+										conversation.participants.filter((p) => p.id !== userStore.user?.id)[0].username}
 								</Text>
 								{conversation?.participants && (
 									<Text fontSize='xs' m='0 !important' color='text.secondary' fontWeight={500}>

@@ -21,6 +21,8 @@ import { ConversationsTabs } from './tabs'
 
 export const Conversations: React.FC = observer(() => {
 	const { cacheStore } = useStores()
+	const [conversations, setConversations] = useState<Conversation[]>([])
+
 	const {
 		data: all,
 		loading: allLoading,
@@ -44,18 +46,26 @@ export const Conversations: React.FC = observer(() => {
 			},
 		})
 	}
+
 	useEffect(() => {
+		const fromCache = cacheStore.selectCache((cache) => cache.conversations)
+		console.log({ fromCache })
+		setConversations(fromCache)
 		subscribeToNewConversations()
 	}, [])
 
+	useEffect(() => {
+		if (all?.conversations) {
+			const fetched = all?.conversations
+			console.log({ fetched })
+			setConversations(fetched)
+			cacheStore.updateConversations(fetched)
+		}
+	}, [all?.conversations])
+
 	return (
 		<Animation.Scale left={0} top={0} bottom={0} pos='absolute' width='100%'>
-			<ConversationsTabs
-				all={all?.conversations}
-				allLoading={allLoading}
-				unread={all?.conversations}
-				unreadLoading={allLoading}
-			/>
+			<ConversationsTabs all={conversations} allLoading={allLoading} />
 		</Animation.Scale>
 	)
 })

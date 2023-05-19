@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { CSSProperties } from 'react'
 
 import { navigate } from 'gatsby'
 
-import { Avatar, Badge, Checkbox, Divider, HStack, StackProps, Text, VStack } from '@chakra-ui/react'
+import { Avatar, AvatarProps, Badge, Checkbox, Divider, HStack, StackProps, Text, VStack } from '@chakra-ui/react'
 import { useLocation } from '@reach/router'
 import { MotionConfig } from 'framer-motion'
 
@@ -34,10 +34,12 @@ const ListItemWrapper: React.FC<ListItemWrapperProps> = ({ isActive, to, isHover
 }
 
 interface ListItemAvatarProps {
-	src: string
+	src?: string
+	name?: string
+	background?: AvatarProps['background']
 }
-export const ListItemAvatar: React.FC<ListItemAvatarProps> = ({ src }) => {
-	return <Avatar pointerEvents='none' src={src} />
+export const ListItemAvatar: React.FC<ListItemAvatarProps> = ({ src, name, background }) => {
+	return <Avatar pointerEvents='none' src={src} background={background} name={name} />
 }
 
 interface ListItemTitleProps {
@@ -92,7 +94,7 @@ const ListItemContent: React.FC<ListItemTitleProps> = ({ isActive, title, other,
 }
 interface ListItemProps {
 	to?: string
-	avatar: string
+	avatar: ListItemAvatarProps
 	title: string
 	subtitle?: string
 	date?: string
@@ -117,7 +119,7 @@ export const ListItem: React.FC<ListItemProps & StackProps> = ({
 		<ListItemWrapper to={to} isActive={isActive} isHoverable={isHoverable} {...props}>
 			{withCheckbox && <Checkbox zIndex={-1} isChecked={isChecked} />}
 			<HStack w='full'>
-				<ListItemAvatar src={avatar} />
+				<ListItemAvatar {...avatar} />
 				<ListItemContent isActive={isActive} title={title} subtitle={subtitle} date={date} />
 			</HStack>
 		</ListItemWrapper>

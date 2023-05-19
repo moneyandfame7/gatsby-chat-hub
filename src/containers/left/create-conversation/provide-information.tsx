@@ -64,31 +64,40 @@ export const ProvideInformation: React.FC<ProvideInformationProps & LeftColumnUI
 					Provide information
 				</Text>
 				<AnimatePresence initial={false}>
-					{name.length > 0 && <CreateConversationGoNext onClick={handleSubmit} />}
+					{participants.length > 1 && name.length === 0 ? null : <CreateConversationGoNext onClick={handleSubmit} />}
 				</AnimatePresence>
 			</HStack>
-			<VStack justifyContent='space-around' height='calc(100% - 40px)'>
-				<VStack gap={2}>
-					<Input variant='outline' placeholder='Conversation name' size='lg' onChange={handleChangeName} />
-					<VStack w='full' gap={0.1}>
-						<Input
-							variant='outline'
-							placeholder='Description ( optional )'
-							size='lg'
-							onChange={handleChangeDescription}
-						/>
-						<Text color='text.secondary' fontSize='14px'>
-							You can provide an optional description for your channel.
-						</Text>
+			<VStack justifyContent={participants.length < 2 ? 'start' : 'space-around'} height='calc(100% - 40px)'>
+				{participants.length > 1 && (
+					<VStack gap={2}>
+						<Input variant='outline' placeholder='Conversation name' size='lg' onChange={handleChangeName} />
+						<VStack w='full' gap={0.1}>
+							<Input
+								variant='outline'
+								placeholder='Description ( optional )'
+								size='lg'
+								onChange={handleChangeDescription}
+							/>
+							<Text color='text.secondary' fontSize='14px'>
+								You can provide an optional description for your channel.
+							</Text>
+						</VStack>
 					</VStack>
-				</VStack>
+				)}
 				<Box w='full'>
 					<Text fontWeight={500} color='text.secondary' my={2}>
 						{participants.length} {participants.length > 1 ? 'members' : 'member'}{' '}
 					</Text>
 					<Scrollable height='430px' width='100%'>
 						{participants.map((p) => (
-							<ListItem key={p.id} avatar={p.photo} title={p.username} isHoverable={false} />
+							<ListItem
+								key={p.id}
+								avatar={{
+									src: p.photo,
+								}}
+								title={p.username}
+								isHoverable={false}
+							/>
 						))}
 					</Scrollable>
 				</Box>

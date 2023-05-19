@@ -5,6 +5,8 @@ import { HStack } from '@chakra-ui/react'
 import { AnimatePresence } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
+import { client, useApolloNetworkStatus } from '@services/apollo/clients'
+import useNetworkStatus from '@services/hooks/useNetworkStatus'
 import { useStores } from '@services/store'
 import { LeftColumnContent } from '@services/store/ui/left-column'
 
@@ -45,6 +47,9 @@ export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ leftCol
 		}
 	}
 
+	const isLoading = useApolloNetworkStatus().numPendingQueries > 0
+	const isOnline = useNetworkStatus()
+
 	const handleLogoutSelect = async () => {
 		await authorizationStore.logout()
 	}
@@ -70,7 +75,8 @@ export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ leftCol
 		<HStack justify='space-between' px={2} py={3}>
 			<AnimatePresence initial={false}>{renderContentActionButton()}</AnimatePresence>
 			<SearchInput
-				isLoading={searchStore.isLoading}
+				isLoading={isLoading || !isOnline}
+				spinnerColor={isLoading ? 'primary' : 'yellow'}
 				isFocused={isSearchInputFocused}
 				handleFocus={handleFocusInput}
 				handleChange={handleSearchQuery}

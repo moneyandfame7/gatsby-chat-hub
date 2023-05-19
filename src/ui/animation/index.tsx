@@ -30,11 +30,11 @@ const ANIMATION_VARIANTS: Record<AnimationVariants, Variants> = {
 	FADE: {
 		open: {
 			opacity: 1,
-			transition: { duration: 0.1 },
+			transition: { duration: 0.2 },
 		},
 		hidden: {
 			opacity: 0,
-			transition: { duration: 0.1 },
+			transition: { duration: 0.2 },
 		},
 	},
 	SLIDE: {

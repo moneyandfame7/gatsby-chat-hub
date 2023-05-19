@@ -45,7 +45,9 @@ const SearchList: React.FC<
 				>
 					<ListItem
 						subtitle='last seen in'
-						avatar={u.photo}
+						avatar={{
+							src: u.photo,
+						}}
 						title={u.username}
 						withCheckbox
 						isChecked={participants.some((p) => p.id === u.id)}
