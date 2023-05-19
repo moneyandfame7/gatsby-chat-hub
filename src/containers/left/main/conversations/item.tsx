@@ -69,6 +69,7 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({ conversation
 		}
 		return c.createdAt
 	}
+	console.log({ conversation })
 	return (
 		<ConversationContextMenu containerRef={containerRef} conversation={conversation}>
 			<ListItem
@@ -76,7 +77,7 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({ conversation
 				date={formatDate(getDateForConversation(conversation))}
 				key={conversation.id}
 				avatar={conversation.participants[0].photo}
-				title={conversation.participants[0].username}
+				title={conversation.name}
 				to={ROUTES.chat(conversation.id)}
 				subtitle='Lorem ipsum dorem lasldlasdlalsdlasldaksdfkaskdfkaskdfkaksdfk'
 			/>

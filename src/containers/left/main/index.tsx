@@ -31,21 +31,11 @@ export const LeftMain: React.FC<LeftMainProps> = observer(({ leftColumnUiStore }
 	}, [leftColumnUiStore.content])
 
 	return (
-		<Animation
-			// variants={SCALE_ANIMATION}
-			initial='hidden'
-			animate='open'
-			exit='hidden'
-			// animate={leftColumnUiStore.contentGroup !== ContentGroup.Main}
-			display='flex'
-			flexDirection='column'
-			height='100%'
-			pos='relative'
-		>
+		<Animation.Scale display='flex' flexDirection='column' height='100%' pos='relative'>
 			<LeftMainHeader leftColumnUiStore={leftColumnUiStore} />
 			<Scrollable pos='relative' id='LeftWrapper' height='100%' width='100%' overflowY='scroll'>
 				<AnimatePresence initial>{renderContent()}</AnimatePresence>
 			</Scrollable>
-		</Animation>
+		</Animation.Scale>
 	)
 })

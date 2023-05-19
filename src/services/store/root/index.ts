@@ -13,8 +13,8 @@ export class RootStore implements IRootStore {
 	public constructor() {
 		this.userStore = new UserStore()
 		this.authorizationStore = new AuthorizationStore(this)
-		this.searchStore = new SearchStore()
 		this.cacheStore = new CacheStore()
+		this.searchStore = new SearchStore(this)
 	}
 }
 

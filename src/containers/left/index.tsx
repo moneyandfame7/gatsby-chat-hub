@@ -21,11 +21,11 @@ export const LeftColumn: React.FC = observer(() => {
 	function renderContent() {
 		switch (leftColumnUiStore.contentGroup) {
 			case ContentGroup.Settings:
-				return <Settings leftColumnUiStore={leftColumnUiStore} />
+				return <Settings key={ContentGroup.Settings} leftColumnUiStore={leftColumnUiStore} />
 			case ContentGroup.NewConversation:
-				return <CreateConversation leftColumnUiStore={leftColumnUiStore} />
+				return <CreateConversation key={ContentGroup.NewConversation} leftColumnUiStore={leftColumnUiStore} />
 			default:
-				return <LeftMain leftColumnUiStore={leftColumnUiStore} />
+				return <LeftMain key={ContentGroup.Main} leftColumnUiStore={leftColumnUiStore} />
 		}
 	}
 
@@ -49,7 +49,15 @@ export const LeftColumn: React.FC = observer(() => {
 		}
 	}, [])
 	return (
-		<Box bg='white' backdropFilter='auto' backdropBlur='10px' height='100vh' w={{ base: 'full', sm: '390px' }}>
+		<Box
+			bg='white'
+			backdropFilter='auto'
+			backdropBlur='10px'
+			height='100vh'
+			w={{ base: 'full', sm: '390px' }}
+			overflow='hidden'
+			position='relative'
+		>
 			<AnimatePresence initial={false}>{renderContent()}</AnimatePresence>
 		</Box>
 	)

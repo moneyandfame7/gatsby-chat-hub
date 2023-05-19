@@ -19,34 +19,32 @@ const ANIMATION_VARIANTS: Record<AnimationVariants, Variants> = {
 		open: {
 			scale: 1,
 			opacity: 1,
-			transition: { duration: 0.1 },
+			transition: { duration: 0.2 },
 		},
 		hidden: {
 			opacity: 0,
-			scale: 0.9,
-			transition: { duration: 0.1 },
+			scale: 0.5,
+			transition: { duration: 0.2 },
 		},
 	},
 	FADE: {
 		open: {
 			opacity: 1,
-			scale: 1,
 			transition: { duration: 0.1 },
 		},
 		hidden: {
 			opacity: 0,
-			scale: 0.8,
 			transition: { duration: 0.1 },
 		},
 	},
 	SLIDE: {
 		hidden: (d: AnimationDirection) => ({
 			x: d === 'left' ? '-100%' : '100%',
-			transition: { duration: 0.25, ease: 'easeInOut' },
+			transition: { duration: 0.2, ease: 'easeInOut' },
 		}),
 		open: (d: AnimationDirection) => ({
 			x: 0,
-			transition: { duration: 0.25, ease: 'easeInOut' },
+			transition: { duration: 0.2, ease: 'easeInOut' },
 		}),
 	},
 	ROTATE: {
