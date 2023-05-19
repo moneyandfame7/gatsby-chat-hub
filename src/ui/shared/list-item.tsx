@@ -2,26 +2,29 @@ import React from 'react'
 
 import { navigate } from 'gatsby'
 
-import { Avatar, Badge, Divider, HStack, StackProps, Text, VStack } from '@chakra-ui/react'
+import { Avatar, Badge, Checkbox, Divider, HStack, StackProps, Text, VStack } from '@chakra-ui/react'
 import { useLocation } from '@reach/router'
+import { MotionConfig } from 'framer-motion'
 
 interface ListItemWrapperProps extends StackProps {
-	to: string
+	to?: string
 	children: React.ReactNode
-	isActive: boolean
+	isActive?: boolean
+	isHoverable: boolean
 }
-const ListItemWrapper: React.FC<ListItemWrapperProps> = ({ isActive, to, ...props }) => {
+const ListItemWrapper: React.FC<ListItemWrapperProps> = ({ isActive, to, isHoverable, ...props }) => {
 	const { pathname, hash } = useLocation()
 	return (
 		<HStack
 			bg={isActive ? 'purple.200' : 'none'}
-			_hover={{ bg: isActive ? 'purple.200' : 'gray.50' }}
-			cursor='pointer'
+			_hover={{ bg: isHoverable ? (isActive ? 'purple.200' : 'blackAlpha.50') : 'initial' }}
+			cursor={isHoverable ? 'pointer' : 'default'}
 			p='9px'
 			w='full'
 			userSelect='none'
+			gap={5}
 			onClick={(e) => {
-				if (pathname + hash !== to) {
+				if (to && pathname + hash !== to) {
 					navigate(to)
 				}
 			}}
@@ -34,21 +37,21 @@ interface ListItemAvatarProps {
 	src: string
 }
 export const ListItemAvatar: React.FC<ListItemAvatarProps> = ({ src }) => {
-	return <Avatar src={src} />
+	return <Avatar pointerEvents='none' src={src} />
 }
 
 interface ListItemTitleProps {
-	subtitle: string
+	subtitle?: string
 	date?: string
 	title: string
 	other?: string
-	isActive: boolean
+	isActive?: boolean
 }
 const ListItemContent: React.FC<ListItemTitleProps> = ({ isActive, title, other, subtitle, date }) => {
 	return (
 		<VStack align='start' flex={1}>
 			<HStack justify='space-between' w='full'>
-				<Text fontSize={16} fontWeight={600}>
+				<Text fontSize={16} fontWeight={500}>
 					{title}
 				</Text>
 				<Text fontSize={12} color='text.secondary'>
@@ -56,40 +59,59 @@ const ListItemContent: React.FC<ListItemTitleProps> = ({ isActive, title, other,
 				</Text>
 			</HStack>
 			<HStack w='full'>
-				<Text
-					w='30px'
-					overflowX='hidden'
-					textOverflow='ellipsis'
-					flex='1'
-					fontSize={14}
-					textColor='text.secondary'
-					whiteSpace='nowrap'
-				>
-					{subtitle}
-				</Text>
+				{subtitle && (
+					<Text
+						w='30px'
+						overflowX='hidden'
+						textOverflow='ellipsis'
+						flex='1'
+						fontSize={14}
+						textColor='text.secondary'
+						whiteSpace='nowrap'
+					>
+						{subtitle}
+					</Text>
+				)}
 				{other && (
 					<Badge transition='all 0.3s ease' borderTopRadius={2} borderRadius='0.75rem'>
 						{other}
 					</Badge>
 				)}
 			</HStack>
-			<Divider borderColor={isActive ? 'transparent' : 'inherit'} />
+			{typeof isActive !== 'undefined' && <Divider borderColor={isActive ? 'transparent' : 'inherit'} />}
 		</VStack>
 	)
 }
 interface ListItemProps {
-	to: string
+	to?: string
 	avatar: string
 	title: string
-	subtitle: string
+	subtitle?: string
 	date?: string
-	isActive: boolean
+	isActive?: boolean
+	withCheckbox?: boolean
+	isChecked?: boolean
+	isHoverable?: boolean
 }
-export const ListItem: React.FC<ListItemProps> = ({ isActive, avatar, title, subtitle, date, to }) => {
+export const ListItem: React.FC<ListItemProps & StackProps> = ({
+	isActive,
+	avatar,
+	title,
+	subtitle,
+	date,
+	to,
+	withCheckbox = false,
+	isChecked = false,
+	isHoverable = true,
+	...props
+}) => {
 	return (
-		<ListItemWrapper to={to} isActive={isActive}>
-			<ListItemAvatar src={avatar} />
-			<ListItemContent isActive={isActive} title={title} subtitle={subtitle} date={date} />
+		<ListItemWrapper to={to} isActive={isActive} isHoverable={isHoverable} {...props}>
+			{withCheckbox && <Checkbox zIndex={-1} isChecked={isChecked} />}
+			<HStack w='full'>
+				<ListItemAvatar src={avatar} />
+				<ListItemContent isActive={isActive} title={title} subtitle={subtitle} date={date} />
+			</HStack>
 		</ListItemWrapper>
 	)
 }

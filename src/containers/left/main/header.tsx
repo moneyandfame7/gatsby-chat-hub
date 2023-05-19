@@ -23,7 +23,6 @@ export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ leftCol
 			if (!Boolean(query)) {
 				return
 			}
-
 			if (leftColumnUiStore.content === LeftColumnContent.Contacts) {
 				searchStore.executeSearchQuery({ type: 'contacts', query })
 				return

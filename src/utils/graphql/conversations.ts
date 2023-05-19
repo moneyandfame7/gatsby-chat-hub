@@ -21,6 +21,8 @@ export interface Conversation {
 	id: string
 	lastMessage: NullableField<LastMessage>
 	createdAt: Date
+	name: string
+	description?: string
 	/* Count of unread messages */
 	unreadMessages: number
 	participants: Participant[]
@@ -41,6 +43,8 @@ export const CONVERSATION_FRAGMENT: DocumentNode = gql`
 		id
 		unreadMessages
 		createdAt
+		name
+		description
 		lastMessage {
 			text
 			updatedAt
@@ -118,11 +122,15 @@ export interface CreateConversationResponse {
 	}
 }
 export interface CreateConversationInput {
-	participantsIds: string[]
+	createConversationInput: {
+		participantsIds: string[]
+		name: string
+		description?: string
+	}
 }
 export const CREATE_CONVERSATION: DocumentNode = gql`
-	mutation CreateConversation($participantsIds: [String]) {
-		createConversation(participantsIds: $participantsIds) {
+	mutation CreateConversation($createConversationInput: CreateConversationInput) {
+		createConversation(createConversationInput: $createConversationInput) {
 			conversationId
 		}
 	}

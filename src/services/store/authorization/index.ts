@@ -84,7 +84,6 @@ export class AuthorizationStore implements IAuthorizationStore {
 		})
 		if (data) {
 			this.updateCredentials(data.login)
-			this.rootStore.cacheStore.update({ currentUser: data.login.user })
 			return { success: true, error: null }
 		}
 		return { success: false, error: 'Erorr with google authorization' }

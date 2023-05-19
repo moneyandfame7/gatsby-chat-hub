@@ -1,10 +1,11 @@
-import { makeAutoObservable } from 'mobx'
+import { uniqBy } from 'lodash'
+import { configure, makeAutoObservable, toJS } from 'mobx'
 import { makePersistable } from 'mobx-persist-store'
 
 import { client } from '@services/apollo/clients'
 
 import { hasWindow } from '@utils/functions'
-import { Conversation } from '@utils/graphql/conversations'
+import { Conversation, Participant } from '@utils/graphql/conversations'
 
 import type { User } from '../user/type'
 
@@ -12,40 +13,54 @@ interface Message {}
 
 interface GlobalCache {
 	currentUser?: User
-	users?: {
-		recentSearchedById?: string[]
-		byId: Record<string, User>
-		data: User[]
-	}
-	conversations?: {
-		byId?: Record<string, Conversation>
-		data?: Conversation[]
-	}
+	recentSearchedUsers: Participant[]
+	conversations: Conversation[]
 	messages?: {
 		byChatId?: Record<string, Message>
 	}
 }
 
+const initialState: GlobalCache = {
+	recentSearchedUsers: [],
+	conversations: [],
+}
+const MAX_LENGTH = 20
 export class CacheStore {
-	public globalCache: GlobalCache | Record<string, never> = {}
+	public globalCache: GlobalCache = initialState
+
 	public constructor() {
 		makeAutoObservable(this, {}, { autoBind: true })
 
+		configure({
+			useProxies: 'never',
+		})
 		makePersistable(this, {
 			name: 'ch-global-cache',
 			properties: ['globalCache'],
 			storage: hasWindow() ? window.localStorage : undefined,
 		})
 	}
+
 	public clear = async () => {
 		await client.clearStore()
-		this.globalCache = {}
+		this.globalCache = initialState
 	}
 
-	public update = async (state: Partial<GlobalCache>) => {
-		this.globalCache = {
-			...this.globalCache,
-			...state,
-		}
+	public selectCache = <T>(selector: (cache: GlobalCache) => T) => {
+		return selector(toJS(this.globalCache))
+	}
+
+	public updateRecentUsers(payload: Participant[]) {
+		const merged = [...payload, ...this.globalCache.recentSearchedUsers]
+		const sliced = merged.slice(0, MAX_LENGTH)
+		this.globalCache.recentSearchedUsers = uniqBy(sliced, 'id')
+	}
+
+	public updateConversations(payload: Conversation[]) {
+		this.globalCache.conversations = payload
+	}
+
+	public getGlobalCache = () => {
+		return toJS(this.globalCache)
 	}
 }

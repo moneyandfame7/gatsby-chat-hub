@@ -29,54 +29,33 @@ export const Conversations: React.FC = observer(() => {
 		fetchPolicy: 'cache-and-network',
 	})
 
-	const [data, setData] = useState<Conversation[]>([])
+	const subscribeToNewConversations = () => {
+		subscribeToMore({
+			document: CONVERSATION_CREATED_SUBSCRIPTION,
+			updateQuery: (prev, { subscriptionData }: { subscriptionData: ConversationCreatedSubscriptionData }) => {
+				if (!subscriptionData.data) {
+					return prev
+				}
+				const newConversation = subscriptionData.data.conversationCreated
 
+				return Object.assign({}, prev, {
+					conversations: [newConversation, ...prev.conversations],
+				})
+			},
+		})
+	}
 	useEffect(() => {
-		const cachedData = cacheStore.globalCache.conversations?.data
-
-		if (cachedData) {
-			setData(cachedData)
-		}
-		// eslint-disable-next-line @typescript-eslint/no-extra-semi
+		subscribeToNewConversations()
 	}, [])
-
-	useEffect(() => {
-		if (data && all?.conversations && JSON.stringify(all.conversations) !== JSON.stringify(data)) {
-			console.log('cache not equal')
-			cacheStore.update({ conversations: { data: all.conversations } })
-			setData(all.conversations)
-		}
-	}, [data, all?.conversations])
-	const { data: unread, loading: unreadLoading } = useQuery<ConversationsData>(CONVERSATIONS_QUERY, {})
-
-	// const subscribeToNewConversations = () => {
-	// 	subscribeToMore({
-	// 		document: CONVERSATION_CREATED_SUBSCRIPTION,
-	// 		updateQuery: (prev, { subscriptionData }: { subscriptionData: ConversationCreatedSubscriptionData }) => {
-	// 			if (!subscriptionData.data) {
-	// 				return prev
-	// 			}
-	// 			const newConversation = subscriptionData.data.conversationCreated
-
-	// 			return Object.assign({}, prev, {
-	// 				conversations: [newConversation, ...prev.conversations],
-	// 			})
-	// 		},
-	// 	})
-	// }
-
-	// /**
-	//  * викликати subscriptions on mount
-	//  */
-	// useEffect(() => {
-	// 	subscribeToNewConversations()
-	// }, [])
 
 	return (
 		<Animation.Scale left={0} top={0} bottom={0} pos='absolute' width='100%'>
-			{data.length > 0 && (
-				<ConversationsTabs all={data} allLoading={false} unread={data} unreadLoading={unreadLoading} />
-			)}
+			<ConversationsTabs
+				all={all?.conversations}
+				allLoading={allLoading}
+				unread={all?.conversations}
+				unreadLoading={allLoading}
+			/>
 		</Animation.Scale>
 	)
 })
