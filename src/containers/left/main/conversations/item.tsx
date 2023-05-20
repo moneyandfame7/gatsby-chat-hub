@@ -6,6 +6,7 @@ import { MdOutlineMarkChatRead, MdOutlineMarkChatUnread } from 'react-icons/md'
 import { RxOpenInNewWindow } from 'react-icons/rx'
 
 import { useConversationAvatar } from '@services/actions/ui/conversations'
+import { useIsMobileScreen } from '@services/hooks'
 import { useStores } from '@services/store'
 
 import { ContextMenu, ContextMenuItem } from '@ui/overlay'
@@ -74,10 +75,11 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({ conversation
 		return c.createdAt
 	}
 	const avatar = useConversationAvatar(conversation)
+	const isMobileScreen = useIsMobileScreen()
 	return (
 		<ConversationContextMenu containerRef={containerRef} conversation={conversation}>
 			<ListItem
-				isActive={activeConversationId === conversation.id}
+				isActive={!isMobileScreen && activeConversationId === conversation.id}
 				date={formatDate(getDateForConversation(conversation))}
 				key={conversation.id}
 				avatar={avatar}

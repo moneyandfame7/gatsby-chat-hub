@@ -1,20 +1,30 @@
 /* lib  */
 import React, { useEffect } from 'react'
 
-import { Box } from '@chakra-ui/react'
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence, Variants, motion } from 'framer-motion'
 import { observer, useLocalObservable } from 'mobx-react-lite'
 
+import { useIsMobileScreen } from '@services/hooks'
 import { ContentGroup, LeftColumnContent, LeftColumnUiStore } from '@services/store/ui/left-column'
 
 import { LeftMain } from '@containers/left/main'
 import { Settings } from '@containers/left/settings'
 
-import { isChatOpen } from '@utils/functions'
+import { isChatOpen, useIsChatOpen } from '@utils/functions'
 
 /* ui  */
 import { CreateConversation } from './create-conversation'
 
+const TEST: Variants = {
+	hidden: {
+		x: '-10%',
+		transition: { duration: 0.2, ease: 'easeInOut' },
+	},
+	open: {
+		x: 0,
+		transition: { duration: 0.2, ease: 'easeInOut' },
+	},
+}
 export const LeftColumn: React.FC = observer(() => {
 	const leftColumnUiStore = useLocalObservable(() => new LeftColumnUiStore())
 
@@ -48,17 +58,24 @@ export const LeftColumn: React.FC = observer(() => {
 			document.removeEventListener('keydown', handlePressEscape, true)
 		}
 	}, [])
+	const isMobileScreen = useIsMobileScreen()
+	const isChatActive = useIsChatOpen()
+
+	console.log({ isChatActive })
 	return (
-		<Box
-			bg='white'
-			backdropFilter='auto'
-			backdropBlur='10px'
-			height='100vh'
-			w={{ base: 'full', sm: '390px' }}
-			overflow='hidden'
-			position='relative'
+		<motion.div
+			variants={TEST}
+			initial='open'
+			animate={isMobileScreen && isChatActive ? 'hidden' : 'open'}
+			style={{
+				background: 'white',
+				height: '100vh',
+				width: isMobileScreen ? '100%' : '390px',
+				overflow: 'hidden',
+				position: 'relative',
+			}}
 		>
 			<AnimatePresence initial={false}>{renderContent()}</AnimatePresence>
-		</Box>
+		</motion.div>
 	)
 })

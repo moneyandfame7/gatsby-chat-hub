@@ -40,6 +40,7 @@ export const PARTICIPANT_FRAGMENT: DocumentNode = gql`
 		username
 	}
 `
+
 export const CONVERSATION_FRAGMENT: DocumentNode = gql`
 	${PARTICIPANT_FRAGMENT}
 	fragment ConversationFields on Conversation {
@@ -87,6 +88,11 @@ export const CONVERSATION_ID_QUERY: DocumentNode = gql`
 		conversation(id: $id) {
 			id
 			createdAt
+			name
+			createdAt
+			unreadMessages
+			avatarVariant
+			description
 			messages {
 				id
 				isRead

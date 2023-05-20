@@ -19,6 +19,9 @@ const ListItemWrapper: React.FC<ListItemWrapperProps> = ({ isActive, to, isHover
 			bg={isActive ? 'purple.200' : 'none'}
 			_hover={{ bg: isHoverable ? (isActive ? 'purple.200' : 'blackAlpha.50') : 'initial' }}
 			cursor={isHoverable ? 'pointer' : 'default'}
+			sx={{
+				'-webkit-tap-highlight-color': 'transparent',
+			}}
 			p='9px'
 			w='full'
 			userSelect='none'
