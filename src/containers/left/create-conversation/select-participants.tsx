@@ -1,7 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-import { ArrowRightIcon } from '@chakra-ui/icons'
-import { Center, HStack, IconButton, Input, InputGroup, InputRightElement, Text } from '@chakra-ui/react'
+import { Center, HStack, Input, InputGroup, InputRightElement, Text } from '@chakra-ui/react'
 import { AnimatePresence } from 'framer-motion'
 import { uniqBy } from 'lodash'
 import { observer } from 'mobx-react-lite'
@@ -9,20 +8,20 @@ import { observer } from 'mobx-react-lite'
 import { useSelectSearchUsers } from '@services/actions/search'
 import { LeftColumnContent, useStores } from '@services/store'
 
-import { Animation } from '@ui/animation'
-import { Scrollable } from '@ui/overlay'
-import { ListItem } from '@ui/shared/list-item'
-import { SecondaryLoader } from '@ui/shared/loaders'
+import { Animation } from '@components/animation'
+import { Scrollable } from '@components/overlay'
+import { ListItem } from '@components/shared/list-item'
+import { SecondaryLoader } from '@components/shared/loaders'
 
-import { LeftColumnUI } from '@containers/left/settings'
+import { WithLeftColumnStore } from '@containers/left/settings'
 
 import { Participant } from '@utils/graphql/conversations'
 import { PropsWithParticipants } from '@utils/types'
 
-import { CreateConversationGoNext } from '.'
 import { LeftGoBack } from '../go-back'
+import { CreateConversationGoNext } from './go-next-button'
 
-interface ConversationModalProps extends LeftColumnUI {
+interface ConversationModalProps extends WithLeftColumnStore {
 	participants: Participant[]
 	handleGoBack: () => void
 	selectParticipant: (p: Participant) => void
@@ -75,8 +74,12 @@ export const SelectParticipants: React.FC<ConversationModalProps> = observer(
 				searchStore.clear()
 			}
 		}, [newSearchResult])
+
 		const handleChangeUsername = async (e: React.ChangeEvent<HTMLInputElement>) => {
 			setUsername(e.currentTarget.value)
+		}
+		const handleGoNextStep = () => {
+			leftColumnUiStore.setContent(LeftColumnContent.NewConversationStep2)
 		}
 
 		useEffect(() => {
@@ -116,19 +119,15 @@ export const SelectParticipants: React.FC<ConversationModalProps> = observer(
 			}
 		}
 
-		const handleGoNextStep = () => {
-			leftColumnUiStore.setContent(LeftColumnContent.NewConversationStep2)
-		}
-
 		return (
-			<Animation.Scale height='100%' pos='absolute' left={0} top={0} bottom={0} width='100%'>
+			<Animation.Fade height='100%' pos='absolute' left={0} top={0} bottom={0} width='100%'>
 				<HStack p={4}>
 					<LeftGoBack onClick={handleGoBack} />
 					<Text flex={1} fontSize='xl' fontWeight={500}>
 						Add Participants
 					</Text>
 					<AnimatePresence initial={false}>
-						{participants.length > 0 && <CreateConversationGoNext onClick={handleGoNextStep} />}
+						{/* participants.length > 0 &&  */ <CreateConversationGoNext onClick={handleGoNextStep} />}
 					</AnimatePresence>
 				</HStack>
 				<InputGroup>
@@ -151,7 +150,7 @@ export const SelectParticipants: React.FC<ConversationModalProps> = observer(
 					</AnimatePresence>
 				</InputGroup>
 				{renderContent()}
-			</Animation.Scale>
+			</Animation.Fade>
 		)
 	}
 )

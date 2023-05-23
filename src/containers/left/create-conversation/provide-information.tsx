@@ -2,32 +2,32 @@ import React, { useState } from 'react'
 
 import { navigate } from 'gatsby'
 
-import { Box, FormControl, HStack, Input, Text, VStack } from '@chakra-ui/react'
+import { Box, HStack, Input, Text, VStack } from '@chakra-ui/react'
 import { AnimatePresence } from 'framer-motion'
 
 import { createConversation } from '@services/actions/api/conversations'
 import { LeftColumnContent, useStores } from '@services/store'
 
-import { Animation } from '@ui/animation'
-import { Scrollable } from '@ui/overlay'
-import { ListItem } from '@ui/shared/list-item'
+import { Animation } from '@components/animation'
+import { Scrollable } from '@components/overlay'
+import { ListItem } from '@components/shared/list-item'
 
 import { ROUTES } from '@utils/constants'
 import { PropsWithParticipants } from '@utils/types'
 
-import { CreateConversationGoNext } from '.'
 import { LeftGoBack } from '../go-back'
-import { LeftColumnUI } from '../settings'
+import { WithLeftColumnStore } from '../settings'
+import { CreateConversationGoNext } from './go-next-button'
 
 interface ProvideInformationProps extends PropsWithParticipants {
 	handleGoBack: () => void
 }
-export const ProvideInformation: React.FC<ProvideInformationProps & LeftColumnUI> = ({
+export const ProvideInformation: React.FC<ProvideInformationProps & WithLeftColumnStore> = ({
 	participants,
 	handleGoBack,
 	leftColumnUiStore,
 }) => {
-	const { userStore, authorizationStore } = useStores()
+	const { userStore, authorizationStore, cacheStore } = useStores()
 	const [name, setName] = useState<string>('')
 	const [description, setDescription] = useState<string>('')
 
@@ -52,12 +52,13 @@ export const ProvideInformation: React.FC<ProvideInformationProps & LeftColumnUI
 		})
 		if (response?.data) {
 			leftColumnUiStore.setContent(LeftColumnContent.Conversations)
+
 			navigate(ROUTES.chat(response.data.createConversation.conversationId))
 		}
 	}
 
 	return (
-		<Animation.Slide bg='white' height='100%' pos='absolute' top={0} left={0} bottom={0} w='full' zIndex={1} p={4}>
+		<Animation.Fade bg='white' height='100%' pos='absolute' top={0} left={0} bottom={0} w='full' zIndex={1} p={4}>
 			<HStack>
 				<LeftGoBack onClick={handleGoBack} />
 				<Text flex={1} fontSize='xl' fontWeight={500}>
@@ -102,6 +103,6 @@ export const ProvideInformation: React.FC<ProvideInformationProps & LeftColumnUI
 					</Scrollable>
 				</Box>
 			</VStack>
-		</Animation.Slide>
+		</Animation.Fade>
 	)
 }

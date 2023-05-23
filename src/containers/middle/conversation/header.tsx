@@ -11,12 +11,10 @@ import { useConversationAvatar } from '@services/actions/ui/conversations'
 import { useIsMobileScreen } from '@services/hooks'
 import { useStores } from '@services/store'
 
-import { StyledMenu, StyledMenuItem } from '@ui/overlay'
-import { ListItemAvatar } from '@ui/shared/list-item'
+import { StyledMenu, StyledMenuItem } from '@components/overlay'
+import { ListItemAvatar } from '@components/shared/list-item'
 
 import { Conversation } from '@utils/graphql/conversations'
-
-import { ConversationContext } from '../layout'
 
 interface MessagesHeaderProps {
 	conversation: Conversation
@@ -25,12 +23,9 @@ export const ConversationHeader: FC<MessagesHeaderProps> = ({ conversation }) =>
 	const { userStore } = useStores()
 	const isMobileScreen = useIsMobileScreen()
 	const location = useLocation()
-	const { onConversationClose, toggleInfo } = useContext(ConversationContext)
+
 	const onGoBackClick = () => {
-		onConversationClose()
-		setTimeout(() => {
-			navigate(location.pathname)
-		}, 100)
+		navigate(location.pathname)
 	}
 
 	const showMembersStatus = useCallback(() => {
@@ -72,7 +67,7 @@ export const ConversationHeader: FC<MessagesHeaderProps> = ({ conversation }) =>
 			{conversation ? (
 				<>
 					<Box flex={1}>
-						<HStack cursor='pointer' onClick={toggleInfo} width='max-content'>
+						<HStack cursor='pointer' /*  onClick={toggleInfo} */ width='max-content'>
 							{/* @todo переробити avatar */}
 							<ListItemAvatar {...conversationAvatar} />
 							<VStack align='start'>

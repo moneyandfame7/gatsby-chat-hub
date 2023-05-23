@@ -9,8 +9,8 @@ import { useConversationAvatar } from '@services/actions/ui/conversations'
 import { useIsMobileScreen } from '@services/hooks'
 import { useStores } from '@services/store'
 
-import { ContextMenu, ContextMenuItem } from '@ui/overlay'
-import { ListItem } from '@ui/shared/list-item'
+import { ContextMenu, ContextMenuItem } from '@components/overlay'
+import { ListItem } from '@components/shared/list-item'
 
 import { ROUTES } from '@utils/constants'
 import { formatDate } from '@utils/functions'

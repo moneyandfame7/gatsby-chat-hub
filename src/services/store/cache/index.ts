@@ -1,5 +1,5 @@
 import { uniqBy } from 'lodash'
-import { configure, makeAutoObservable, toJS } from 'mobx'
+import { makeAutoObservable, toJS } from 'mobx'
 import { makePersistable } from 'mobx-persist-store'
 
 import { client } from '@services/apollo/clients'
@@ -29,10 +29,6 @@ export class CacheStore {
 
 	public constructor() {
 		makeAutoObservable(this, {}, { autoBind: true })
-
-		configure({
-			useProxies: 'never',
-		})
 		makePersistable(this, {
 			name: 'ch-global-cache',
 			properties: ['globalCache'],
@@ -40,12 +36,12 @@ export class CacheStore {
 		})
 	}
 
-	public clear = async () => {
+	public async clear() {
 		await client.clearStore()
 		this.globalCache = initialState
 	}
 
-	public selectCache = <T>(selector: (cache: GlobalCache) => T) => {
+	public selectCache<T>(selector: (cache: GlobalCache) => T) {
 		return selector(toJS(this.globalCache))
 	}
 

@@ -4,8 +4,8 @@ import { Input, InputGroup, InputLeftElement, InputRightElement } from '@chakra-
 import { AnimatePresence } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
-import { IconButton } from '@ui/shared/buttons'
-import { Loader, SecondaryLoader } from '@ui/shared/loaders'
+import { IconButton } from '@components/shared/buttons'
+import { Loader, SecondaryLoader } from '@components/shared/loaders'
 
 import { Animation } from '../animation'
 import { CloseIcon, SearchIcon } from '../icons'

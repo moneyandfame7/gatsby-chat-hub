@@ -10,13 +10,13 @@ import useNetworkStatus from '@services/hooks/useNetworkStatus'
 import { useStores } from '@services/store'
 import { LeftColumnContent } from '@services/store/ui/left-column'
 
-import { SearchInput } from '@ui/shared/search-input'
+import { SearchInput } from '@components/shared/search-input'
 
 import { LeftGoBack } from '../go-back'
 import { LeftDropdownMenu } from '../menu'
-import { LeftColumnUI } from '../settings'
+import { WithLeftColumnStore } from '../settings'
 
-interface LeftMainHeaderProps extends LeftColumnUI {}
+interface LeftMainHeaderProps extends WithLeftColumnStore {}
 export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ leftColumnUiStore }) => {
 	const { authorizationStore, searchStore } = useStores()
 

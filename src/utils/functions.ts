@@ -1,7 +1,7 @@
 import { useLocation } from '@reach/router'
 import moment from 'moment'
 
-import { validateId } from '@modules/chat/conversation/helpers/validateId'
+import { validateId } from '@containers/middle/conversation/helpers/validateId'
 
 export const hasWindow = () => typeof window !== 'undefined'
 

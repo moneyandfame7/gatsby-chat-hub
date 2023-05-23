@@ -15,8 +15,6 @@
 		"target": "esnext",
 		"baseUrl": "./",
 		"paths": {
-			"@ui/*": ["./src/ui/*"],
-			"@ui": ["./src/ui"],
 			"@components/*": ["./src/components/*"],
 
 			"@containers/*": ["./src/containers/*"],

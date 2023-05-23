@@ -16,8 +16,8 @@ import {
 import { AnimatePresence } from 'framer-motion'
 import Lottie from 'react-lottie-player'
 
-import { Animation } from '@ui/animation'
-import { Loader } from '@ui/shared/loaders'
+import { Animation } from '@components/animation'
+import { Loader } from '@components/shared/loaders'
 
 import { Conversation } from '@utils/graphql/conversations'
 

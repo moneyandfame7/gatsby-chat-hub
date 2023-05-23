@@ -5,9 +5,6 @@ import { AvatarVariants } from '@services/actions/ui/conversations'
 
 import type { NullableField } from '@utils/types'
 
-/**
- * Отримати список розмов, де є поточний юзер
- * */
 export interface Participant {
 	id: string
 	username: string

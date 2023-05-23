@@ -1,7 +1,5 @@
-import { useMemo } from 'react'
-
 import { throttle } from 'lodash'
-import { makeAutoObservable, runInAction, toJS } from 'mobx'
+import { makeAutoObservable, toJS } from 'mobx'
 
 import { client } from '@services/apollo/clients'
 
@@ -17,8 +15,7 @@ type SearchOptions = {
 	query: string
 }
 
-// const throttledSearch <T extends (...args: any[])>(func:T)=>{}
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const throttledSearch = <T extends (...args: any[]) => void>(func: T) => {
 	return throttle(func, 800, { leading: false })
 }
@@ -34,12 +31,19 @@ export class SearchStore {
 		global: [],
 	}
 	public state: SearchResult = this.initialState
-
 	public isLoading = false
+
 	public constructor(public readonly rootStore: RootStore) {
 		makeAutoObservable(this, {}, { autoBind: true })
 	}
 
+	public executeSearchQuery = ({ type, query }: SearchOptions) => {
+		switch (type) {
+			case 'global':
+				this.searchByQueryGlobal(query)
+				break
+		}
+	}
 	public clear() {
 		this.setLoading(false)
 		this.state = this.initialState
@@ -47,28 +51,19 @@ export class SearchStore {
 	private setLoading = (status: boolean): void => {
 		this.isLoading = status
 	}
-	public selectResult = <T>(selector: (cache: SearchResult) => T) => {
+	public selectResult = <T>(selector: (search: SearchResult) => T) => {
 		return selector(toJS(this.state))
 	}
 
 	public searchByQueryGlobal = throttledSearch((query: string) => {
-		console.log('[GLOBAL QUERY]:', query)
 		this.setLoading(true)
-		/**
-		 * @TODO debounce
-		 */
+
 		setTimeout(() => {
 			this.setLoading(false)
 		}, 500)
 	})
 
-	public searchByContacts = throttledSearch((query: string) => {
-		console.log('[CONTACTS QUERY]: ', query)
-	})
-
-	/* Users  */
 	public searchUsers = throttledSearch(async (query: string) => {
-		console.log(`[USERS QUERY]:`, query)
 		this.setLoading(true)
 		const { data } = await client.query<SearchUsersResponse, SearchUsersInput>({
 			query: SEARCH_USERS,
@@ -83,16 +78,5 @@ export class SearchStore {
 	})
 	public setUsers = (result: Participant[]) => {
 		this.state.users = result
-	}
-
-	public executeSearchQuery = ({ type, query }: SearchOptions) => {
-		switch (type) {
-			case 'contacts':
-				this.searchByContacts(query)
-				break
-			case 'global':
-				this.searchByQueryGlobal(query)
-				break
-		}
 	}
 }

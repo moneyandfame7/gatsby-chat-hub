@@ -17,7 +17,7 @@ import { CreateConversation } from './create-conversation'
 
 const TEST: Variants = {
 	hidden: {
-		x: '-10%',
+		x: '-20%',
 		transition: { duration: 0.2, ease: 'easeInOut' },
 	},
 	open: {
@@ -61,7 +61,6 @@ export const LeftColumn: React.FC = observer(() => {
 	const isMobileScreen = useIsMobileScreen()
 	const isChatActive = useIsChatOpen()
 
-	console.log({ isChatActive })
 	return (
 		<motion.div
 			variants={TEST}

@@ -7,7 +7,7 @@ import { observer } from 'mobx-react-lite'
 import { client, getPersistor } from '@services/apollo/clients'
 import { useStores } from '@services/store'
 
-import { Animation } from '@ui/animation'
+import { Animation } from '@components/animation'
 
 import {
 	CONVERSATIONS_QUERY,
