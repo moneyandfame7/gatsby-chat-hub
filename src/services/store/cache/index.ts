@@ -11,6 +11,7 @@ import type { User } from '../user/type'
 
 interface GlobalCache {
 	currentUser?: User
+	animationsEnabled: boolean
 	recentSearchedUsers: Participant[]
 	conversations: Conversation[]
 }
@@ -18,6 +19,7 @@ interface GlobalCache {
 const initialState: GlobalCache = {
 	recentSearchedUsers: [],
 	conversations: [],
+	animationsEnabled: true,
 }
 const MAX_LENGTH = 20
 
@@ -58,5 +60,9 @@ export class CacheStore {
 	public updateConversationById(payload: Conversation) {
 		const withoutUpdated = this.globalCache.conversations.filter((c) => c.id !== payload.id)
 		this.globalCache.conversations = [...withoutUpdated, payload]
+	}
+
+	public toggleAnimations() {
+		this.globalCache.animationsEnabled = !this.globalCache.animationsEnabled
 	}
 }

@@ -4,6 +4,7 @@ import { Box } from '@chakra-ui/react'
 import { AnimatePresence, Variants } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
+import { useIsAnimated } from '@services/hooks'
 import { LeftColumnContent } from '@services/store'
 
 import { Animation } from '@components/animation'

@@ -4,6 +4,8 @@ import { Input, InputGroup, InputLeftElement, InputRightElement } from '@chakra-
 import { AnimatePresence } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
+import { useIsAnimated } from '@services/hooks'
+
 import { IconButton } from '@components/shared/buttons'
 import { Loader, SecondaryLoader } from '@components/shared/loaders'
 
@@ -59,6 +61,7 @@ export const SearchInput: React.FC<SearchInputProps> = observer(
 			}
 		}, [isFocused, placeholder])
 
+		const isAnimated = useIsAnimated()
 		return (
 			<InputGroup cursor='default'>
 				<InputLeftElement pointerEvents='none' children={<SearchIcon />} />
@@ -81,10 +84,14 @@ export const SearchInput: React.FC<SearchInputProps> = observer(
 						transform: `translateX(${textStyles.x})`,
 					}}
 					onBlur={() => {
-						setTextStyles({ x: TEXT_ANIMAION_POSITION })
+						if (isAnimated) {
+							setTextStyles({ x: TEXT_ANIMAION_POSITION })
+						}
 					}}
 					onFocus={() => {
-						setTextStyles({ x: '0%' })
+						if (isAnimated) {
+							setTextStyles({ x: '0%' })
+						}
 
 						handleFocus()
 					}}

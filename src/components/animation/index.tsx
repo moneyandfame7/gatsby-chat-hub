@@ -1,7 +1,10 @@
 import React, { PropsWithChildren } from 'react'
 
-import { chakra, forwardRef, shouldForwardProp } from '@chakra-ui/react'
+import { Box, chakra, forwardRef, shouldForwardProp } from '@chakra-ui/react'
 import { Variants, isValidMotionProp, motion } from 'framer-motion'
+import { observer } from 'mobx-react-lite'
+
+import { useIsAnimated } from '@services/hooks'
 
 const Animated = chakra(motion.div, {
 	/**
@@ -59,34 +62,51 @@ const ANIMATION_VARIANTS: Record<AnimationVariants, Variants> = {
 	},
 }
 
-const Scale: React.FC<AnimationProps> = ({ children, ...props }) => {
-	return (
+const Scale: React.FC<AnimationProps> = observer(({ children, ...props }) => {
+	const isAnimated = useIsAnimated()
+	return isAnimated ? (
 		<Animated variants={ANIMATION_VARIANTS.SCALE} initial='hidden' animate='open' exit='hidden' {...props}>
 			{children}
 		</Animated>
-	)
-}
-const Slide: React.FC<AnimationProps> = forwardRef(({ children, ...props }, ref) => {
-	return (
-		<Animated ref={ref} variants={ANIMATION_VARIANTS.SLIDE} initial='hidden' animate='open' exit='hidden' {...props}>
-			{children}
-		</Animated>
+	) : (
+		<Box {...props}>{children}</Box>
 	)
 })
-const Fade: React.FC<AnimationProps> = ({ children, ...props }) => {
-	return (
+const Slide: React.FC<AnimationProps> = observer(
+	forwardRef(({ children, ...props }, ref) => {
+		const isAnimated = useIsAnimated()
+
+		return isAnimated ? (
+			<Animated ref={ref} variants={ANIMATION_VARIANTS.SLIDE} initial='hidden' animate='open' exit='hidden' {...props}>
+				{children}
+			</Animated>
+		) : (
+			<Box {...props}>{children}</Box>
+		)
+	})
+)
+const Fade: React.FC<AnimationProps> = observer(({ children, ...props }) => {
+	const isAnimated = useIsAnimated()
+
+	return isAnimated ? (
 		<Animated variants={ANIMATION_VARIANTS.FADE} initial='hidden' animate='open' exit='hidden' {...props}>
 			{children}
 		</Animated>
+	) : (
+		<Box {...props}>{children}</Box>
 	)
-}
-const Rotate: React.FC<AnimationProps> = ({ children, ...props }) => {
-	return (
+})
+const Rotate: React.FC<AnimationProps> = observer(({ children, ...props }) => {
+	const isAnimated = useIsAnimated()
+
+	return isAnimated ? (
 		<Animated variants={ANIMATION_VARIANTS.ROTATE} initial='hidden' animate='open' exit='hidden' {...props}>
 			{children}
 		</Animated>
+	) : (
+		<Box {...props}>{children}</Box>
 	)
-}
+})
 
 export const Animation = Object.assign(Animated, {
 	Scale,

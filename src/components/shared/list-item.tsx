@@ -1,10 +1,9 @@
-import React, { CSSProperties } from 'react'
+import React from 'react'
 
 import { navigate } from 'gatsby'
 
 import { Avatar, AvatarProps, Badge, Checkbox, Divider, HStack, StackProps, Text, VStack } from '@chakra-ui/react'
 import { useLocation } from '@reach/router'
-import { MotionConfig } from 'framer-motion'
 
 interface ListItemWrapperProps extends StackProps {
 	to?: string
@@ -19,9 +18,6 @@ const ListItemWrapper: React.FC<ListItemWrapperProps> = ({ isActive, to, isHover
 			bg={isActive ? 'purple.200' : 'none'}
 			_hover={{ bg: isHoverable ? (isActive ? 'purple.200' : 'blackAlpha.50') : 'initial' }}
 			cursor={isHoverable ? 'pointer' : 'default'}
-			sx={{
-				'-webkit-tap-highlight-color': 'transparent',
-			}}
 			p='9px'
 			w='full'
 			userSelect='none'
@@ -40,9 +36,10 @@ interface ListItemAvatarProps {
 	src?: string
 	name?: string
 	background?: AvatarProps['background']
+	size?: AvatarProps['size']
 }
-export const ListItemAvatar: React.FC<ListItemAvatarProps> = ({ src, name, background }) => {
-	return <Avatar pointerEvents='none' src={src} background={background} name={name} />
+export const ListItemAvatar: React.FC<ListItemAvatarProps> = ({ src, name, background, size }) => {
+	return <Avatar pointerEvents='none' src={src} background={background} name={name} size={size} />
 }
 
 interface ListItemTitleProps {
@@ -120,7 +117,7 @@ export const ListItem: React.FC<ListItemProps & StackProps> = ({
 }) => {
 	return (
 		<ListItemWrapper to={to} isActive={isActive} isHoverable={isHoverable} {...props}>
-			{withCheckbox && <Checkbox zIndex={-1} isChecked={isChecked} />}
+			{withCheckbox && <Checkbox pointerEvents='none' userSelect='none' isChecked={isChecked} />}
 			<HStack w='full'>
 				<ListItemAvatar {...avatar} />
 				<ListItemContent isActive={isActive} title={title} subtitle={subtitle} date={date} />

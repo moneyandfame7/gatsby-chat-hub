@@ -48,6 +48,9 @@ const theme = extendTheme(
 					bgImage: `${gradient}`,
 					bgSize: 'cover',
 				},
+				'*': {
+					WebkitTapHighlightColor: 'transparent',
+				},
 			}),
 		},
 	}

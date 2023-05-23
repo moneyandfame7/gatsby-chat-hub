@@ -59,7 +59,7 @@ export const ProvideInformation: React.FC<ProvideInformationProps & WithLeftColu
 
 	return (
 		<Animation.Fade bg='white' height='100%' pos='absolute' top={0} left={0} bottom={0} w='full' zIndex={1} p={4}>
-			<HStack>
+			<HStack mb={5}>
 				<LeftGoBack onClick={handleGoBack} />
 				<Text flex={1} fontSize='xl' fontWeight={500}>
 					Provide information

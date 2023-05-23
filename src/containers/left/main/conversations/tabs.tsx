@@ -16,6 +16,8 @@ import {
 import { AnimatePresence } from 'framer-motion'
 import Lottie from 'react-lottie-player'
 
+import { useIsAnimated } from '@services/hooks'
+
 import { Animation } from '@components/animation'
 import { Loader } from '@components/shared/loaders'
 
@@ -66,10 +68,19 @@ export const ConversationsTabs: React.FC<ConversationsTabsProps> = ({ all, allLo
 			</Center>
 		)
 	}
-	const [unread, setUnread] = useState<Conversation[]>([])
 
+	const [unread, setUnread] = useState<Conversation[]>([])
+	const isAnimated = useIsAnimated()
+
+	const animationTabs = isAnimated
+		? {
+				as: AnimatePresence,
+				initial: false,
+				mode: 'popLayout',
+		  }
+		: undefined
 	return (
-		<Tabs isLazy position='relative' variant='unstyled' defaultIndex={0}>
+		<Tabs isLazy={isAnimated} position='relative' variant='unstyled' defaultIndex={0}>
 			<TabList px={2} overflowX='auto' boxShadow='0 2px 2px rgb(114 114 114 / 17%)' height='100%'>
 				<StyledTab>All</StyledTab>
 				<StyledTab gap={2}>
@@ -79,12 +90,12 @@ export const ConversationsTabs: React.FC<ConversationsTabsProps> = ({ all, allLo
 			</TabList>
 			<TabIndicator mt='-1.5px' height='3px' bg='#8774E1' borderRadius='1px' _hover={{ height: '3px' }} />
 			<TabPanels overflowX='hidden' height='100%' my={2}>
-				<TabPanel p={0} as={AnimatePresence} initial={false} mode='popLayout'>
+				<TabPanel p={0} {...animationTabs}>
 					<Animation.Slide custom='left' data-component-name='Animated' p={0} ref={containerRef}>
 						{renderTab(allLoading, all)}
 					</Animation.Slide>
 				</TabPanel>
-				<TabPanel p={0} as={AnimatePresence} initial={false} mode='popLayout'>
+				<TabPanel p={0} {...animationTabs}>
 					<Animation.Slide custom='right' data-component-name='Animated' p={0} ref={containerRef}>
 						{renderTab(false, unread)}
 					</Animation.Slide>

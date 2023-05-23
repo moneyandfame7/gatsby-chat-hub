@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { AnimatePresence, Variants, motion } from 'framer-motion'
 import { observer, useLocalObservable } from 'mobx-react-lite'
 
-import { useIsMobileScreen } from '@services/hooks'
+import { useIsAnimated, useLayout } from '@services/hooks'
 import { ContentGroup, LeftColumnContent, LeftColumnUiStore } from '@services/store/ui/left-column'
 
 import { LeftMain } from '@containers/left/main'
@@ -39,37 +39,37 @@ export const LeftColumn: React.FC = observer(() => {
 		}
 	}
 
-	const handlePressEscape = (e: KeyboardEvent) => {
-		/* e.repeat for prevent keydown holding */
-		if (
-			(e.code === 'Escape' || e.key === 'Escape') &&
-			!e.repeat &&
-			(!isChatOpen() || leftColumnUiStore.content !== LeftColumnContent.Conversations)
-		) {
-			e.stopPropagation()
-			leftColumnUiStore.handleResetContent()
-		}
-	}
-
 	useEffect(() => {
+		const handlePressEscape = (e: KeyboardEvent) => {
+			/* e.repeat for prevent keydown holding */
+			if (
+				(e.code === 'Escape' || e.key === 'Escape') &&
+				!e.repeat &&
+				(!isChatOpen() || leftColumnUiStore.content !== LeftColumnContent.Conversations)
+			) {
+				e.stopPropagation()
+				leftColumnUiStore.handleResetContent()
+			}
+		}
+
 		document.addEventListener('keydown', handlePressEscape, true)
 
 		return () => {
 			document.removeEventListener('keydown', handlePressEscape, true)
 		}
 	}, [])
-	const isMobileScreen = useIsMobileScreen()
+	const { isMobile } = useLayout()
 	const isChatActive = useIsChatOpen()
-
+	const isAnimated = useIsAnimated()
 	return (
 		<motion.div
-			variants={TEST}
+			variants={isAnimated ? TEST : undefined}
 			initial='open'
-			animate={isMobileScreen && isChatActive ? 'hidden' : 'open'}
+			animate={isMobile && isChatActive ? 'hidden' : 'open'}
 			style={{
 				background: 'white',
 				height: '100vh',
-				width: isMobileScreen ? '100%' : '390px',
+				width: isMobile ? '100%' : '390px',
 				overflow: 'hidden',
 				position: 'relative',
 			}}

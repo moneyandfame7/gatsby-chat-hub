@@ -2,6 +2,9 @@
 import React, { PropsWithChildren, createContext, useContext, useEffect, useRef, useState } from 'react'
 
 import { Box, Menu, MenuItemProps, Portal } from '@chakra-ui/react'
+import { observer } from 'mobx-react-lite'
+
+import { useIsAnimated } from '@services/hooks'
 
 import { Backdrop } from './backdrop'
 
@@ -32,9 +35,10 @@ interface ContextMenuProps extends PropsWithChildren {
 	renderItems: React.ReactElement
 	containerRef: React.RefObject<HTMLDivElement>
 }
-export const ContextMenu: React.FC<ContextMenuProps> = ({ renderItems, children, containerRef }) => {
+export const ContextMenu: React.FC<ContextMenuProps> = observer(({ renderItems, children, containerRef }) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const menuRef = useRef<HTMLDivElement>(null)
+
 	const MENU_PADDING = 20
 
 	const openMenu = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -42,6 +46,9 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ renderItems, children,
 			e.preventDefault()
 			setIsOpen(true)
 			const popper = menuRef.current?.parentElement
+			/**
+			 * @todo переробити, і передавати оце в компонент, а не писати тут parent.parent.parent
+			 */
 			const container = containerRef?.current?.parentElement?.parentElement?.parentElement?.parentElement
 			// 33*4+16+2 33 - height of 1 el, 4 - count of elements, 16 - menu padding, 2 - borders px
 			if (!popper || !container) {
@@ -95,4 +102,4 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ renderItems, children,
 			</Menu>
 		</ContextMenuContext.Provider>
 	)
-}
+})
