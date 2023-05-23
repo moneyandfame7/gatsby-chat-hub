@@ -2,7 +2,7 @@ import React, { PropsWithChildren, useEffect, useState } from 'react'
 
 import { Center } from '@chakra-ui/react'
 
-import { SecondaryLoader } from '@ui/shared/loaders'
+import { SecondaryLoader } from '@components/shared/loaders'
 
 export const ClientOnly: React.FC<PropsWithChildren> = ({ children }) => {
 	const [domLoaded, setDomLoaded] = useState(false)

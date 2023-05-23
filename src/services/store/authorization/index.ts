@@ -1,10 +1,13 @@
 /* lib */
+import { navigate } from 'gatsby'
+
 import jwtDecode from 'jwt-decode'
 import { makeAutoObservable } from 'mobx'
 import { makePersistable } from 'mobx-persist-store'
 
 import { client, secondaryClient } from '@services/apollo/clients'
 
+import { ROUTES } from '@utils/constants'
 import { hasWindow } from '@utils/functions'
 import type { NullableField } from '@utils/types'
 
@@ -91,6 +94,7 @@ export class AuthorizationStore implements IAuthorizationStore {
 	public async logout(): Promise<void> {
 		this.updateCredentials(null)
 		this.rootStore.cacheStore.clear()
+		navigate(ROUTES.login())
 	}
 	public async refresh(): Promise<NullableField<AccessToken>> {
 		if (!this.refreshToken) {

@@ -4,8 +4,8 @@ import { Input, InputGroup, InputLeftElement, InputRightElement } from '@chakra-
 import { AnimatePresence } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
-import { IconButton } from '@ui/shared/buttons'
-import { Loader } from '@ui/shared/loaders'
+import { IconButton } from '@components/shared/buttons'
+import { Loader, SecondaryLoader } from '@components/shared/loaders'
 
 import { Animation } from '../animation'
 import { CloseIcon, SearchIcon } from '../icons'
@@ -18,10 +18,11 @@ interface SearchInputProps {
 	placeholder: string
 	isFocused: boolean
 	isLoading: boolean
+	spinnerColor: string
 }
 
 export const SearchInput: React.FC<SearchInputProps> = observer(
-	({ isLoading, handleFocus, handleChange, placeholder, isFocused }) => {
+	({ isLoading, handleFocus, handleChange, placeholder, isFocused, spinnerColor }) => {
 		const TEXT_ANIMAION_POSITION = '30%'
 		const inputRef = useRef<HTMLInputElement>(null)
 		const [inputValue, setInputValue] = useState('')
@@ -109,11 +110,11 @@ export const SearchInput: React.FC<SearchInputProps> = observer(
 						</Animation.Scale>
 					)}
 					{isLoading && (
-						<Animation.Scale key='AnimatedLoader'>
+						<Animation.Fade key='AnimatedLoader'>
 							<InputRightElement>
-								<Loader size='small' />
+								<SecondaryLoader color='primary' />
 							</InputRightElement>
-						</Animation.Scale>
+						</Animation.Fade>
 					)}
 				</AnimatePresence>
 			</InputGroup>

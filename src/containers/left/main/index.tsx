@@ -1,20 +1,21 @@
 import React, { useCallback } from 'react'
 
+import { Box } from '@chakra-ui/react'
 import { AnimatePresence, Variants } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
 import { LeftColumnContent } from '@services/store'
 
-import { Animation } from '@ui/animation'
-import { Scrollable } from '@ui/overlay'
+import { Animation } from '@components/animation'
+import { Scrollable } from '@components/overlay'
 
-import { LeftColumnUI } from '../settings'
+import { WithLeftColumnStore } from '../settings'
 import { ContactList } from './contacts'
 import { Conversations } from './conversations'
 import { LeftMainHeader } from './header'
 import { LeftSearch } from './search'
 
-interface LeftMainProps extends LeftColumnUI {}
+interface LeftMainProps extends WithLeftColumnStore {}
 
 export const LeftMain: React.FC<LeftMainProps> = observer(({ leftColumnUiStore }) => {
 	const renderContent = useCallback(() => {
@@ -34,7 +35,7 @@ export const LeftMain: React.FC<LeftMainProps> = observer(({ leftColumnUiStore }
 		<Animation.Scale display='flex' flexDirection='column' height='100%' pos='relative'>
 			<LeftMainHeader leftColumnUiStore={leftColumnUiStore} />
 			<Scrollable pos='relative' id='LeftWrapper' height='100%' width='100%' overflowY='scroll'>
-				<AnimatePresence initial>{renderContent()}</AnimatePresence>
+				<AnimatePresence initial={false}>{renderContent()}</AnimatePresence>
 			</Scrollable>
 		</Animation.Scale>
 	)

@@ -5,16 +5,18 @@ import { HStack } from '@chakra-ui/react'
 import { AnimatePresence } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
+import { client, useApolloNetworkStatus } from '@services/apollo/clients'
+import useNetworkStatus from '@services/hooks/useNetworkStatus'
 import { useStores } from '@services/store'
 import { LeftColumnContent } from '@services/store/ui/left-column'
 
-import { SearchInput } from '@ui/shared/search-input'
+import { SearchInput } from '@components/shared/search-input'
 
 import { LeftGoBack } from '../go-back'
 import { LeftDropdownMenu } from '../menu'
-import { LeftColumnUI } from '../settings'
+import { WithLeftColumnStore } from '../settings'
 
-interface LeftMainHeaderProps extends LeftColumnUI {}
+interface LeftMainHeaderProps extends WithLeftColumnStore {}
 export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ leftColumnUiStore }) => {
 	const { authorizationStore, searchStore } = useStores()
 
@@ -45,6 +47,9 @@ export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ leftCol
 		}
 	}
 
+	const isLoading = useApolloNetworkStatus().numPendingQueries > 0
+	const isOnline = useNetworkStatus()
+
 	const handleLogoutSelect = async () => {
 		await authorizationStore.logout()
 	}
@@ -70,7 +75,8 @@ export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ leftCol
 		<HStack justify='space-between' px={2} py={3}>
 			<AnimatePresence initial={false}>{renderContentActionButton()}</AnimatePresence>
 			<SearchInput
-				isLoading={searchStore.isLoading}
+				isLoading={isLoading || !isOnline}
+				spinnerColor={isLoading ? 'primary' : 'yellow'}
 				isFocused={isSearchInputFocused}
 				handleFocus={handleFocusInput}
 				handleChange={handleSearchQuery}

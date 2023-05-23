@@ -18,6 +18,7 @@ module.exports = defineConfig({
 				'@typescript-eslint/explicit-function-return-type': 'off',
 				'@typescript-eslint/no-empty-interface': 'off',
 				'@typescript-eslint/no-extra-semi': 'off',
+				'react-hooks/exhaustive-deps': 'off',
 			},
 		},
 	],

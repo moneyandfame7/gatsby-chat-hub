@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 
 import {
 	Badge,
@@ -16,8 +16,8 @@ import {
 import { AnimatePresence } from 'framer-motion'
 import Lottie from 'react-lottie-player'
 
-import { Animation } from '@ui/animation'
-import { Loader } from '@ui/shared/loaders'
+import { Animation } from '@components/animation'
+import { Loader } from '@components/shared/loaders'
 
 import { Conversation } from '@utils/graphql/conversations'
 
@@ -39,23 +39,20 @@ const StyledTab = chakra(Tab, {
 interface ConversationsTabsProps {
 	all?: Conversation[]
 	allLoading: boolean
-
-	unread?: Conversation[]
-	unreadLoading: boolean
 }
 
-export const ConversationsTabs: React.FC<ConversationsTabsProps> = ({ all, allLoading, unread, unreadLoading }) => {
+export const ConversationsTabs: React.FC<ConversationsTabsProps> = ({ all, allLoading }) => {
 	const containerRef = useRef(null)
 	const renderTab = (loading: boolean, conversations?: Conversation[]) => {
+		if (conversations && conversations.length > 0) {
+			return <ConversationsList containerRef={containerRef} conversations={conversations} />
+		}
 		if (loading) {
 			return (
 				<Center height='100%'>
 					<Loader />
 				</Center>
 			)
-		}
-		if (conversations && conversations.length > 0) {
-			return <ConversationsList containerRef={containerRef} conversations={conversations} />
 		}
 		return (
 			<Center h='50vh' flexDir='column' userSelect='none'>
@@ -69,6 +66,7 @@ export const ConversationsTabs: React.FC<ConversationsTabsProps> = ({ all, allLo
 			</Center>
 		)
 	}
+	const [unread, setUnread] = useState<Conversation[]>([])
 
 	return (
 		<Tabs isLazy position='relative' variant='unstyled' defaultIndex={0}>
@@ -88,7 +86,7 @@ export const ConversationsTabs: React.FC<ConversationsTabsProps> = ({ all, allLo
 				</TabPanel>
 				<TabPanel p={0} as={AnimatePresence} initial={false} mode='popLayout'>
 					<Animation.Slide custom='right' data-component-name='Animated' p={0} ref={containerRef}>
-						{renderTab(unreadLoading, unread)}
+						{renderTab(false, unread)}
 					</Animation.Slide>
 				</TabPanel>
 			</TabPanels>

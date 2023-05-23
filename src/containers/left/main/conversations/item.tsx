@@ -5,8 +5,12 @@ import { useLocation } from '@reach/router'
 import { MdOutlineMarkChatRead, MdOutlineMarkChatUnread } from 'react-icons/md'
 import { RxOpenInNewWindow } from 'react-icons/rx'
 
-import { ContextMenu, ContextMenuItem } from '@ui/overlay'
-import { ListItem } from '@ui/shared/list-item'
+import { useConversationAvatar } from '@services/actions/ui/conversations'
+import { useIsMobileScreen } from '@services/hooks'
+import { useStores } from '@services/store'
+
+import { ContextMenu, ContextMenuItem } from '@components/overlay'
+import { ListItem } from '@components/shared/list-item'
 
 import { ROUTES } from '@utils/constants'
 import { formatDate } from '@utils/functions'
@@ -61,6 +65,7 @@ const ConversationContextMenu: React.FC<ConversationItemProps> = ({ containerRef
 }
 
 export const ConversationItem: React.FC<ConversationItemProps> = ({ conversation, containerRef }) => {
+	const { userStore } = useStores()
 	const { hash } = useLocation()
 	const activeConversationId = hash.split('#')[1]
 	const getDateForConversation = (c: Conversation) => {
@@ -69,15 +74,16 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({ conversation
 		}
 		return c.createdAt
 	}
-	console.log({ conversation })
+	const avatar = useConversationAvatar(conversation)
+	const isMobileScreen = useIsMobileScreen()
 	return (
 		<ConversationContextMenu containerRef={containerRef} conversation={conversation}>
 			<ListItem
-				isActive={activeConversationId === conversation.id}
+				isActive={!isMobileScreen && activeConversationId === conversation.id}
 				date={formatDate(getDateForConversation(conversation))}
 				key={conversation.id}
-				avatar={conversation.participants[0].photo}
-				title={conversation.name}
+				avatar={avatar}
+				title={conversation.name || conversation.participants.filter((p) => p.id !== userStore.user?.id)[0].username}
 				to={ROUTES.chat(conversation.id)}
 				subtitle='Lorem ipsum dorem lasldlasdlalsdlasldaksdfkaskdfkaskdfkaksdfk'
 			/>

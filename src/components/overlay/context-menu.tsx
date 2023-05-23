@@ -42,14 +42,14 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ renderItems, children,
 			e.preventDefault()
 			setIsOpen(true)
 			const popper = menuRef.current?.parentElement
+			const container = containerRef?.current?.parentElement?.parentElement?.parentElement?.parentElement
 			// 33*4+16+2 33 - height of 1 el, 4 - count of elements, 16 - menu padding, 2 - borders px
-			if (!popper || !containerRef.current?.parentElement) {
+			if (!popper || !container) {
 				return
 			}
 
 			const { width: menuWidth, height: menuHeight } = popper.getBoundingClientRect()
-			const { width: containerWidth, height: containerHeight } =
-				containerRef.current.parentElement.getBoundingClientRect()
+			const { width: containerWidth, height: containerHeight } = container.getBoundingClientRect()
 
 			let x = e.clientX + MENU_PADDING
 			let y = e.clientY + MENU_PADDING
@@ -58,9 +58,12 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ renderItems, children,
 				x = containerWidth - menuWidth - MENU_PADDING
 			}
 
-			if (menuHeight * 2 + y >= containerHeight) {
+			/* omg */
+
+			if (menuHeight + y >= containerHeight) {
 				y = y - menuHeight - MENU_PADDING * 2
 			}
+
 			Object.assign(popper.style, {
 				top: `${y}px`,
 				left: `${x}px`,

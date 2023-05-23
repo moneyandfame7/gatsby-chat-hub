@@ -1,9 +1,9 @@
 /* lib  */
 import React from 'react'
 
-import { Animation } from '@ui/animation'
-import { ArrowBack } from '@ui/icons'
-import { IconButton } from '@ui/shared/buttons'
+import { Animation } from '@components/animation'
+import { ArrowBack } from '@components/icons'
+import { IconButton } from '@components/shared/buttons'
 
 interface LeftGoBackProps {
 	onClick: () => void

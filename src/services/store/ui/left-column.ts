@@ -41,6 +41,7 @@ export class LeftColumnUiStore {
 	public handleResetContent(): void {
 		// eslint-disable-next-line no-console
 		console.log('[OLD CONTENT]:', LeftColumnContent[this.content])
+
 		switch (this.content) {
 			case LeftColumnContent.NewConversationStep2:
 				this.setContent(LeftColumnContent.NewConversationStep1)

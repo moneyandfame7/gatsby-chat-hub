@@ -1,12 +1,11 @@
 import React, { useMemo } from 'react'
 
 import { MenuButton } from '@chakra-ui/react'
-import { Variants } from 'framer-motion'
 
-import { Animation } from '@ui/animation'
-import { ContactsIcon, LogoutIcon, MenuIcon, NewChatIcon } from '@ui/icons'
-import { StyledMenu, StyledMenuItem } from '@ui/overlay'
-import { IconButton } from '@ui/shared/buttons'
+import { Animation } from '@components/animation'
+import { ContactsIcon, LogoutIcon, MenuIcon, NewChatIcon } from '@components/icons'
+import { StyledMenu, StyledMenuItem } from '@components/overlay'
+import { IconButton } from '@components/shared/buttons'
 
 interface LeftDropdownMenuProps {
 	onNewChatSelect: () => void

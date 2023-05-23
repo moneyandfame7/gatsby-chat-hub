@@ -2,7 +2,7 @@
 export * from './layout'
 
 /* Current conversation */
-export * from './conversation/index'
+export * from '../../containers/middle/conversation/index'
 
 /* Conversation information */
 export * from './information/index'
