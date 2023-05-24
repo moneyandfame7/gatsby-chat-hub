@@ -1,14 +1,16 @@
 /* lib */
+import { navigate } from 'gatsby'
+
 import jwtDecode from 'jwt-decode'
 import { makeAutoObservable } from 'mobx'
 import { makePersistable } from 'mobx-persist-store'
 
 import { client, secondaryClient } from '@services/apollo/clients'
 
+import { ROUTES } from '@utils/constants'
 import { hasWindow } from '@utils/functions'
 import type { NullableField } from '@utils/types'
 
-import { cache } from '../cache'
 import { RootStore } from '../root'
 import { LOGIN_MUTATION, REFRESH_MUTATION } from './graphql'
 import type {
@@ -89,10 +91,10 @@ export class AuthorizationStore implements IAuthorizationStore {
 		}
 		return { success: false, error: 'Erorr with google authorization' }
 	}
-	public logout(): void {
+	public async logout(): Promise<void> {
 		this.updateCredentials(null)
-		cache.clear()
-		client.clearStore()
+		this.rootStore.cacheStore.clear()
+		navigate(ROUTES.login())
 	}
 	public async refresh(): Promise<NullableField<AccessToken>> {
 		if (!this.refreshToken) {

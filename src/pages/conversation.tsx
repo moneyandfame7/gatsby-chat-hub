@@ -1,43 +1,41 @@
-import * as React from 'react'
-import { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 
-import { PageProps } from 'gatsby'
+import { PageProps, navigate } from 'gatsby'
 
-import { Badge, Center } from '@chakra-ui/react'
+import { HStack } from '@chakra-ui/react'
+import { observer } from 'mobx-react-lite'
 
-import { Conversation, ConversationLayout } from '@modules/chat'
+import { useStores } from '@services/store'
 
-import { hasWindow } from '@utils/functions'
-import { pageHead } from '@utils/page-head'
+import { pageHead } from '@components/page-head'
 
-const ConversationPage: React.FC<PageProps> = ({ location }) => {
-	const currentConversationId = location.hash.split('#')[1]
+import { LeftColumn } from '@containers/left'
+import { MiddleColumn } from '@containers/middle'
+import { validateId } from '@containers/middle/helpers'
+import { RightColumn } from '@containers/right'
 
-	const [domLoaded, setDomLoaded] = useState(false)
+import { ROUTES } from '@utils/constants'
+
+const ConversationPage: React.FC<PageProps> = observer(({ location }) => {
+	const { cacheStore } = useStores()
+	const conversationId = location.hash.split('#')[1]
+
+	const isValidId = validateId(conversationId)
+	const rtl = cacheStore.selectCache((cache) => cache.rtl)
 	useEffect(() => {
-		setDomLoaded(true)
-	}, [])
+		if (Boolean(conversationId) && !isValidId) {
+			navigate(ROUTES.chat(), { replace: true })
+		}
+	}, [isValidId, conversationId])
+
 	return (
-		<>
-			{domLoaded && (
-				<ConversationLayout>
-					{currentConversationId ? (
-						/**
-						 * @TODO validate id, if not uuid then not open chat?
-						 */
-						<Conversation id={currentConversationId} />
-					) : (
-						<Center height='100vh' display={{ base: 'none', md: 'flex' }} flex={1}>
-							<Badge userSelect='none' bg='blackAlpha.400' color='#fff'>
-								Select a conversation to start chatting
-							</Badge>
-						</Center>
-					)}
-				</ConversationLayout>
-			)}
-		</>
+		<HStack flexDir={rtl ? 'row-reverse' : 'row'} data-component-name='Wrapper'>
+			<LeftColumn />
+			<MiddleColumn conversationId={isValidId ? conversationId : null} />
+			<RightColumn />
+		</HStack>
 	)
-}
+})
 
 export default ConversationPage
 

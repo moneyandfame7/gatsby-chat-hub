@@ -1,29 +1,33 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { useQuery } from '@apollo/client'
+import { observer } from 'mobx-react-lite'
 
-import { Animated } from '@ui/animation'
+import { useStores } from '@services/store'
+
+import { Animation } from '@components/animation'
+import { ClientOnly } from '@components/client-only'
 
 import {
 	CONVERSATIONS_QUERY,
 	CONVERSATION_CREATED_SUBSCRIPTION,
+	Conversation,
 	ConversationCreatedSubscriptionData,
 	ConversationsData,
 } from '@utils/graphql/conversations'
 
-import { SCALE_ANIMATION } from '..'
 import { ConversationsTabs } from './tabs'
 
-export const Conversations: React.FC = () => {
+export const Conversations: React.FC = observer(() => {
+	const { cacheStore } = useStores()
+	const [conversations, setConversations] = useState<Conversation[]>([])
+
 	const {
 		data: all,
 		loading: allLoading,
 		subscribeToMore,
 	} = useQuery<ConversationsData>(CONVERSATIONS_QUERY, {
-		fetchPolicy: 'cache-first',
-	})
-	const { data: unread, loading: unreadLoading } = useQuery<ConversationsData>(CONVERSATIONS_QUERY, {
-		fetchPolicy: 'cache-first',
+		fetchPolicy: 'cache-and-network',
 	})
 
 	const subscribeToNewConversations = () => {
@@ -42,32 +46,25 @@ export const Conversations: React.FC = () => {
 		})
 	}
 
-	/**
-	 * викликати subscriptions on mount
-	 */
 	useEffect(() => {
+		const fromCache = cacheStore.selectCache((cache) => cache.conversations)
+		setConversations(fromCache)
 		subscribeToNewConversations()
 	}, [])
 
+	useEffect(() => {
+		if (all?.conversations) {
+			const fetched = all?.conversations
+			setConversations(fetched)
+			cacheStore.updateConversations(fetched)
+		}
+	}, [all?.conversations])
+
 	return (
-		<Animated
-			variants={SCALE_ANIMATION}
-			initial='hidden'
-			animate='open'
-			exit='hidden'
-			padding='inherit'
-			left={0}
-			top={0}
-			bottom={0}
-			pos='absolute'
-			width='100%'
-		>
-			<ConversationsTabs
-				all={all?.conversations}
-				allLoading={allLoading}
-				unread={unread?.conversations}
-				unreadLoading={unreadLoading}
-			/>
-		</Animated>
+		<ClientOnly>
+			<Animation.Scale left={0} top={0} bottom={0} pos='absolute' width='100%' id='ConversationsContainer'>
+				<ConversationsTabs all={conversations} allLoading={allLoading} />
+			</Animation.Scale>
+		</ClientOnly>
 	)
-}
+})

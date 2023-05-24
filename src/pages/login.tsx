@@ -11,8 +11,9 @@ import { CreateUsername, GoogleLogin } from '@modules/authentication'
 import { Environment } from '@services/environment'
 import { useStores } from '@services/store/'
 
+import { pageHead } from '@components/page-head'
+
 import { ROUTES } from '@utils/constants'
-import { pageHead } from '@utils/page-head'
 
 const Login: FC = observer(() => {
 	const { authorizationStore, userStore } = useStores()

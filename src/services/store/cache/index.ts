@@ -1,70 +1,77 @@
-import ms from 'milliseconds'
-import { Conversation, Participant } from '@utils/graphql/conversations'
 import { uniqBy } from 'lodash'
-import { LocalStorage } from './localstorage'
+import { makeAutoObservable, runInAction, toJS } from 'mobx'
+import { makePersistable, stopPersisting } from 'mobx-persist-store'
 
-interface CacheStoreOptions {
-  name: string
-  expiresIn?: number
-}
-interface CacheStoreFields {
-  recentUsers: Participant[]
-  recentConversations: Conversation[]
+import { client } from '@services/apollo/clients'
+
+import { hasWindow } from '@utils/functions'
+import { Conversation, Participant } from '@utils/graphql/conversations'
+
+import type { User } from '../user/type'
+
+interface GlobalCache {
+	currentUser?: User
+	animationsEnabled: boolean
+	recentSearchedUsers: Participant[]
+	conversations: Conversation[]
+	rtl: boolean
 }
 
-interface UpdateCacheOptions<T> {
-  forUpdate: Array<T>
-  exist: Array<T>
-  length: number
+const initialState: GlobalCache = {
+	recentSearchedUsers: [],
+	conversations: [],
+	animationsEnabled: true,
+	rtl: false,
 }
+const MAX_LENGTH = 20
+
+export const selectConversationById = (id: string) => (state: GlobalCache) =>
+	state.conversations.find((c) => c.id === id)
 
 export class CacheStore {
-  public recentUsers: Participant[] = []
-  public recentConversations: Conversation[] = []
+	public globalCache: GlobalCache = initialState
 
-  private RECENT_USERS_LENGTH = 20
-  private RECENT_CONVERSATIONS_LENGTH = 20
-  private STORAGE_KEY = 'ch-state-cache'
-  private readonly localStorageService: LocalStorage<CacheStoreFields>
-  constructor() {
-    this.localStorageService = new LocalStorage({
-      name: this.STORAGE_KEY,
-      expiresIn: ms.minutes(3),
-      encrypt: false
-    })
+	public constructor() {
+		makeAutoObservable(this, {}, { autoBind: true })
+		makePersistable(this, {
+			name: 'ch-global-cache',
+			properties: ['globalCache'],
+			storage: hasWindow() ? window.localStorage : undefined,
+		})
+	}
 
-    this.init()
-  }
+	public async clear() {
+		await client.clearStore()
+		runInAction(() => {
+			this.globalCache = initialState
+			stopPersisting(this)
+		})
+	}
 
-  public updateRecentUsers = (users: Participant[]): void => {
-    const cached = this.updateCache({ exist: this.recentUsers, forUpdate: users, length: this.RECENT_USERS_LENGTH })
+	public selectCache<T>(selector: (cache: GlobalCache) => T) {
+		return selector(toJS(this.globalCache))
+	}
 
-    this.localStorageService.set({ recentUsers: cached })
-    this.recentUsers = cached
-  }
-  public updateRecentConversations = (conversations: Conversation[]): void => {
-    console.log({ conversations })
-  }
-  public clear() {
-    this.localStorageService.clear()
-    this.recentUsers = []
-    this.recentConversations = []
-  }
+	public updateRecentUsers(payload: Participant[]) {
+		const merged = [...payload, ...this.globalCache.recentSearchedUsers]
+		const sliced = merged.slice(0, MAX_LENGTH)
+		this.globalCache.recentSearchedUsers = uniqBy(sliced, 'id')
+	}
 
-  private updateCache = <T>(options: UpdateCacheOptions<T>): Array<T> => {
-    const { forUpdate, exist, length } = options
+	public updateConversations(payload: Conversation[]) {
+		this.globalCache.conversations = payload
+	}
 
-    const merged = [...forUpdate, ...exist] // з'єднуємо нові та старі значення
-    const sliced = merged.slice(0, length) // обрізаємо до максимальної довжини
+	public updateConversationById(payload: Conversation) {
+		const withoutUpdated = this.globalCache.conversations.filter((c) => c.id !== payload.id)
+		this.globalCache.conversations = [...withoutUpdated, payload]
+	}
 
-    const result = [...sliced]
+	public toggleAnimations() {
+		this.globalCache.animationsEnabled = !this.globalCache.animationsEnabled
+	}
 
-    return uniqBy(result, 'id')
-  }
-  private init = () => {
-    this.recentUsers = this.localStorageService.get()?.recentUsers || []
-    this.recentConversations = this.localStorageService.get()?.recentConversations || []
-  }
+	public toggleDirection() {
+		this.globalCache.rtl = !this.globalCache.rtl
+	}
 }
-
-export const cache = new CacheStore()

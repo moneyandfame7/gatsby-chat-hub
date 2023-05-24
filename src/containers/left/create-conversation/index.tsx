@@ -1,69 +1,65 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-import { useMutation } from '@apollo/client'
-import { Box } from '@chakra-ui/react'
+import { AnimatePresence } from 'framer-motion'
+import { observer } from 'mobx-react-lite'
 
-import { useStores } from '@services/store'
+import { LeftColumnContent } from '@services/store'
 
-import { LeftColumnUI } from '@containers/left/settings'
+import { Animation } from '@components/animation'
 
-import { CREATE_CONVERSATION, CreateConversationInput, CreateConversationResponse } from '@utils/graphql/conversations'
+import { WithLeftColumnStore } from '@containers/left/settings'
 
-interface ConversationModalProps extends LeftColumnUI {
-	onOpen?: () => void
-	isOpen?: boolean
-	onClose?: () => void
-	toggle?: () => void
-}
+import { Participant } from '@utils/graphql/conversations'
 
-export const CreateConversation: React.FC<ConversationModalProps> = ({
-	leftColumnUiStore,
-	onClose,
-	onOpen,
-	isOpen,
-	toggle,
-}) => {
-	/* step 2 */
-	const { userStore } = useStores()
+import { ProvideInformation } from './provide-information'
+import { SelectParticipants } from './select-participants'
 
-	const [createConversation, { loading: createConversationLoading }] = useMutation<
-		CreateConversationResponse,
-		CreateConversationInput
-	>(CREATE_CONVERSATION)
+interface ConversationModalProps extends WithLeftColumnStore {}
 
-	// const onCreateConversation = async () => {
-	// 	const participantsIds = [userStore.user!.id, ...participants.map((p) => p.id)]
-	// 	try {
-	// 		const { data } = await createConversation({
-	// 			variables: {
-	// 				participantsIds,
-	// 			},
-	// 		})
+export const CreateConversation: React.FC<ConversationModalProps> = observer(({ leftColumnUiStore }) => {
+	const [selectedParticipants, setSelectedParticipants] = useState<Participant[]>([])
 
-	// 		if (!data?.createConversation) {
-	// 			throw new Error('Failed to create conversation')
-	// 		}
-	// 		const {
-	// 			createConversation: { conversationId },
-	// 		} = data
-	// 		/* @TODO: переробити це */
-	// 		navigate(`/c#${conversationId}`)
-	// 		/**
-	// 		 * Clear state on successfull creation
-	// 		 */
-	// 		// setUsername('')
-	// 		// setParticipants([])
-	// 		onClose && onClose()
-	// 	} catch (e: any) {
-	// 		// eslint-disable-next-line no-console
-	// 		console.warn(e)
-	// 	}
-	// }
+	const selectParticipant = (selected: Participant) => {
+		if (selectedParticipants.includes(selected)) {
+			setSelectedParticipants((prev) => prev.filter((p) => p.id !== selected.id))
+		} else {
+			setSelectedParticipants((prev) => [selected, ...prev])
+		}
+	}
+
+	const handleGoBack = () => {
+		leftColumnUiStore.handleResetContent()
+	}
+
+	const renderContent = () => {
+		switch (leftColumnUiStore.content) {
+			case LeftColumnContent.NewConversationStep1:
+				return (
+					<SelectParticipants
+						handleGoBack={handleGoBack}
+						key={LeftColumnContent.NewConversationStep1}
+						participants={selectedParticipants}
+						leftColumnUiStore={leftColumnUiStore}
+						selectParticipant={selectParticipant}
+					/>
+				)
+			case LeftColumnContent.NewConversationStep2:
+				return (
+					<ProvideInformation
+						leftColumnUiStore={leftColumnUiStore}
+						handleGoBack={handleGoBack}
+						key={LeftColumnContent.NewConversationStep2}
+						participants={selectedParticipants}
+					/>
+				)
+			default:
+				return null
+		}
+	}
+
 	return (
-		<>
-			<Box bg='red' minH='50vh' minW='300px'>
-				asdfasdfl
-			</Box>
-		</>
+		<Animation.Slide bg='white' left={0} top={0} bottom={0} pos='absolute' width='100%' height='100%'>
+			<AnimatePresence initial={false}>{renderContent()}</AnimatePresence>
+		</Animation.Slide>
 	)
-}
+})

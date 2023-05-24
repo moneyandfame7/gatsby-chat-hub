@@ -16,6 +16,7 @@
 		"^@modules/(.*)$",
 		"^@services/(.*)$",
 		"^@ui/(.*)$",
+		"^@components/(.*)$",
 		"^@containers/(.*)$",
 		"^@utils/(.*)$",
 		"^@assets/(.*)$",

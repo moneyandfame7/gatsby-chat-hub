@@ -1,63 +1,82 @@
 import { throttle } from 'lodash'
-import { makeAutoObservable } from 'mobx'
+import { makeAutoObservable, toJS } from 'mobx'
+
+import { client } from '@services/apollo/clients'
+
+import { Participant } from '@utils/graphql/conversations'
+
+import { RootStore } from '../root'
+import { SEARCH_USERS } from '../user/graphql'
+import { SearchUsersInput, SearchUsersResponse } from '../user/type'
 
 type SearchName = 'contacts' | 'global'
 type SearchOptions = {
-  type: SearchName
-  query: string
+	type: SearchName
+	query: string
 }
 
-// const throttledSearch <T extends (...args: any[])>(func:T)=>{}
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const throttledSearch = <T extends (...args: any[]) => void>(func: T) => {
-  return throttle(func, 500, { leading: false })
+	return throttle(func, 800, { leading: false })
+}
+
+export interface SearchResult {
+	users: Participant[]
+	global: []
 }
 
 export class SearchStore {
-  private queryGlobalResult: any
+	public readonly initialState: SearchResult = {
+		users: [],
+		global: [],
+	}
+	public state: SearchResult = this.initialState
+	public isLoading = false
 
-  public isLoading: boolean = false
-  public searchQuery: string = ''
-  constructor() {
-    makeAutoObservable(this, {}, { autoBind: true })
-  }
+	public constructor(public readonly rootStore: RootStore) {
+		makeAutoObservable(this, {}, { autoBind: true })
+	}
 
-  public searchByQueryGlobal = throttledSearch((query: string) => {
-    console.log('[GLOBAL QUERY]:', query)
-    this.setLoading(true)
-    /**
-     * @TODO debounce
-     */
-    this.searchQuery = query
-    setTimeout(() => {
-      this.setLoading(false)
-    }, 500)
-  })
+	public executeSearchQuery = ({ type, query }: SearchOptions) => {
+		switch (type) {
+			case 'global':
+				this.searchByQueryGlobal(query)
+				break
+		}
+	}
+	public clear() {
+		this.setLoading(false)
+		this.state = this.initialState
+	}
+	private setLoading = (status: boolean): void => {
+		this.isLoading = status
+	}
+	public selectResult = <T>(selector: (search: SearchResult) => T) => {
+		return selector(toJS(this.state))
+	}
 
-  public searchByContacts = throttledSearch((query: string) => {
-    console.log('[CONTACTS QUERY]: ', query)
-  })
-  public getContacts = (contact: string) => {
-    /* by default, return from cache */
-    /* contacts or No contacts matched your search. */
-  }
+	public searchByQueryGlobal = throttledSearch((query: string) => {
+		this.setLoading(true)
 
-  public getQueryGlobalResult = () => {
-    /* messages, chats, contacts */
-  }
+		setTimeout(() => {
+			this.setLoading(false)
+		}, 500)
+	})
 
-  private setLoading = (status: boolean): void => {
-    this.isLoading = status
-  }
+	public searchUsers = throttledSearch(async (query: string) => {
+		this.setLoading(true)
+		const { data } = await client.query<SearchUsersResponse, SearchUsersInput>({
+			query: SEARCH_USERS,
 
-  public executeSearchQuery = ({ type, query }: SearchOptions) => {
-    switch (type) {
-      case 'contacts':
-        this.searchByContacts(query)
-        break
-      case 'global':
-        this.searchByQueryGlobal(query)
-        break
-    }
-  }
+			variables: {
+				username: query,
+			},
+		})
+
+		this.setLoading(false)
+		this.setUsers(data.searchUsers)
+	})
+	public setUsers = (result: Participant[]) => {
+		this.state.users = result
+	}
 }

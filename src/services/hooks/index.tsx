@@ -1,3 +1,6 @@
 export * from './useDebounce'
-export * from './useIsMobileScreen'
+export * from './useThrottle'
+
+export * from './useLayout'
+export * from './useIsAnimated'
 export * from './usePressEsc'

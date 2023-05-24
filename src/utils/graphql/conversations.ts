@@ -1,11 +1,10 @@
 import { gql } from '@apollo/client'
 import { DocumentNode } from 'graphql'
 
+import { AvatarVariants } from '@services/actions/ui/conversations'
+
 import type { NullableField } from '@utils/types'
 
-/**
- * Отримати список розмов, де є поточний юзер
- * */
 export interface Participant {
 	id: string
 	username: string
@@ -21,6 +20,9 @@ export interface Conversation {
 	id: string
 	lastMessage: NullableField<LastMessage>
 	createdAt: Date
+	name: string
+	description?: string
+	avatarVariant?: AvatarVariants
 	/* Count of unread messages */
 	unreadMessages: number
 	participants: Participant[]
@@ -35,12 +37,16 @@ export const PARTICIPANT_FRAGMENT: DocumentNode = gql`
 		username
 	}
 `
+
 export const CONVERSATION_FRAGMENT: DocumentNode = gql`
 	${PARTICIPANT_FRAGMENT}
 	fragment ConversationFields on Conversation {
 		id
 		unreadMessages
 		createdAt
+		name
+		description
+		avatarVariant
 		lastMessage {
 			text
 			updatedAt
@@ -79,6 +85,11 @@ export const CONVERSATION_ID_QUERY: DocumentNode = gql`
 		conversation(id: $id) {
 			id
 			createdAt
+			name
+			createdAt
+			unreadMessages
+			avatarVariant
+			description
 			messages {
 				id
 				isRead
@@ -118,11 +129,15 @@ export interface CreateConversationResponse {
 	}
 }
 export interface CreateConversationInput {
-	participantsIds: string[]
+	createConversationInput: {
+		participantsIds: string[]
+		name: string
+		description?: string
+	}
 }
 export const CREATE_CONVERSATION: DocumentNode = gql`
-	mutation CreateConversation($participantsIds: [String]) {
-		createConversation(participantsIds: $participantsIds) {
+	mutation CreateConversation($createConversationInput: CreateConversationInput) {
+		createConversation(createConversationInput: $createConversationInput) {
 			conversationId
 		}
 	}

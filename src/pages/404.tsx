@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { PageProps } from 'gatsby'
 
-import { pageHead } from '@utils/page-head'
+import { pageHead } from '@components/page-head'
 
 const NotFoundPage: React.FC<PageProps> = () => {
 	return <main>404</main>

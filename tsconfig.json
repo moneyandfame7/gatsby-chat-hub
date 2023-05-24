@@ -1,6 +1,5 @@
 {
 	"compilerOptions": {
-		"baseUrl": "src",
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"jsx": "react",
@@ -14,23 +13,23 @@
 		"resolveJsonModule": true,
 		"strict": true,
 		"target": "esnext",
+		"baseUrl": "./",
 		"paths": {
-			"@ui/*": ["ui/*"],
-			"@ui": ["ui"],
+			"@components/*": ["./src/components/*"],
 
-			"@containers/*": ["containers/*"],
-			"@containers": ["containers"],
+			"@containers/*": ["./src/containers/*"],
+			"@containers": ["./src/containers"],
 
-			"@services/*": ["services/*"],
-			"@services": ["services"],
+			"@services/*": ["./src/services/*"],
+			"@services": ["./src/services"],
 
-			"@modules": ["modules"],
-			"@modules/*": ["modules/*"],
+			"@modules": ["./src/modules"],
+			"@modules/*": ["./src/modules/*"],
 
-			"@assets/*": ["assets/*"],
+			"@assets/*": ["./src/assets/*"],
 
-			"@utils/*": ["utils/*"],
-			"@utils": ["utils"]
+			"@utils/*": ["./src/utils/*"],
+			"@utils": ["./src/utils"]
 		}
 	},
 	"include": ["./src/**/*", "./gatsby-node.ts", "./gatsby-config.ts", "./plugins/**/*"]
