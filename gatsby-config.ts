@@ -34,7 +34,6 @@ const config: GatsbyConfig = {
 					'@containers': path.resolve(__dirname, 'src/containers'),
 					'@modules': path.resolve(__dirname, 'src/modules'),
 					'@services': path.resolve(__dirname, 'src/services'),
-					'@ui': path.resolve(__dirname, 'src/ui'),
 					'@utils': path.resolve(__dirname, 'src/utils'),
 					'@components': path.resolve(__dirname, 'src/components'),
 				},

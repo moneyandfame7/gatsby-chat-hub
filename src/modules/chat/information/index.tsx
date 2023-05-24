@@ -3,12 +3,10 @@ import React, { FC } from 'react'
 import { Text, VStack } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
 
-import { useIsMobileScreen } from '@services/hooks'
+import { useLayout } from '@services/hooks'
 
 export const ConversationInformation: FC = () => {
-	const isMobileScreen = useIsMobileScreen()
-	/* Header */
-	/* index.tsx */
+	const { isMobile } = useLayout()
 	return (
 		<VStack
 			zIndex={10000}
@@ -16,7 +14,7 @@ export const ConversationInformation: FC = () => {
 			pos={{ base: 'absolute', md: 'initial' }}
 			right={0}
 			initial={{ width: 0 }}
-			animate={{ width: isMobileScreen ? '100%' : 300 }}
+			animate={{ width: isMobile ? '100%' : 300 }}
 			exit={{ width: 0 }}
 			margin='0px !important'
 			w={{ base: '100%', md: '300px' }}

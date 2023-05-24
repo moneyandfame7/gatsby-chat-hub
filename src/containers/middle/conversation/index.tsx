@@ -6,9 +6,13 @@ import { navigate, useLocation } from '@reach/router'
 import { Variants } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
-import { useStores } from '@services/store'
+import { getIsOverlayOpen } from '@services/actions/ui'
+import { usePressEsc } from '@services/hooks'
+import { LeftColumnContent, useStores } from '@services/store'
 import { selectConversationById } from '@services/store/cache'
+import { RightColumnContent } from '@services/store/ui/right-column'
 
+import { ROUTES } from '@utils/constants'
 import { CONVERSATION_ID_QUERY, ConversationByIdData, ConversationByIdInput } from '@utils/graphql/conversations'
 import { Conversation as ConversationType } from '@utils/graphql/conversations'
 
@@ -29,10 +33,10 @@ const CHAT_ANIMATIONS: Variants = {
 	},
 }
 export const Conversation: React.FC<ConversationProps> = observer(({ id }) => {
-	const { cacheStore } = useStores()
-	const [conversation, setConversation] = useState<ConversationType>()
-
-	const location = useLocation()
+	const { cacheStore, rightColumnUiStore, leftColumnUiStore } = useStores()
+	const [conversation, setConversation] = useState<ConversationType | undefined>(
+		cacheStore.selectCache(selectConversationById(id))
+	)
 
 	const { data } = useQuery<ConversationByIdData, ConversationByIdInput>(CONVERSATION_ID_QUERY, {
 		variables: { id },
@@ -53,20 +57,20 @@ export const Conversation: React.FC<ConversationProps> = observer(({ id }) => {
 		}
 	}, [id])
 
-	const handlePressEscape = (e: KeyboardEvent) => {
-		if ((e.code === 'Escape' || e.key === 'Escape') && !e.repeat) {
-			e.stopPropagation()
-			navigate(location.pathname)
+	const closeConversation = () => {
+		if (!rightColumnUiStore.isInDom) {
+			navigate(ROUTES.chat(), { replace: true })
 		}
 	}
 
-	useEffect(() => {
-		document.addEventListener('keydown', handlePressEscape, false)
-
-		return () => {
-			document.removeEventListener('keydown', handlePressEscape, false)
+	const openConversation = ({ id }: { id: string }) => {
+		const conversation = cacheStore.selectCache(selectConversationById(id))
+		if (conversation) {
+			navigate(ROUTES.chat(id))
 		}
-	}, [])
+	}
+
+	usePressEsc(closeConversation)
 
 	if (!conversation) {
 		return null

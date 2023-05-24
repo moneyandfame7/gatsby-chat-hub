@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react'
 
-import { Box } from '@chakra-ui/react'
-import { AnimatePresence, Variants } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
 import { LeftColumnContent } from '@services/store'

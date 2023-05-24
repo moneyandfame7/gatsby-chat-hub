@@ -2,9 +2,22 @@ import React, { CSSProperties } from 'react'
 
 import { navigate } from 'gatsby'
 
-import { Avatar, AvatarProps, Badge, Checkbox, Divider, HStack, StackProps, Text, VStack } from '@chakra-ui/react'
+import {
+	Avatar,
+	AvatarProps,
+	Badge,
+	Box,
+	Center,
+	Checkbox,
+	Divider,
+	HStack,
+	Image,
+	StackProps,
+	SystemStyleObject,
+	Text,
+	VStack,
+} from '@chakra-ui/react'
 import { useLocation } from '@reach/router'
-import { MotionConfig } from 'framer-motion'
 
 interface ListItemWrapperProps extends StackProps {
 	to?: string
@@ -19,9 +32,6 @@ const ListItemWrapper: React.FC<ListItemWrapperProps> = ({ isActive, to, isHover
 			bg={isActive ? 'purple.200' : 'none'}
 			_hover={{ bg: isHoverable ? (isActive ? 'purple.200' : 'blackAlpha.50') : 'initial' }}
 			cursor={isHoverable ? 'pointer' : 'default'}
-			sx={{
-				'-webkit-tap-highlight-color': 'transparent',
-			}}
 			p='9px'
 			w='full'
 			userSelect='none'
@@ -40,9 +50,65 @@ interface ListItemAvatarProps {
 	src?: string
 	name?: string
 	background?: AvatarProps['background']
+	size?: 'large' | 'medium' | 'small'
 }
-export const ListItemAvatar: React.FC<ListItemAvatarProps> = ({ src, name, background }) => {
-	return <Avatar pointerEvents='none' src={src} background={background} name={name} />
+export const ListItemAvatar: React.FC<ListItemAvatarProps> = ({ src, name, background, size = 'large' }) => {
+	const baseStyles: SystemStyleObject = {
+		borderRadius: '50%',
+		pointerEvents: 'none',
+	}
+	const getWidth = () => {
+		switch (size) {
+			case 'large':
+				return {
+					width: '50px',
+					height: '50px',
+					fontSize: '20px',
+				}
+			case 'medium':
+				return {
+					width: '40px',
+					height: '40px',
+				}
+			case 'small':
+				return {
+					width: '30px',
+					height: '30px',
+				}
+		}
+	}
+	const renderContent = () => {
+		switch (Boolean(src)) {
+			case true:
+				return (
+					<Box
+						sx={{
+							...baseStyles,
+							...getWidth(),
+						}}
+					>
+						<Image width='100%' height='100%' src={src} alt={name} />
+					</Box>
+				)
+			case false:
+				return (
+					<Center
+						sx={{
+							...baseStyles,
+							...getWidth(),
+						}}
+						bg={background}
+						fontWeight={600}
+						textTransform='uppercase'
+						color='#fff'
+					>
+						{name?.slice(0, 2)}
+					</Center>
+				)
+		}
+	}
+
+	return <>{renderContent()}</>
 }
 
 interface ListItemTitleProps {
@@ -120,7 +186,7 @@ export const ListItem: React.FC<ListItemProps & StackProps> = ({
 }) => {
 	return (
 		<ListItemWrapper to={to} isActive={isActive} isHoverable={isHoverable} {...props}>
-			{withCheckbox && <Checkbox zIndex={-1} isChecked={isChecked} />}
+			{withCheckbox && <Checkbox pointerEvents='none' userSelect='none' isChecked={isChecked} />}
 			<HStack w='full'>
 				<ListItemAvatar {...avatar} />
 				<ListItemContent isActive={isActive} title={title} subtitle={subtitle} date={date} />

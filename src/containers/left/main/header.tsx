@@ -1,15 +1,15 @@
 /* lib  */
 import React, { useCallback } from 'react'
 
-import { HStack } from '@chakra-ui/react'
 import { AnimatePresence } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
-import { client, useApolloNetworkStatus } from '@services/apollo/clients'
+import { useApolloNetworkStatus } from '@services/apollo/clients'
 import useNetworkStatus from '@services/hooks/useNetworkStatus'
 import { useStores } from '@services/store'
 import { LeftColumnContent } from '@services/store/ui/left-column'
 
+import { ColumnHeader } from '@components/column-header'
 import { SearchInput } from '@components/shared/search-input'
 
 import { LeftGoBack } from '../go-back'
@@ -19,6 +19,34 @@ import { WithLeftColumnStore } from '../settings'
 interface LeftMainHeaderProps extends WithLeftColumnStore {}
 export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ leftColumnUiStore }) => {
 	const { authorizationStore, searchStore } = useStores()
+
+	const searchInputPlaceholder =
+		leftColumnUiStore.content === LeftColumnContent.Contacts ? 'Search contacts' : 'Search (⌘K)'
+
+	const isSearchInputFocused =
+		leftColumnUiStore.content === LeftColumnContent.Contacts ||
+		leftColumnUiStore.content === LeftColumnContent.GlobalSearch
+
+	const isLoading = useApolloNetworkStatus().numPendingQueries > 0
+	const isOnline = useNetworkStatus()
+
+	const handleLogoutSelect = useCallback(async () => {
+		await authorizationStore.logout()
+	}, [])
+
+	const handleFocusInput = useCallback(() => {
+		if (leftColumnUiStore.content !== LeftColumnContent.GlobalSearch) {
+			leftColumnUiStore.setContent(LeftColumnContent.GlobalSearch)
+		}
+	}, [])
+
+	const handleNewChatSelect = useCallback(() => {
+		leftColumnUiStore.setContent(LeftColumnContent.NewConversationStep1)
+	}, [])
+
+	const handleGoBack = useCallback(() => {
+		leftColumnUiStore.handleResetContent()
+	}, [])
 
 	const handleSearchQuery = useCallback(
 		(query: string) => {
@@ -34,35 +62,8 @@ export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ leftCol
 		},
 		[leftColumnUiStore.content, searchStore.executeSearchQuery]
 	)
-	const searchInputPlaceholder =
-		leftColumnUiStore.content === LeftColumnContent.Contacts ? 'Search contacts' : 'Search (⌘K)'
 
-	const isSearchInputFocused =
-		leftColumnUiStore.content === LeftColumnContent.Contacts ||
-		leftColumnUiStore.content === LeftColumnContent.GlobalSearch
-
-	const handleFocusInput = () => {
-		if (leftColumnUiStore.content !== LeftColumnContent.GlobalSearch) {
-			leftColumnUiStore.setContent(LeftColumnContent.GlobalSearch)
-		}
-	}
-
-	const isLoading = useApolloNetworkStatus().numPendingQueries > 0
-	const isOnline = useNetworkStatus()
-
-	const handleLogoutSelect = async () => {
-		await authorizationStore.logout()
-	}
-
-	const handleNewChatSelect = () => {
-		leftColumnUiStore.setContent(LeftColumnContent.NewConversationStep1)
-	}
-
-	const handleGoBack = () => {
-		leftColumnUiStore.handleResetContent()
-	}
-
-	const renderContentActionButton = useCallback(() => {
+	const renderContent = useCallback(() => {
 		switch (leftColumnUiStore.content) {
 			case LeftColumnContent.Conversations:
 				return <LeftDropdownMenu onLogOutSelect={handleLogoutSelect} onNewChatSelect={handleNewChatSelect} />
@@ -70,18 +71,18 @@ export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ leftCol
 				return <LeftGoBack onClick={handleGoBack} />
 		}
 	}, [leftColumnUiStore.content])
-
 	return (
-		<HStack justify='space-between' px={2} py={3}>
-			<AnimatePresence initial={false}>{renderContentActionButton()}</AnimatePresence>
+		<ColumnHeader>
+			<AnimatePresence initial={false}>{renderContent()}</AnimatePresence>
 			<SearchInput
+				width='90%'
 				isLoading={isLoading || !isOnline}
-				spinnerColor={isLoading ? 'primary' : 'yellow'}
+				loaderStatus={!isOnline ? 'offline' : 'fetching'}
 				isFocused={isSearchInputFocused}
 				handleFocus={handleFocusInput}
 				handleChange={handleSearchQuery}
 				placeholder={searchInputPlaceholder}
 			/>
-		</HStack>
+		</ColumnHeader>
 	)
 })

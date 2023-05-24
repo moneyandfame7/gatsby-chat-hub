@@ -4,8 +4,10 @@ import { Input, InputGroup, InputLeftElement, InputRightElement } from '@chakra-
 import { AnimatePresence } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
+import { useIsAnimated } from '@services/hooks'
+
 import { IconButton } from '@components/shared/buttons'
-import { Loader, SecondaryLoader } from '@components/shared/loaders'
+import { SecondaryLoader } from '@components/shared/loaders'
 
 import { Animation } from '../animation'
 import { CloseIcon, SearchIcon } from '../icons'
@@ -18,11 +20,12 @@ interface SearchInputProps {
 	placeholder: string
 	isFocused: boolean
 	isLoading: boolean
-	spinnerColor: string
+	width?: string
+	loaderStatus?: 'offline' | 'fetching'
 }
 
 export const SearchInput: React.FC<SearchInputProps> = observer(
-	({ isLoading, handleFocus, handleChange, placeholder, isFocused, spinnerColor }) => {
+	({ isLoading, handleFocus, handleChange, placeholder, isFocused, width, loaderStatus = 'fetching' }) => {
 		const TEXT_ANIMAION_POSITION = '30%'
 		const inputRef = useRef<HTMLInputElement>(null)
 		const [inputValue, setInputValue] = useState('')
@@ -59,8 +62,9 @@ export const SearchInput: React.FC<SearchInputProps> = observer(
 			}
 		}, [isFocused, placeholder])
 
+		const isAnimated = useIsAnimated()
 		return (
-			<InputGroup cursor='default'>
+			<InputGroup cursor='default' width={width}>
 				<InputLeftElement pointerEvents='none' children={<SearchIcon />} />
 				<Input
 					lineHeight='normal'
@@ -81,10 +85,14 @@ export const SearchInput: React.FC<SearchInputProps> = observer(
 						transform: `translateX(${textStyles.x})`,
 					}}
 					onBlur={() => {
-						setTextStyles({ x: TEXT_ANIMAION_POSITION })
+						if (isAnimated) {
+							setTextStyles({ x: TEXT_ANIMAION_POSITION })
+						}
 					}}
 					onFocus={() => {
-						setTextStyles({ x: '0%' })
+						if (isAnimated) {
+							setTextStyles({ x: '0%' })
+						}
 
 						handleFocus()
 					}}
@@ -112,7 +120,7 @@ export const SearchInput: React.FC<SearchInputProps> = observer(
 					{isLoading && (
 						<Animation.Fade key='AnimatedLoader'>
 							<InputRightElement>
-								<SecondaryLoader color='primary' />
+								<SecondaryLoader color={loaderStatus === 'fetching' ? 'primary' : 'yellow'} />
 							</InputRightElement>
 						</Animation.Fade>
 					)}

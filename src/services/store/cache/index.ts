@@ -1,6 +1,6 @@
 import { uniqBy } from 'lodash'
-import { makeAutoObservable, toJS } from 'mobx'
-import { makePersistable } from 'mobx-persist-store'
+import { autorun, makeAutoObservable, runInAction, toJS } from 'mobx'
+import { isPersisting, makePersistable, stopPersisting } from 'mobx-persist-store'
 
 import { client } from '@services/apollo/clients'
 
@@ -11,13 +11,17 @@ import type { User } from '../user/type'
 
 interface GlobalCache {
 	currentUser?: User
+	animationsEnabled: boolean
 	recentSearchedUsers: Participant[]
 	conversations: Conversation[]
+	rtl: boolean
 }
 
 const initialState: GlobalCache = {
 	recentSearchedUsers: [],
 	conversations: [],
+	animationsEnabled: true,
+	rtl: false,
 }
 const MAX_LENGTH = 20
 
@@ -38,7 +42,10 @@ export class CacheStore {
 
 	public async clear() {
 		await client.clearStore()
-		this.globalCache = initialState
+		runInAction(() => {
+			this.globalCache = initialState
+			stopPersisting(this)
+		})
 	}
 
 	public selectCache<T>(selector: (cache: GlobalCache) => T) {
@@ -58,5 +65,13 @@ export class CacheStore {
 	public updateConversationById(payload: Conversation) {
 		const withoutUpdated = this.globalCache.conversations.filter((c) => c.id !== payload.id)
 		this.globalCache.conversations = [...withoutUpdated, payload]
+	}
+
+	public toggleAnimations() {
+		this.globalCache.animationsEnabled = !this.globalCache.animationsEnabled
+	}
+
+	public toggleDirection() {
+		this.globalCache.rtl = !this.globalCache.rtl
 	}
 }

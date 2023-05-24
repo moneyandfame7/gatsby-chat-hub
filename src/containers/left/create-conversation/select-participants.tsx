@@ -6,9 +6,11 @@ import { uniqBy } from 'lodash'
 import { observer } from 'mobx-react-lite'
 
 import { useSelectSearchUsers } from '@services/actions/search'
+import { useIsAnimated } from '@services/hooks'
 import { LeftColumnContent, useStores } from '@services/store'
 
 import { Animation } from '@components/animation'
+import { ColumnHeader } from '@components/column-header'
 import { Scrollable } from '@components/overlay'
 import { ListItem } from '@components/shared/list-item'
 import { SecondaryLoader } from '@components/shared/loaders'
@@ -29,13 +31,14 @@ interface ConversationModalProps extends WithLeftColumnStore {
 
 const SearchList: React.FC<
 	PropsWithParticipants & { selectParticipant: (p: Participant) => void; searchList: Participant[] }
-> = ({ participants, searchList, selectParticipant }) => {
+> = observer(({ participants, searchList, selectParticipant }) => {
+	const isAnimated = useIsAnimated()
 	return (
 		<Scrollable height='calc(100% - 112px)' width='100%' p={3}>
 			{searchList.map((u) => (
 				<Animation.Fade
 					key={u.id}
-					layout
+					layout={isAnimated ? true : undefined}
 					onClick={() => {
 						selectParticipant(u)
 					}}
@@ -55,7 +58,7 @@ const SearchList: React.FC<
 			))}
 		</Scrollable>
 	)
-}
+})
 export const SelectParticipants: React.FC<ConversationModalProps> = observer(
 	({ leftColumnUiStore, participants, selectParticipant, handleGoBack }) => {
 		const { searchStore, cacheStore } = useStores()
@@ -64,6 +67,13 @@ export const SelectParticipants: React.FC<ConversationModalProps> = observer(
 		const [username, setUsername] = useState<string>('')
 
 		const newSearchResult = useSelectSearchUsers(searchStore)
+
+		const handleChangeUsername = async (e: React.ChangeEvent<HTMLInputElement>) => {
+			setUsername(e.currentTarget.value)
+		}
+		const handleGoNextStep = () => {
+			leftColumnUiStore.setContent(LeftColumnContent.NewConversationStep2)
+		}
 
 		useEffect(() => {
 			if (newSearchResult.length > 0) {
@@ -74,13 +84,6 @@ export const SelectParticipants: React.FC<ConversationModalProps> = observer(
 				searchStore.clear()
 			}
 		}, [newSearchResult])
-
-		const handleChangeUsername = async (e: React.ChangeEvent<HTMLInputElement>) => {
-			setUsername(e.currentTarget.value)
-		}
-		const handleGoNextStep = () => {
-			leftColumnUiStore.setContent(LeftColumnContent.NewConversationStep2)
-		}
 
 		useEffect(() => {
 			if (Boolean(username)) {
@@ -121,15 +124,15 @@ export const SelectParticipants: React.FC<ConversationModalProps> = observer(
 
 		return (
 			<Animation.Fade height='100%' pos='absolute' left={0} top={0} bottom={0} width='100%'>
-				<HStack p={4}>
+				<ColumnHeader>
 					<LeftGoBack onClick={handleGoBack} />
 					<Text flex={1} fontSize='xl' fontWeight={500}>
 						Add Participants
 					</Text>
 					<AnimatePresence initial={false}>
-						{/* participants.length > 0 &&  */ <CreateConversationGoNext onClick={handleGoNextStep} />}
+						{participants.length > 0 && <CreateConversationGoNext onClick={handleGoNextStep} />}
 					</AnimatePresence>
-				</HStack>
+				</ColumnHeader>
 				<InputGroup>
 					<Input
 						onChange={handleChangeUsername}

@@ -6,7 +6,7 @@ import { MdOutlineMarkChatRead, MdOutlineMarkChatUnread } from 'react-icons/md'
 import { RxOpenInNewWindow } from 'react-icons/rx'
 
 import { useConversationAvatar } from '@services/actions/ui/conversations'
-import { useIsMobileScreen } from '@services/hooks'
+import { useLayout } from '@services/hooks'
 import { useStores } from '@services/store'
 
 import { ContextMenu, ContextMenuItem } from '@components/overlay'
@@ -37,28 +37,27 @@ const ConversationContextMenu: React.FC<ConversationItemProps> = ({ containerRef
 		//
 	}, [])
 
-	const conversationItems = useMemo(
-		() => (
-			<>
-				<ContextMenuItem icon={<RxOpenInNewWindow size={21} color='#707579' />} onClick={handleOpenNewTab}>
-					Open in new tab
-				</ContextMenuItem>
-				{/* if has unread - mark as read, else mark as unread */}
-				<ContextMenuItem icon={<MdOutlineMarkChatRead size={20} color='#707579' />} onClick={handleMarkAsRead}>
-					Mark as read
-				</ContextMenuItem>
-				<ContextMenuItem icon={<MdOutlineMarkChatUnread size={20} color='#707579' />} onClick={handleMarkAsUnread}>
-					Mark as unread
-				</ContextMenuItem>
-				<ContextMenuItem color='red' icon={<DeleteIcon fontSize={20} color='red' />} onClick={handleDelete}>
-					Delete
-				</ContextMenuItem>
-			</>
-		),
-		[]
+	const conversationItems = (
+		<>
+			<ContextMenuItem icon={<RxOpenInNewWindow size={21} color='#707579' />} onClick={handleOpenNewTab}>
+				Open in new tab
+			</ContextMenuItem>
+			{/* if has unread - mark as read, else mark as unread */}
+			<ContextMenuItem icon={<MdOutlineMarkChatRead size={20} color='#707579' />} onClick={handleMarkAsRead}>
+				Mark as read
+			</ContextMenuItem>
+			<ContextMenuItem icon={<MdOutlineMarkChatUnread size={20} color='#707579' />} onClick={handleMarkAsUnread}>
+				Mark as unread
+			</ContextMenuItem>
+			<ContextMenuItem color='red' icon={<DeleteIcon fontSize={20} color='red' />} onClick={handleDelete}>
+				Delete
+			</ContextMenuItem>
+		</>
 	)
+
+	const container = document.getElementById('ConversationsContainer')
 	return (
-		<ContextMenu containerRef={containerRef} renderItems={conversationItems}>
+		<ContextMenu container={container} containerRef={containerRef} renderItems={conversationItems}>
 			{children}
 		</ContextMenu>
 	)
@@ -75,11 +74,11 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({ conversation
 		return c.createdAt
 	}
 	const avatar = useConversationAvatar(conversation)
-	const isMobileScreen = useIsMobileScreen()
+	const { isMobile } = useLayout()
 	return (
 		<ConversationContextMenu containerRef={containerRef} conversation={conversation}>
 			<ListItem
-				isActive={!isMobileScreen && activeConversationId === conversation.id}
+				isActive={!isMobile && activeConversationId === conversation.id}
 				date={formatDate(getDateForConversation(conversation))}
 				key={conversation.id}
 				avatar={avatar}

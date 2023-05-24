@@ -34,6 +34,7 @@ const theme = extendTheme(
 			},
 
 			red: '#E53835',
+			yellow: '#FDD764',
 		},
 		semanticTokens: {
 			colors: {
@@ -47,6 +48,10 @@ const theme = extendTheme(
 				body: {
 					bgImage: `${gradient}`,
 					bgSize: 'cover',
+				},
+				'*': {
+					WebkitTapHighlightColor: 'transparent',
+					overflowX: 'hidden',
 				},
 			}),
 		},
