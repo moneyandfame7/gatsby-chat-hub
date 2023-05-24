@@ -59,7 +59,6 @@ export const Conversation: React.FC<ConversationProps> = observer(({ id }) => {
 
 	const closeConversation = () => {
 		if (!rightColumnUiStore.isInDom) {
-			console.log(leftColumnUiStore.contentGroup, leftColumnUiStore.content)
 			navigate(ROUTES.chat(), { replace: true })
 		}
 	}

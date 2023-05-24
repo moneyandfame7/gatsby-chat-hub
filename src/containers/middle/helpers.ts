@@ -19,7 +19,7 @@ export function useConversationId() {
 	const isValidId = validateId(id)
 
 	useEffect(() => {
-		if (!isValidId) {
+		if (Boolean(id) && !isValidId) {
 			navigate(ROUTES.chat(), { replace: true })
 		}
 	}, [isValidId, id])

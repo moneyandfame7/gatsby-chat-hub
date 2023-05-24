@@ -23,7 +23,7 @@ const ConversationPage: React.FC<PageProps> = observer(({ location }) => {
 	const isValidId = validateId(conversationId)
 	const rtl = cacheStore.selectCache((cache) => cache.rtl)
 	useEffect(() => {
-		if (!isValidId) {
+		if (Boolean(conversationId) && !isValidId) {
 			navigate(ROUTES.chat(), { replace: true })
 		}
 	}, [isValidId, conversationId])
