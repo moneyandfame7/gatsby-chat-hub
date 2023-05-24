@@ -21,10 +21,11 @@ interface SearchInputProps {
 	isFocused: boolean
 	isLoading: boolean
 	width?: string
+	loaderStatus?: 'offline' | 'fetching'
 }
 
 export const SearchInput: React.FC<SearchInputProps> = observer(
-	({ isLoading, handleFocus, handleChange, placeholder, isFocused, width }) => {
+	({ isLoading, handleFocus, handleChange, placeholder, isFocused, width, loaderStatus = 'fetching' }) => {
 		const TEXT_ANIMAION_POSITION = '30%'
 		const inputRef = useRef<HTMLInputElement>(null)
 		const [inputValue, setInputValue] = useState('')
@@ -119,7 +120,7 @@ export const SearchInput: React.FC<SearchInputProps> = observer(
 					{isLoading && (
 						<Animation.Fade key='AnimatedLoader'>
 							<InputRightElement>
-								<SecondaryLoader color='primary' />
+								<SecondaryLoader color={loaderStatus === 'fetching' ? 'primary' : 'yellow'} />
 							</InputRightElement>
 						</Animation.Fade>
 					)}

@@ -77,6 +77,7 @@ export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ leftCol
 			<SearchInput
 				width='90%'
 				isLoading={isLoading || !isOnline}
+				loaderStatus={!isOnline ? 'offline' : 'fetching'}
 				isFocused={isSearchInputFocused}
 				handleFocus={handleFocusInput}
 				handleChange={handleSearchQuery}

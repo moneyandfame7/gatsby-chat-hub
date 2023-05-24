@@ -34,6 +34,7 @@ const theme = extendTheme(
 			},
 
 			red: '#E53835',
+			yellow: '#FDD764',
 		},
 		semanticTokens: {
 			colors: {

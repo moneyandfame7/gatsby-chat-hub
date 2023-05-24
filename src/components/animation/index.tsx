@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 
-import { Box, chakra, forwardRef, shouldForwardProp } from '@chakra-ui/react'
+import { Box, BoxProps, chakra, forwardRef, shouldForwardProp } from '@chakra-ui/react'
 import { Variants, isValidMotionProp, motion } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
@@ -128,10 +128,42 @@ const Width: React.FC<AnimationProps> = observer(({ children, ...props }) => {
 	)
 })
 
+interface DotsProps {
+	text: string
+}
+const Dots: React.FC<DotsProps> = ({ text }) => {
+	return (
+		<motion.span>
+			{text}
+			{Array.from({ length: 3 }).map((_, index) => (
+				<motion.span
+					key={index}
+					initial={{
+						opacity: 0,
+					}}
+					animate={{
+						opacity: 1,
+					}}
+					transition={{
+						delay: index * 0.2,
+						type: 'spring',
+						stiffness: 60,
+						duration: 1,
+						repeat: Infinity,
+					}}
+				>
+					.
+				</motion.span>
+			))}
+		</motion.span>
+	)
+}
+
 export const Animation = Object.assign(Animated, {
 	Scale,
 	Slide,
 	Fade,
 	Rotate,
 	Width,
+	Dots,
 })

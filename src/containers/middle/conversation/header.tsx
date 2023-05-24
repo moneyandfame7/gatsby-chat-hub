@@ -15,13 +15,16 @@ import {
 	VStack,
 } from '@chakra-ui/react'
 import { useLocation } from '@reach/router'
+import { motion } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
 import { useConversationAvatar } from '@services/actions/ui/conversations'
 import { useLayout } from '@services/hooks'
+import useNetworkStatus from '@services/hooks/useNetworkStatus'
 import { useStores } from '@services/store'
 import { RightColumnContent } from '@services/store/ui/right-column'
 
+import { Animation } from '@components/animation'
 import { ClientOnly } from '@components/client-only'
 import { ColumnHeader } from '@components/column-header'
 import { ArrowBack, BellIcon, DeleteIcon, InfoIcon, MoreVerticalIcon, SearchIcon } from '@components/icons'
@@ -39,6 +42,7 @@ export const ConversationHeader: FC<MessagesHeaderProps> = observer(({ conversat
 	const { isMobile } = useLayout()
 	const conversationAvatar = useConversationAvatar(conversation)
 	const location = useLocation()
+	const isOnline = useNetworkStatus()
 
 	const handleClickGoBack = () => {
 		navigate(location.pathname)
@@ -53,13 +57,14 @@ export const ConversationHeader: FC<MessagesHeaderProps> = observer(({ conversat
 	}
 
 	const showMembersStatus = useCallback(() => {
-		if (conversation) {
-			if (conversation?.participants.length > 2) {
-				return `${conversation?.participants.length} members`
-			}
-			return 'Last seen in'
+		if (!isOnline) {
+			return <Animation.Dots text='waiting for network' />
 		}
-	}, [conversation])
+		if (conversation?.participants.length > 2) {
+			return `${conversation?.participants.length} members`
+		}
+		return 'last seen in'
+	}, [conversation, isOnline])
 
 	return (
 		<ColumnHeader w='full' userSelect='none' pos='relative' boxShadow='0 2px 2px rgb(114 114 114 / 17%)'>

@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react'
 
-import { Center, Text } from '@chakra-ui/react'
+import { Center } from '@chakra-ui/react'
 import { AnimatePresence } from 'framer-motion'
 
 import { SecondaryLoader } from '@components/shared/loaders'
