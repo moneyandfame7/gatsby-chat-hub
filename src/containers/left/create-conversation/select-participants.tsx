@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { Center, HStack, Input, InputGroup, InputRightElement, Text } from '@chakra-ui/react'
+import { Center, Input, InputGroup, InputRightElement, Text } from '@chakra-ui/react'
 import { AnimatePresence } from 'framer-motion'
 import { uniqBy } from 'lodash'
 import { observer } from 'mobx-react-lite'

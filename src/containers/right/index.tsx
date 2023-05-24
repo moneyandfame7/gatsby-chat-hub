@@ -1,20 +1,16 @@
-import React, { PropsWithChildren, useEffect } from 'react'
+import React, { PropsWithChildren } from 'react'
 
-import { Box, HStack, ResponsiveValue, Text, position } from '@chakra-ui/react'
-import { useLocation } from '@reach/router'
-import { AnimatePresence, motion } from 'framer-motion'
+import { Text } from '@chakra-ui/react'
+import { AnimatePresence } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
 import { useLayout, usePressEsc } from '@services/hooks'
 import { useStores } from '@services/store'
-import { selectConversationById } from '@services/store/cache'
 import { RightColumnContent } from '@services/store/ui/right-column'
 
 import { Animation } from '@components/animation'
-import { CloseIcon } from '@components/icons'
-import { IconButton } from '@components/shared/buttons'
 
-import { useConversation, useConversationId, validateId } from '@containers/middle/helpers'
+import { useConversation } from '@containers/middle/helpers'
 
 import { ContainerIndex } from '@utils/constants'
 import { isChatOpen } from '@utils/functions'
@@ -78,7 +74,7 @@ const RightColumnAnimation: React.FC<PropsWithChildren> = observer(({ children }
 })
 
 export const RightColumn: React.FC = observer(() => {
-	const { rightColumnUiStore, cacheStore } = useStores()
+	const { rightColumnUiStore } = useStores()
 
 	const handlePressEscape = () => {
 		if (rightColumnUiStore.isInDom) {

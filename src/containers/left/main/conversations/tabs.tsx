@@ -1,18 +1,6 @@
 import React, { useRef, useState } from 'react'
 
-import {
-	Badge,
-	Center,
-	CircularProgress,
-	Tab,
-	TabIndicator,
-	TabList,
-	TabPanel,
-	TabPanels,
-	Tabs,
-	Text,
-	chakra,
-} from '@chakra-ui/react'
+import { Badge, Center, Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, chakra } from '@chakra-ui/react'
 import { AnimatePresence } from 'framer-motion'
 import Lottie from 'react-lottie-player'
 

@@ -2,15 +2,13 @@ import React, { useEffect, useState } from 'react'
 
 import { useQuery } from '@apollo/client'
 import { VStack } from '@chakra-ui/react'
-import { navigate, useLocation } from '@reach/router'
+import { navigate } from '@reach/router'
 import { Variants } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
-import { getIsOverlayOpen } from '@services/actions/ui'
 import { usePressEsc } from '@services/hooks'
-import { LeftColumnContent, useStores } from '@services/store'
+import { useStores } from '@services/store'
 import { selectConversationById } from '@services/store/cache'
-import { RightColumnContent } from '@services/store/ui/right-column'
 
 import { ROUTES } from '@utils/constants'
 import { CONVERSATION_ID_QUERY, ConversationByIdData, ConversationByIdInput } from '@utils/graphql/conversations'
@@ -22,18 +20,8 @@ interface ConversationProps {
 	id: string
 }
 
-const CHAT_ANIMATIONS: Variants = {
-	open: {
-		x: 0,
-		transition: { duration: 0.3 },
-	},
-	hidden: {
-		x: '100%',
-		transition: { duration: 0.3 },
-	},
-}
 export const Conversation: React.FC<ConversationProps> = observer(({ id }) => {
-	const { cacheStore, rightColumnUiStore, leftColumnUiStore } = useStores()
+	const { cacheStore, rightColumnUiStore } = useStores()
 	const [conversation, setConversation] = useState<ConversationType | undefined>(
 		cacheStore.selectCache(selectConversationById(id))
 	)

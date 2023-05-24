@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 
-import { Box, BoxProps, chakra, forwardRef, shouldForwardProp } from '@chakra-ui/react'
+import { Box, chakra, forwardRef, shouldForwardProp } from '@chakra-ui/react'
 import { Variants, isValidMotionProp, motion } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 

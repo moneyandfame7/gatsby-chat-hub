@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Box, HStack, Text } from '@chakra-ui/react'
+import { Text } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
 
 import { useStores } from '@services/store'

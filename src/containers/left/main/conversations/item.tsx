@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useCallback, useMemo } from 'react'
+import React, { PropsWithChildren, useCallback } from 'react'
 
 import { DeleteIcon } from '@chakra-ui/icons'
 import { useLocation } from '@reach/router'

@@ -1,21 +1,9 @@
-import React, { FC, useCallback, useContext, useEffect, useState } from 'react'
+import React, { FC, useCallback } from 'react'
 
 import { navigate } from 'gatsby'
 
-import {
-	Avatar,
-	Box,
-	Center,
-	CircularProgress,
-	HStack,
-	Image,
-	MenuButton,
-	MenuDivider,
-	Text,
-	VStack,
-} from '@chakra-ui/react'
+import { Box, HStack, MenuButton, MenuDivider, Text, VStack } from '@chakra-ui/react'
 import { useLocation } from '@reach/router'
-import { motion } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
 import { useConversationAvatar } from '@services/actions/ui/conversations'
@@ -25,7 +13,6 @@ import { useStores } from '@services/store'
 import { RightColumnContent } from '@services/store/ui/right-column'
 
 import { Animation } from '@components/animation'
-import { ClientOnly } from '@components/client-only'
 import { ColumnHeader } from '@components/column-header'
 import { ArrowBack, BellIcon, DeleteIcon, InfoIcon, MoreVerticalIcon, SearchIcon } from '@components/icons'
 import { StyledMenu, StyledMenuItem } from '@components/overlay'

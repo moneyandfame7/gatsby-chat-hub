@@ -1,6 +1,6 @@
 import { uniqBy } from 'lodash'
-import { autorun, makeAutoObservable, runInAction, toJS } from 'mobx'
-import { isPersisting, makePersistable, stopPersisting } from 'mobx-persist-store'
+import { makeAutoObservable, runInAction, toJS } from 'mobx'
+import { makePersistable, stopPersisting } from 'mobx-persist-store'
 
 import { client } from '@services/apollo/clients'
 

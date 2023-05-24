@@ -22,7 +22,6 @@ const TEST: Variants = {
 		transition: { duration: 0.5, ease: 'easeInOut' },
 	},
 }
-const TEST2: Variants = {}
 const Root: FC<PageProps> = ({ location }) => {
 	const [open, setOpen] = useState(false)
 	return (

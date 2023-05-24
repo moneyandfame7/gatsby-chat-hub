@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import { navigate } from 'gatsby'
 
-import { Box, Divider, HStack, Input, Text, VStack } from '@chakra-ui/react'
+import { Box, Divider, Input, Text, VStack } from '@chakra-ui/react'
 import { AnimatePresence } from 'framer-motion'
 
 import { createConversation } from '@services/actions/api/conversations'

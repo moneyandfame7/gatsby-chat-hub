@@ -7,8 +7,7 @@ import { useStores } from '@services/store'
 
 import { Animation } from '@components/animation'
 import {
-	AnimationIcon1,
-	AnimationIcon2,
+	AnimationIcon1, // AnimationIcon2,
 	ContactsIcon,
 	LayoutIcon,
 	LogoutIcon,

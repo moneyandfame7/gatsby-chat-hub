@@ -4,7 +4,6 @@ import React, { PropsWithChildren, createContext, useContext, useEffect, useRef,
 import { Box, Menu, MenuItemProps, Portal } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
 
-import { useIsAnimated } from '@services/hooks'
 import { useStores } from '@services/store'
 
 import { KeyboardEventKey } from '@utils/constants'

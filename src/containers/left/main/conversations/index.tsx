@@ -1,10 +1,8 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { useQuery } from '@apollo/client'
-import { observable } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
-import { client, getPersistor } from '@services/apollo/clients'
 import { useStores } from '@services/store'
 
 import { Animation } from '@components/animation'

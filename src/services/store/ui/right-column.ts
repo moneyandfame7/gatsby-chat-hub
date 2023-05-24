@@ -1,6 +1,4 @@
-import { autorun, makeAutoObservable } from 'mobx'
-
-import { NullableField } from '@utils/types'
+import { makeAutoObservable } from 'mobx'
 
 export enum RightColumnContent {
 	MessagesSearch,

@@ -1,9 +1,8 @@
-import React, { CSSProperties } from 'react'
+import React from 'react'
 
 import { navigate } from 'gatsby'
 
 import {
-	Avatar,
 	AvatarProps,
 	Badge,
 	Box,
