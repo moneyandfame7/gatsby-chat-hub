@@ -1,14 +1,12 @@
 import React, { PropsWithChildren, useCallback } from 'react'
 
-import { DeleteIcon } from '@chakra-ui/icons'
 import { useLocation } from '@reach/router'
-import { MdOutlineMarkChatRead, MdOutlineMarkChatUnread } from 'react-icons/md'
-import { RxOpenInNewWindow } from 'react-icons/rx'
 
 import { useConversationAvatar } from '@services/actions/ui/conversations'
 import { useLayout } from '@services/hooks'
 import { useStores } from '@services/store'
 
+import { DeleteIcon, MarkReadIcon, MarkUnreadIcon, NewTabIcon } from '@components/icons'
 import { ContextMenu, ContextMenuItem } from '@components/overlay'
 import { ListItem } from '@components/shared/list-item'
 
@@ -39,17 +37,17 @@ const ConversationContextMenu: React.FC<ConversationItemProps> = ({ containerRef
 
 	const conversationItems = (
 		<>
-			<ContextMenuItem icon={<RxOpenInNewWindow size={21} color='#707579' />} onClick={handleOpenNewTab}>
+			<ContextMenuItem icon={<NewTabIcon />} onClick={handleOpenNewTab}>
 				Open in new tab
 			</ContextMenuItem>
 			{/* if has unread - mark as read, else mark as unread */}
-			<ContextMenuItem icon={<MdOutlineMarkChatRead size={20} color='#707579' />} onClick={handleMarkAsRead}>
+			<ContextMenuItem icon={<MarkReadIcon />} onClick={handleMarkAsRead}>
 				Mark as read
 			</ContextMenuItem>
-			<ContextMenuItem icon={<MdOutlineMarkChatUnread size={20} color='#707579' />} onClick={handleMarkAsUnread}>
+			<ContextMenuItem icon={<MarkUnreadIcon />} onClick={handleMarkAsUnread}>
 				Mark as unread
 			</ContextMenuItem>
-			<ContextMenuItem color='red' icon={<DeleteIcon fontSize={20} color='red' />} onClick={handleDelete}>
+			<ContextMenuItem color='red' icon={<DeleteIcon fontSize={20} color='red' fill='none' />} onClick={handleDelete}>
 				Delete
 			</ContextMenuItem>
 		</>

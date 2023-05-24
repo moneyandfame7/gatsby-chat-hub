@@ -46,8 +46,8 @@ const theme = extendTheme(
 		styles: {
 			global: () => ({
 				body: {
-					bgImage: `${gradient}`,
-					bgSize: 'cover',
+					// bgImage: `${gradient}`,
+					// bgSize: 'cover',
 				},
 				'*': {
 					WebkitTapHighlightColor: 'transparent',

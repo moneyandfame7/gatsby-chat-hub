@@ -18,9 +18,11 @@ export const ClientOnly: React.FC<PropsWithChildren> = ({ children }) => {
 			{domLoaded ? (
 				<Animation.Fade key='Root'>{children}</Animation.Fade>
 			) : (
-				<Center key='Loader' height='100vh' bg='white'>
-					<SecondaryLoader size='40px' />
-				</Center>
+				<Animation.Fade key='Root2'>
+					<Center key='Loader' height='100vh' bg='white'>
+						<SecondaryLoader size='40px' />
+					</Center>
+				</Animation.Fade>
 			)}
 		</AnimatePresence>
 	)

@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 
-import { Box } from '@chakra-ui/react'
+import { Badge, Center } from '@chakra-ui/react'
 import { AnimatePresence, Variants, motion } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
@@ -10,6 +10,8 @@ import { Animation } from '@components/animation'
 
 import { ContainerIndex } from '@utils/constants'
 import { NullableField } from '@utils/types'
+
+import gradient from '@assets/gradient.png'
 
 import { Conversation } from './conversation'
 
@@ -86,24 +88,32 @@ export const MiddleColumn: React.FC<MiddleColumnProps> = observer(({ conversatio
 			case true:
 				return (
 					<AnimatePresence initial={false}>
-						{conversationId && (
+						{conversationId ? (
 							<>
 								{isAnimated && <Overlay key='Overlay' />}
 								<MiddleColumnAnimation isAnimated={isAnimated} key='Conversation'>
 									<Conversation id={conversationId} />
 								</MiddleColumnAnimation>
 							</>
-						)}
+						) : null}
 					</AnimatePresence>
 				)
 			default:
-				return <>{conversationId && <Conversation id={conversationId} />}</>
+				return (
+					<>
+						{conversationId ? (
+							<Conversation id={conversationId} />
+						) : (
+							<Center h='100vh' m='0px !important' flex={1} bgImage={gradient} bgSize='cover' bgRepeat='no-repeat'>
+								<Badge p={1} borderRadius={8}>
+									Select conversation
+								</Badge>
+							</Center>
+						)}
+					</>
+				)
 		}
 	}
 
-	return (
-		<Box data-component-name='MiddleColumn' /* width='100%' */ flex={1} margin='0px !important'>
-			{renderContent()}
-		</Box>
-	)
+	return <>{renderContent()}</>
 })

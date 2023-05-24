@@ -1,4 +1,3 @@
-/* lib */
 import React, { type FC, useState } from 'react'
 
 import { Link, PageProps } from 'gatsby'
@@ -9,7 +8,6 @@ import { observer } from 'mobx-react-lite'
 
 import { pageHead } from '@components/page-head'
 
-/* services */
 import { ROUTES } from '@utils/constants'
 
 const TEST: Variants = {
