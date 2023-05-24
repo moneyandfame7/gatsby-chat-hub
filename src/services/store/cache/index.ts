@@ -1,5 +1,5 @@
 import { uniqBy } from 'lodash'
-import { makeAutoObservable, toJS } from 'mobx'
+import { autorun, makeAutoObservable, toJS } from 'mobx'
 import { makePersistable } from 'mobx-persist-store'
 
 import { client } from '@services/apollo/clients'
@@ -14,12 +14,14 @@ interface GlobalCache {
 	animationsEnabled: boolean
 	recentSearchedUsers: Participant[]
 	conversations: Conversation[]
+	rtl: boolean
 }
 
 const initialState: GlobalCache = {
 	recentSearchedUsers: [],
 	conversations: [],
 	animationsEnabled: true,
+	rtl: false,
 }
 const MAX_LENGTH = 20
 
@@ -64,5 +66,9 @@ export class CacheStore {
 
 	public toggleAnimations() {
 		this.globalCache.animationsEnabled = !this.globalCache.animationsEnabled
+	}
+
+	public toggleDirection() {
+		this.globalCache.rtl = !this.globalCache.rtl
 	}
 }

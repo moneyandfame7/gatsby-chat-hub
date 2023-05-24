@@ -3,7 +3,7 @@ export const ROUTES = {
 		if (id) {
 			return `/conversation/#${id}`
 		}
-		return '/conversation'
+		return '/conversation/'
 	},
 	login: () => '/login',
 }

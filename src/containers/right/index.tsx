@@ -1,84 +1,116 @@
-import React, { useEffect } from 'react'
+import React, { PropsWithChildren, useEffect } from 'react'
 
-import { Box, ResponsiveValue, position } from '@chakra-ui/react'
+import { Box, HStack, ResponsiveValue, Text, position } from '@chakra-ui/react'
+import { useLocation } from '@reach/router'
+import { AnimatePresence, motion } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
-import { useLayout } from '@services/hooks'
+import { useLayout, usePressEsc } from '@services/hooks'
 import { useStores } from '@services/store'
+import { selectConversationById } from '@services/store/cache'
 import { RightColumnContent } from '@services/store/ui/right-column'
 
+import { Animation } from '@components/animation'
 import { CloseIcon } from '@components/icons'
 import { IconButton } from '@components/shared/buttons'
 
+import { useConversation, useConversationId, validateId } from '@containers/middle/helpers'
+
 import { ContainerIndex } from '@utils/constants'
+import { isChatOpen } from '@utils/functions'
 
-export const RightColumn: React.FC = observer(() => {
-	const { rightColumnUiStore } = useStores()
-	const { isDesktop, isMobile } = useLayout()
+import { RightHeader } from './header'
 
-	useEffect(() => {
-		const handlePressEscape = (e: KeyboardEvent) => {
-			/* e.repeat for prevent keydown holding */
-			if ((e.code === 'Escape' || e.key === 'Escape') && !e.repeat && rightColumnUiStore.isOpen) {
-				e.stopPropagation()
-				rightColumnUiStore.close()
-			}
-		}
-
-		document.addEventListener('keydown', handlePressEscape, true)
-
-		return () => {
-			document.removeEventListener('keydown', handlePressEscape, true)
-		}
-	}, [])
-
-	const renderContent = () => {
-		switch (rightColumnUiStore.content) {
-			case RightColumnContent.Information:
-				return <Box>Info</Box>
-			case RightColumnContent.MessagesSearch:
-				return <Box>Search</Box>
-		}
+const RightColumnAnimation: React.FC<PropsWithChildren> = observer(({ children }) => {
+	const { isMobile, isDesktop } = useLayout()
+	const { cacheStore } = useStores()
+	const rtl = cacheStore.selectCache((cache) => cache.rtl)
+	const css = {
+		zIndex: ContainerIndex.Right,
+		height: '100vh',
+		bg: 'white',
+		whiteSpace: 'nowrap',
+		margin: '0px !important',
 	}
-
-	const handleClose = () => {
-		rightColumnUiStore.close()
-	}
-
 	const test = () => {
 		switch (true) {
 			case isDesktop:
 				return {
-					width: '300px',
-					bg: 'orange',
-					zIndex: ContainerIndex.Right,
+					width: '400px',
 				}
 			case isMobile:
 				return {
 					position: 'fixed',
 					top: 0,
-					right: 0,
+					right: rtl ? undefined : 0,
+					left: rtl ? 0 : undefined,
 					bottom: 0,
 					width: '100vw',
-					bg: 'green',
-					zIndex: ContainerIndex.Right,
+					boxShadow: '0 10px 20px rgb(114 114 114 / 17%)',
 				}
 			default:
 				return {
 					position: 'fixed',
+					width: '400px',
 					top: 0,
-					right: 0,
+					right: rtl ? undefined : 0,
+					left: rtl ? 0 : undefined,
 					bottom: 0,
-					width: '300px',
-					bg: 'blue',
-					zIndex: ContainerIndex.Right,
+					boxShadow: '0 10px 20px rgb(114 114 114 / 17%)',
 				}
 		}
 	}
+	return !isDesktop ? (
+		<Animation.Slide
+			id='RightColumn'
+			data-component-name='RightColumn'
+			custom={rtl ? 'left' : 'right'}
+			{...(test() as any)}
+			{...css}
+		>
+			{children}
+		</Animation.Slide>
+	) : (
+		<Animation.Width id='RightColumn' data-component-name='RightColumn' custom={400} {...(test() as any)} {...css}>
+			<Animation.Fade>{children}</Animation.Fade>
+		</Animation.Width>
+	)
+})
+
+export const RightColumn: React.FC = observer(() => {
+	const { rightColumnUiStore, cacheStore } = useStores()
+
+	const handlePressEscape = () => {
+		if (rightColumnUiStore.isInDom) {
+			rightColumnUiStore.reset()
+		}
+	}
+
+	usePressEsc(handlePressEscape)
+
+	const renderContent = () => {
+		if (!rightColumnUiStore.isOpen || !isChatOpen()) {
+			return null
+		}
+		switch (rightColumnUiStore.content) {
+			case RightColumnContent.Information:
+				return <>Info</>
+			case RightColumnContent.MessagesSearch:
+				return <>Search</>
+		}
+	}
+
+	const conversation = useConversation()
+
 	return (
-		<Box bg='red' height='100vh' margin='0px !important' hidden={!rightColumnUiStore.isOpen} {...(test() as any)}>
-			<IconButton icon={<CloseIcon />} onClick={handleClose} aria-label='Close column' />
-			{renderContent()}
-		</Box>
+		<AnimatePresence initial={false}>
+			{rightColumnUiStore.isOpen && (
+				<RightColumnAnimation>
+					<RightHeader />
+					<Text>{conversation?.id}</Text>
+					{renderContent()}
+				</RightColumnAnimation>
+			)}
+		</AnimatePresence>
 	)
 })

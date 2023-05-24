@@ -51,7 +51,7 @@ export const ConversationsTabs: React.FC<ConversationsTabsProps> = ({ all, allLo
 		}
 		if (loading) {
 			return (
-				<Center height='100%'>
+				<Center height='100%' bg='blue'>
 					<Loader />
 				</Center>
 			)
@@ -80,7 +80,7 @@ export const ConversationsTabs: React.FC<ConversationsTabsProps> = ({ all, allLo
 		  }
 		: undefined
 	return (
-		<Tabs isLazy={isAnimated} position='relative' variant='unstyled' defaultIndex={0}>
+		<Tabs isLazy={isAnimated} position='relative' variant='unstyled' defaultIndex={0} id='ConversationsTabs'>
 			<TabList px={2} overflowX='auto' boxShadow='0 2px 2px rgb(114 114 114 / 17%)' height='100%'>
 				<StyledTab>All</StyledTab>
 				<StyledTab gap={2}>

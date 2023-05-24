@@ -55,8 +55,9 @@ const ConversationContextMenu: React.FC<ConversationItemProps> = ({ containerRef
 		</>
 	)
 
+	const container = document.getElementById('ConversationsContainer')
 	return (
-		<ContextMenu containerRef={containerRef} renderItems={conversationItems}>
+		<ContextMenu container={container} containerRef={containerRef} renderItems={conversationItems}>
 			{children}
 		</ContextMenu>
 	)

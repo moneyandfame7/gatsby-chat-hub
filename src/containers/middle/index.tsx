@@ -1,5 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 
+import { Box } from '@chakra-ui/react'
 import { AnimatePresence, Variants, motion } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
@@ -100,5 +101,9 @@ export const MiddleColumn: React.FC<MiddleColumnProps> = observer(({ conversatio
 		}
 	}
 
-	return <>{renderContent()}</>
+	return (
+		<Box data-component-name='MiddleColumn' /* width='100%' */ flex={1} margin='0px !important'>
+			{renderContent()}
+		</Box>
+	)
 })

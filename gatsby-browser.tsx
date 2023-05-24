@@ -26,5 +26,4 @@ export const wrapPageElement: GatsbyBrowser['wrapPageElement'] = ({ element }) =
 
 export const onRouteUpdate: GatsbyBrowser['onRouteUpdate'] = (args) => {
 	// eslint-disable-next-line no-console
-	console.log('Route updated')
 }

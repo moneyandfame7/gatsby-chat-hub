@@ -14,7 +14,7 @@ const Animated = chakra(motion.div, {
 })
 
 type AnimationProps = PropsWithChildren & React.ComponentProps<typeof Animated>
-type AnimationVariants = 'SCALE' | 'FADE' | 'SLIDE' | 'ROTATE'
+type AnimationVariants = 'SCALE' | 'FADE' | 'SLIDE' | 'ROTATE' | 'WIDTH'
 type AnimationDirection = 'left' | 'right'
 
 const ANIMATION_VARIANTS: Record<AnimationVariants, Variants> = {
@@ -59,6 +59,14 @@ const ANIMATION_VARIANTS: Record<AnimationVariants, Variants> = {
 			rotate: 360,
 			transition: { duration: 0.2 },
 		},
+	},
+	WIDTH: {
+		hidden: {
+			width: 0,
+		},
+		open: (val: number) => ({
+			width: val,
+		}),
 	},
 }
 
@@ -108,9 +116,22 @@ const Rotate: React.FC<AnimationProps> = observer(({ children, ...props }) => {
 	)
 })
 
+const Width: React.FC<AnimationProps> = observer(({ children, ...props }) => {
+	const isAnimated = useIsAnimated()
+
+	return isAnimated ? (
+		<Animated variants={ANIMATION_VARIANTS.WIDTH} initial='hidden' animate='open' exit='hidden' {...props}>
+			{children}
+		</Animated>
+	) : (
+		<Box {...props}>{children}</Box>
+	)
+})
+
 export const Animation = Object.assign(Animated, {
 	Scale,
 	Slide,
 	Fade,
 	Rotate,
+	Width,
 })

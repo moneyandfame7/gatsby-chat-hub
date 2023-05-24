@@ -8,6 +8,7 @@ import { client, getPersistor } from '@services/apollo/clients'
 import { useStores } from '@services/store'
 
 import { Animation } from '@components/animation'
+import { ClientOnly } from '@components/client-only'
 
 import {
 	CONVERSATIONS_QUERY,
@@ -49,7 +50,6 @@ export const Conversations: React.FC = observer(() => {
 
 	useEffect(() => {
 		const fromCache = cacheStore.selectCache((cache) => cache.conversations)
-		console.log({ fromCache })
 		setConversations(fromCache)
 		subscribeToNewConversations()
 	}, [])
@@ -57,15 +57,16 @@ export const Conversations: React.FC = observer(() => {
 	useEffect(() => {
 		if (all?.conversations) {
 			const fetched = all?.conversations
-			console.log({ fetched })
 			setConversations(fetched)
 			cacheStore.updateConversations(fetched)
 		}
 	}, [all?.conversations])
 
 	return (
-		<Animation.Scale left={0} top={0} bottom={0} pos='absolute' width='100%'>
-			<ConversationsTabs all={conversations} allLoading={allLoading} />
-		</Animation.Scale>
+		<ClientOnly>
+			<Animation.Scale left={0} top={0} bottom={0} pos='absolute' width='100%' id='ConversationsContainer'>
+				<ConversationsTabs all={conversations} allLoading={allLoading} />
+			</Animation.Scale>
+		</ClientOnly>
 	)
 })

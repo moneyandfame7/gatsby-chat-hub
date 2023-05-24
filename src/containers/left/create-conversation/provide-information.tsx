@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 
 import { navigate } from 'gatsby'
 
-import { Box, HStack, Input, Text, VStack } from '@chakra-ui/react'
+import { Box, Divider, HStack, Input, Text, VStack } from '@chakra-ui/react'
 import { AnimatePresence } from 'framer-motion'
 
 import { createConversation } from '@services/actions/api/conversations'
 import { LeftColumnContent, useStores } from '@services/store'
 
 import { Animation } from '@components/animation'
+import { ColumnHeader } from '@components/column-header'
 import { Scrollable } from '@components/overlay'
 import { ListItem } from '@components/shared/list-item'
 
@@ -58,8 +59,8 @@ export const ProvideInformation: React.FC<ProvideInformationProps & WithLeftColu
 	}
 
 	return (
-		<Animation.Fade bg='white' height='100%' pos='absolute' top={0} left={0} bottom={0} w='full' zIndex={1} p={4}>
-			<HStack mb={5}>
+		<Animation.Fade bg='white' height='100%' pos='absolute' top={0} left={0} bottom={0} w='full' zIndex={1}>
+			<ColumnHeader mb={2}>
 				<LeftGoBack onClick={handleGoBack} />
 				<Text flex={1} fontSize='xl' fontWeight={500}>
 					Provide information
@@ -67,15 +68,26 @@ export const ProvideInformation: React.FC<ProvideInformationProps & WithLeftColu
 				<AnimatePresence initial={false}>
 					{participants.length > 1 && name.length === 0 ? null : <CreateConversationGoNext onClick={handleSubmit} />}
 				</AnimatePresence>
-			</HStack>
-			<VStack justifyContent={participants.length < 2 ? 'start' : 'space-around'} height='calc(100% - 40px)'>
+			</ColumnHeader>
+			<VStack px={4} justifyContent={participants.length < 2 ? 'start' : 'space-around'} height='calc(100% - 80px)'>
 				{participants.length > 1 && (
 					<VStack gap={2}>
-						<Input variant='outline' placeholder='Conversation name' size='lg' onChange={handleChangeName} />
+						<Input
+							variant='outline'
+							placeholder='Conversation name'
+							size='lg'
+							borderWidth='2px'
+							borderRadius='18px'
+							_focusVisible={{ borderColor: 'primary' }}
+							onChange={handleChangeName}
+						/>
 						<VStack w='full' gap={0.1}>
 							<Input
 								variant='outline'
 								placeholder='Description ( optional )'
+								borderWidth='2px'
+								borderRadius='18px'
+								_focusVisible={{ borderColor: 'primary' }}
 								size='lg'
 								onChange={handleChangeDescription}
 							/>
@@ -85,11 +97,12 @@ export const ProvideInformation: React.FC<ProvideInformationProps & WithLeftColu
 						</VStack>
 					</VStack>
 				)}
-				<Box w='full'>
+				<Box w='full' h='400px'>
 					<Text fontWeight={500} color='text.secondary' my={2}>
 						{participants.length} {participants.length > 1 ? 'members' : 'member'}{' '}
 					</Text>
-					<Scrollable height='430px' width='100%'>
+					<Divider />
+					<Scrollable height='calc(100% - 43px)' width='100%'>
 						{participants.map((p) => (
 							<ListItem
 								key={p.id}

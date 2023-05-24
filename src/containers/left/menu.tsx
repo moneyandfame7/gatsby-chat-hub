@@ -1,12 +1,20 @@
 import React, { useMemo } from 'react'
 
-import { Flex, MenuButton, Switch } from '@chakra-ui/react'
+import { Flex, MenuButton, MenuDivider, Switch } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
 
 import { useStores } from '@services/store'
 
 import { Animation } from '@components/animation'
-import { AnimationIcon1, AnimationIcon2, ContactsIcon, LogoutIcon, MenuIcon, NewChatIcon } from '@components/icons'
+import {
+	AnimationIcon1,
+	AnimationIcon2,
+	ContactsIcon,
+	LayoutIcon,
+	LogoutIcon,
+	MenuIcon,
+	NewChatIcon,
+} from '@components/icons'
 import { StyledMenu, StyledMenuItem } from '@components/overlay'
 import { IconButton } from '@components/shared/buttons'
 
@@ -17,10 +25,14 @@ interface LeftDropdownMenuProps {
 
 export const LeftDropdownMenu: React.FC<LeftDropdownMenuProps> = observer(({ onNewChatSelect, onLogOutSelect }) => {
 	const { cacheStore } = useStores()
-	const isAnimationsEnabled = cacheStore.selectCache((cache) => cache.animationsEnabled)
+	const { animationsEnabled, rtl } = cacheStore.selectCache((cache) => cache)
 
 	const onSwitchAnimations = () => {
 		cacheStore.toggleAnimations()
+	}
+
+	const onSwitchDirection = () => {
+		cacheStore.toggleDirection()
 	}
 
 	const menuItems = useMemo(
@@ -32,18 +44,25 @@ export const LeftDropdownMenu: React.FC<LeftDropdownMenuProps> = observer(({ onN
 				<StyledMenuItem icon={<AnimationIcon1 />} onClick={onSwitchAnimations}>
 					<Flex align='center' justify='space-between'>
 						Animations
-						<Switch size='sm' isChecked={isAnimationsEnabled} colorScheme='purple' />
+						<Switch size='sm' isChecked={animationsEnabled} colorScheme='purple' />
+					</Flex>
+				</StyledMenuItem>
+				<StyledMenuItem icon={<LayoutIcon />} onClick={onSwitchDirection}>
+					<Flex align='center' justify='space-between'>
+						Right-to-left
+						<Switch size='sm' isChecked={rtl} colorScheme='purple' />
 					</Flex>
 				</StyledMenuItem>
 				<StyledMenuItem icon={<ContactsIcon />} onClick={onNewChatSelect}>
 					Contacts
 				</StyledMenuItem>
+				<MenuDivider my='3px' borderColor='gray.300' />
 				<StyledMenuItem icon={<LogoutIcon />} onClick={onLogOutSelect}>
 					Log out
 				</StyledMenuItem>
 			</>
 		),
-		[isAnimationsEnabled]
+		[animationsEnabled, rtl]
 	)
 	return (
 		<Animation.Rotate>

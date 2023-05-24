@@ -1,11 +1,7 @@
 /* lib  */
-import React, { PropsWithChildren, createContext, useContext, useState } from 'react'
+import React, { PropsWithChildren, useState } from 'react'
 
 import {
-	CSSWithMultiValues,
-	ChakraComponent,
-	ChakraProps,
-	ComponentWithAs,
 	Menu,
 	MenuItem,
 	MenuItemProps,
@@ -15,14 +11,11 @@ import {
 	PlacementWithLogical,
 	Portal,
 	SystemStyleObject,
-	chakra,
 	forwardRef,
 } from '@chakra-ui/react'
-import { MotionConfig } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
 import { useIsAnimated } from '@services/hooks'
-import { useStores } from '@services/store'
 
 import { KeyboardEventKey } from '@utils/constants'
 
@@ -69,35 +62,36 @@ interface StyledMenuProps extends PropsWithChildren {
 	placement?: PlacementWithLogical
 }
 
-export const StyledMenu: React.FC<StyledMenuProps & MenuProps> = observer(
-	({ placement, menuButton = null, children, ...props }) => {
-		const [isOpen, setIsOpen] = useState(false)
-
-		const handleOpen = () => {
-			setIsOpen(true)
-		}
-		const handleClose = () => {
-			setIsOpen(false)
-		}
-		return (
-			<Menu placement={placement} isOpen={isOpen} onOpen={handleOpen} onClose={handleClose} {...props}>
-				{menuButton}
-
-				<Portal>
-					<StyledMenuList
-						zIndex='sticky'
-						onKeyDown={(e) => {
-							if (e.code === KeyboardEventKey.Escape) {
-								e.stopPropagation()
-								handleClose()
-							}
-						}}
-					>
-						{children}
-					</StyledMenuList>
-				</Portal>
-				{isOpen && <Backdrop onClick={handleClose} />}
-			</Menu>
-		)
+export const StyledMenu: React.FC<StyledMenuProps & MenuProps> = ({
+	placement,
+	menuButton = null,
+	children,
+	...props
+}) => {
+	const [isOpen, setIsOpen] = useState(false)
+	const handleOpen = () => {
+		setIsOpen(true)
 	}
-)
+	const handleClose = () => {
+		setIsOpen(false)
+	}
+
+	const handlePressEscape = (e: KeyboardEvent) => {
+		if (e.code === KeyboardEventKey.Escape) {
+			e.preventDefault()
+			e.stopPropagation()
+			handleClose()
+		}
+	}
+
+	return (
+		<Menu isLazy placement={placement} isOpen={isOpen} onOpen={handleOpen} {...props}>
+			{menuButton}
+
+			<Portal>
+				<StyledMenuList zIndex='sticky'>{children}</StyledMenuList>
+			</Portal>
+			{isOpen && <Backdrop onClick={handleClose} handler={handlePressEscape} />}
+		</Menu>
+	)
+}

@@ -10,6 +10,7 @@ import { useIsAnimated } from '@services/hooks'
 import { LeftColumnContent, useStores } from '@services/store'
 
 import { Animation } from '@components/animation'
+import { ColumnHeader } from '@components/column-header'
 import { Scrollable } from '@components/overlay'
 import { ListItem } from '@components/shared/list-item'
 import { SecondaryLoader } from '@components/shared/loaders'
@@ -67,6 +68,13 @@ export const SelectParticipants: React.FC<ConversationModalProps> = observer(
 
 		const newSearchResult = useSelectSearchUsers(searchStore)
 
+		const handleChangeUsername = async (e: React.ChangeEvent<HTMLInputElement>) => {
+			setUsername(e.currentTarget.value)
+		}
+		const handleGoNextStep = () => {
+			leftColumnUiStore.setContent(LeftColumnContent.NewConversationStep2)
+		}
+
 		useEffect(() => {
 			if (newSearchResult.length > 0) {
 				cacheStore.updateRecentUsers(newSearchResult)
@@ -76,13 +84,6 @@ export const SelectParticipants: React.FC<ConversationModalProps> = observer(
 				searchStore.clear()
 			}
 		}, [newSearchResult])
-
-		const handleChangeUsername = async (e: React.ChangeEvent<HTMLInputElement>) => {
-			setUsername(e.currentTarget.value)
-		}
-		const handleGoNextStep = () => {
-			leftColumnUiStore.setContent(LeftColumnContent.NewConversationStep2)
-		}
 
 		useEffect(() => {
 			if (Boolean(username)) {
@@ -123,15 +124,15 @@ export const SelectParticipants: React.FC<ConversationModalProps> = observer(
 
 		return (
 			<Animation.Fade height='100%' pos='absolute' left={0} top={0} bottom={0} width='100%'>
-				<HStack p={4}>
+				<ColumnHeader>
 					<LeftGoBack onClick={handleGoBack} />
 					<Text flex={1} fontSize='xl' fontWeight={500}>
 						Add Participants
 					</Text>
 					<AnimatePresence initial={false}>
-						{/* participants.length > 0 &&  */ <CreateConversationGoNext onClick={handleGoNextStep} />}
+						{participants.length > 0 && <CreateConversationGoNext onClick={handleGoNextStep} />}
 					</AnimatePresence>
-				</HStack>
+				</ColumnHeader>
 				<InputGroup>
 					<Input
 						onChange={handleChangeUsername}

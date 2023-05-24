@@ -7,7 +7,7 @@ import { observer } from 'mobx-react-lite'
 import { useIsAnimated } from '@services/hooks'
 
 import { IconButton } from '@components/shared/buttons'
-import { Loader, SecondaryLoader } from '@components/shared/loaders'
+import { SecondaryLoader } from '@components/shared/loaders'
 
 import { Animation } from '../animation'
 import { CloseIcon, SearchIcon } from '../icons'
@@ -20,11 +20,11 @@ interface SearchInputProps {
 	placeholder: string
 	isFocused: boolean
 	isLoading: boolean
-	spinnerColor: string
+	width?: string
 }
 
 export const SearchInput: React.FC<SearchInputProps> = observer(
-	({ isLoading, handleFocus, handleChange, placeholder, isFocused, spinnerColor }) => {
+	({ isLoading, handleFocus, handleChange, placeholder, isFocused, width }) => {
 		const TEXT_ANIMAION_POSITION = '30%'
 		const inputRef = useRef<HTMLInputElement>(null)
 		const [inputValue, setInputValue] = useState('')
@@ -63,7 +63,7 @@ export const SearchInput: React.FC<SearchInputProps> = observer(
 
 		const isAnimated = useIsAnimated()
 		return (
-			<InputGroup cursor='default'>
+			<InputGroup cursor='default' width={width}>
 				<InputLeftElement pointerEvents='none' children={<SearchIcon />} />
 				<Input
 					lineHeight='normal'

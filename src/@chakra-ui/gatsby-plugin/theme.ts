@@ -50,6 +50,7 @@ const theme = extendTheme(
 				},
 				'*': {
 					WebkitTapHighlightColor: 'transparent',
+					overflowX: 'hidden',
 				},
 			}),
 		},

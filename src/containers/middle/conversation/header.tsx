@@ -12,6 +12,7 @@ import { useStores } from '@services/store'
 import { RightColumnContent } from '@services/store/ui/right-column'
 
 import { ClientOnly } from '@components/client-only'
+import { ColumnHeader } from '@components/column-header'
 import { ArrowBack, BellIcon, DeleteIcon, InfoIcon, MoreVerticalIcon, SearchIcon } from '@components/icons'
 import { StyledMenu, StyledMenuItem } from '@components/overlay'
 import { IconButton } from '@components/shared/buttons'
@@ -50,16 +51,7 @@ export const ConversationHeader: FC<MessagesHeaderProps> = observer(({ conversat
 	}, [conversation])
 
 	return (
-		<HStack
-			bg='white'
-			w='full'
-			h='55px'
-			color='#fff'
-			userSelect='none'
-			pos='relative'
-			p='12px 20px 12px 25px'
-			boxShadow='0 2px 2px rgb(114 114 114 / 17%)'
-		>
+		<ColumnHeader w='full' userSelect='none' pos='relative' boxShadow='0 2px 2px rgb(114 114 114 / 17%)'>
 			<ClientOnly>
 				{isMobile && <IconButton onClick={handleClickGoBack} icon={<ArrowBack />} aria-label='Close chat' p={0} />}
 				<Box flex={1}>
@@ -102,6 +94,7 @@ export const ConversationHeader: FC<MessagesHeaderProps> = observer(({ conversat
 						}
 					>
 						<StyledMenuItem icon={<BellIcon />}>Mute</StyledMenuItem>
+						{isMobile && <StyledMenuItem icon={<SearchIcon />}>Search</StyledMenuItem>}
 						<StyledMenuItem icon={<InfoIcon />}>Information</StyledMenuItem>
 						<MenuDivider my='2px' />
 						<StyledMenuItem color='red' icon={<DeleteIcon color='red' fill='none' />}>
@@ -110,7 +103,7 @@ export const ConversationHeader: FC<MessagesHeaderProps> = observer(({ conversat
 					</StyledMenu>
 				</Box>
 			</ClientOnly>
-		</HStack>
+		</ColumnHeader>
 	)
 })
 
