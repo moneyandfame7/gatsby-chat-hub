@@ -2,7 +2,18 @@ import React, { FC, useCallback, useContext, useEffect, useState } from 'react'
 
 import { navigate } from 'gatsby'
 
-import { Avatar, Box, CircularProgress, HStack, MenuButton, MenuDivider, Text, VStack } from '@chakra-ui/react'
+import {
+	Avatar,
+	Box,
+	Center,
+	CircularProgress,
+	HStack,
+	Image,
+	MenuButton,
+	MenuDivider,
+	Text,
+	VStack,
+} from '@chakra-ui/react'
 import { useLocation } from '@reach/router'
 import { observer } from 'mobx-react-lite'
 
@@ -52,57 +63,55 @@ export const ConversationHeader: FC<MessagesHeaderProps> = observer(({ conversat
 
 	return (
 		<ColumnHeader w='full' userSelect='none' pos='relative' boxShadow='0 2px 2px rgb(114 114 114 / 17%)'>
-			<ClientOnly>
-				{isMobile && <IconButton onClick={handleClickGoBack} icon={<ArrowBack />} aria-label='Close chat' p={0} />}
-				<Box flex={1}>
-					<HStack cursor='pointer' onClick={handleClickOnInfo}>
-						<ListItemAvatar {...conversationAvatar} />
-						<VStack align='start'>
-							<Text fontSize='md' fontWeight={500} color='text.primary'>
-								{conversation.name || conversation.participants.filter((p) => p.id !== userStore.user?.id)[0].username}
+			{isMobile && <IconButton onClick={handleClickGoBack} icon={<ArrowBack />} aria-label='Close chat' p={0} />}
+			<Box flex={1}>
+				<HStack cursor='pointer' onClick={handleClickOnInfo}>
+					<ListItemAvatar size='medium' {...conversationAvatar} />
+					<VStack align='start'>
+						<Text fontSize='md' fontWeight={500} color='text.primary'>
+							{conversation.name || conversation.participants.filter((p) => p.id !== userStore.user?.id)[0].username}
+						</Text>
+						{conversation?.participants && (
+							<Text fontSize='xs' m='0 !important' color='text.secondary' fontWeight={500}>
+								{showMembersStatus()}
 							</Text>
-							{conversation?.participants && (
-								<Text fontSize='xs' m='0 !important' color='text.secondary' fontWeight={500}>
-									{showMembersStatus()}
-								</Text>
-							)}
-						</VStack>
-					</HStack>
-				</Box>
-				<Box>
-					<IconButton
-						icon={<SearchIcon />}
-						aria-label='Search messages'
-						onClick={handleClickOnSearch}
-						hidden={isMobile}
-					/>
-					<StyledMenu
-						placement='bottom-end'
-						menuButton={
-							<MenuButton
-								as={IconButton}
-								aria-label='Menu'
-								color='gray.400'
-								bg='transparent'
-								borderRadius='50%'
-								fontSize={15}
-								_hover={{
-									bg: 'blackAlpha.50',
-								}}
-								icon={<MoreVerticalIcon /* fontSize='15px' color='' */ />}
-							/>
-						}
-					>
-						<StyledMenuItem icon={<BellIcon />}>Mute</StyledMenuItem>
-						{isMobile && <StyledMenuItem icon={<SearchIcon />}>Search</StyledMenuItem>}
-						<StyledMenuItem icon={<InfoIcon />}>Information</StyledMenuItem>
-						<MenuDivider my='2px' />
-						<StyledMenuItem color='red' icon={<DeleteIcon color='red' fill='none' />}>
-							Delete chat
-						</StyledMenuItem>
-					</StyledMenu>
-				</Box>
-			</ClientOnly>
+						)}
+					</VStack>
+				</HStack>
+			</Box>
+			<Box>
+				<IconButton
+					icon={<SearchIcon />}
+					aria-label='Search messages'
+					onClick={handleClickOnSearch}
+					hidden={isMobile}
+				/>
+				<StyledMenu
+					placement='bottom-end'
+					menuButton={
+						<MenuButton
+							as={IconButton}
+							aria-label='Menu'
+							color='gray.400'
+							bg='transparent'
+							borderRadius='50%'
+							fontSize={15}
+							_hover={{
+								bg: 'blackAlpha.50',
+							}}
+							icon={<MoreVerticalIcon /* fontSize='15px' color='' */ />}
+						/>
+					}
+				>
+					<StyledMenuItem icon={<BellIcon />}>Mute</StyledMenuItem>
+					{isMobile && <StyledMenuItem icon={<SearchIcon />}>Search</StyledMenuItem>}
+					<StyledMenuItem icon={<InfoIcon />}>Information</StyledMenuItem>
+					<MenuDivider my='2px' />
+					<StyledMenuItem color='red' icon={<DeleteIcon color='red' fill='none' />}>
+						Delete chat
+					</StyledMenuItem>
+				</StyledMenu>
+			</Box>
 		</ColumnHeader>
 	)
 })

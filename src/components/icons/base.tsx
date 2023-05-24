@@ -14,7 +14,7 @@ export const BaseIcon: React.FC<IconProps> = ({ children, ...props }) => {
 			strokeLinecap='round'
 			strokeLinejoin='round'
 			preserveAspectRatio='none'
-			strokeWidth='1.5'
+			strokeWidth='2'
 			{...props}
 		>
 			{children}

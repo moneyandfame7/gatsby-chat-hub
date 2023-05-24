@@ -34,7 +34,9 @@ const CHAT_ANIMATIONS: Variants = {
 }
 export const Conversation: React.FC<ConversationProps> = observer(({ id }) => {
 	const { cacheStore, rightColumnUiStore, leftColumnUiStore } = useStores()
-	const [conversation, setConversation] = useState<ConversationType>()
+	const [conversation, setConversation] = useState<ConversationType | undefined>(
+		cacheStore.selectCache(selectConversationById(id))
+	)
 
 	const { data } = useQuery<ConversationByIdData, ConversationByIdInput>(CONVERSATION_ID_QUERY, {
 		variables: { id },
