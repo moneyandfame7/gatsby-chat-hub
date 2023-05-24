@@ -1,9 +1,8 @@
 import React from 'react'
 
-import { ArrowRightIcon } from '@chakra-ui/icons'
-import { IconButton } from '@chakra-ui/react'
-
 import { Animation } from '@components/animation'
+import { ArrowRightCircleIcon } from '@components/icons'
+import { IconButton } from '@components/shared/buttons'
 
 interface CreateConversationGoNextProps {
 	onClick: () => void
@@ -12,15 +11,7 @@ interface CreateConversationGoNextProps {
 export const CreateConversationGoNext: React.FC<CreateConversationGoNextProps> = ({ onClick }) => {
 	return (
 		<Animation.Scale>
-			<IconButton
-				onClick={onClick}
-				bg='primary'
-				_hover={{
-					bg: 'primary',
-				}}
-				icon={<ArrowRightIcon color='#fff' />}
-				aria-label='Go next step'
-			/>
+			<IconButton onClick={onClick} icon={<ArrowRightCircleIcon />} aria-label='Go next step' />
 		</Animation.Scale>
 	)
 }

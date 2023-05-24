@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { VStack } from '@chakra-ui/react'
 import { navigate } from '@reach/router'
-import { Variants } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
 import { usePressEsc } from '@services/hooks'
@@ -13,6 +12,8 @@ import { selectConversationById } from '@services/store/cache'
 import { ROUTES } from '@utils/constants'
 import { CONVERSATION_ID_QUERY, ConversationByIdData, ConversationByIdInput } from '@utils/graphql/conversations'
 import { Conversation as ConversationType } from '@utils/graphql/conversations'
+
+import gradient from '@assets/gradient.png'
 
 import { ConversationHeader } from './header'
 
@@ -65,7 +66,17 @@ export const Conversation: React.FC<ConversationProps> = observer(({ id }) => {
 	}
 
 	return (
-		<VStack h='100vh' flex={1} margin='0px !important' border='1px solid' borderColor='gray.200'>
+		<VStack
+			h='100vh'
+			flex={1}
+			margin='0px !important'
+			border='1px solid'
+			borderColor='gray.200'
+			data-component-name='MiddleColumn'
+			bgImage={gradient}
+			bgSize='cover'
+			bgRepeat='no-repeat'
+		>
 			<ConversationHeader conversation={conversation} />
 		</VStack>
 	)
