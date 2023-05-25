@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { useQuery } from '@apollo/client'
 import { observer } from 'mobx-react-lite'
@@ -30,7 +30,7 @@ export const Conversations: React.FC = observer(() => {
 		fetchPolicy: 'cache-and-network',
 	})
 
-	const subscribeToNewConversations = () => {
+	const subscribeToNewConversations = useCallback(() => {
 		subscribeToMore({
 			document: CONVERSATION_CREATED_SUBSCRIPTION,
 			updateQuery: (prev, { subscriptionData }: { subscriptionData: ConversationCreatedSubscriptionData }) => {
@@ -44,7 +44,7 @@ export const Conversations: React.FC = observer(() => {
 				})
 			},
 		})
-	}
+	}, [])
 
 	useEffect(() => {
 		const fromCache = cacheStore.selectCache((cache) => cache.conversations)
