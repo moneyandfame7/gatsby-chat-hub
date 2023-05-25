@@ -28,6 +28,7 @@ const ListItemWrapper: React.FC<ListItemWrapperProps> = ({ isActive, to, isHover
 	const { pathname, hash } = useLocation()
 	return (
 		<HStack
+			borderRadius={8}
 			bg={isActive ? 'purple.200' : 'none'}
 			_hover={{ bg: isHoverable ? (isActive ? 'purple.200' : 'blackAlpha.50') : 'initial' }}
 			cursor={isHoverable ? 'pointer' : 'default'}
@@ -37,7 +38,7 @@ const ListItemWrapper: React.FC<ListItemWrapperProps> = ({ isActive, to, isHover
 			gap={5}
 			onClick={(e) => {
 				if (to && pathname + hash !== to) {
-					navigate(to)
+					navigate(to, { replace: true })
 				}
 			}}
 			{...props}

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 import { Badge, Center, Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, chakra } from '@chakra-ui/react'
 import { AnimatePresence } from 'framer-motion'
