@@ -1,11 +1,13 @@
 import React from 'react'
 
-import { LeftColumnUiStore } from '@services/store'
+import { PropsWithLeftColumnStore } from '@utils/types'
 
-export interface WithLeftColumnStore {
-	leftColumnUiStore: LeftColumnUiStore
-}
-interface SettingsProps extends WithLeftColumnStore {}
+/**
+ * @todo винести інтерфейс і перенести імпорт store окремо
+ * @todo зробити recent conversations і users ( після відкривання чату, зберігати в сторі айдішнік?)
+ */
+
+interface SettingsProps extends PropsWithLeftColumnStore {}
 export const Settings: React.FC<SettingsProps> = ({ leftColumnUiStore }) => {
 	return <>Settings</>
 }

@@ -1,3 +1,5 @@
+import type { LeftColumnUiStore } from '@services/store'
+
 import { Conversation, Participant } from '@utils/graphql/conversations'
 
 export type NullableObj<T> = { [K in keyof T]: T[K] | null }
@@ -10,4 +12,8 @@ export interface PropsWithConversation {
 
 export interface PropsWithParticipants {
 	participants: Participant[]
+}
+
+export interface PropsWithLeftColumnStore {
+	leftColumnUiStore: LeftColumnUiStore
 }

@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 
-export default function useNetworkStatus() {
+import { useApolloNetworkStatus } from '@services/apollo/clients'
+
+export const useNetworkStatus = () => {
 	const [isOnline, setIsOnline] = useState(window.navigator.onLine)
+	const { numPendingMutations, numPendingQueries } = useApolloNetworkStatus()
 
 	useEffect(() => {
 		function handleChange() {
@@ -17,5 +20,5 @@ export default function useNetworkStatus() {
 		}
 	}, [])
 
-	return isOnline
+	return { isOnline, isFetching: numPendingMutations > 0 || numPendingQueries > 0 }
 }

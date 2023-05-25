@@ -8,22 +8,18 @@ import { AnimatePresence } from 'framer-motion'
 import { createConversation } from '@services/actions/api/conversations'
 import { LeftColumnContent, useStores } from '@services/store'
 
+import { ColumnHeader, LeftGoBack, ListItem, Scrollable } from '@components'
 import { Animation } from '@components/animation'
-import { ColumnHeader } from '@components/column-header'
-import { Scrollable } from '@components/overlay'
-import { ListItem } from '@components/shared/list-item'
 
 import { ROUTES } from '@utils/constants'
-import { PropsWithParticipants } from '@utils/types'
+import type { PropsWithLeftColumnStore, PropsWithParticipants } from '@utils/types'
 
-import { LeftGoBack } from '../go-back'
-import { WithLeftColumnStore } from '../settings'
 import { CreateConversationGoNext } from './go-next-button'
 
 interface ProvideInformationProps extends PropsWithParticipants {
 	handleGoBack: () => void
 }
-export const ProvideInformation: React.FC<ProvideInformationProps & WithLeftColumnStore> = ({
+export const ProvideInformation: React.FC<ProvideInformationProps & PropsWithLeftColumnStore> = ({
 	participants,
 	handleGoBack,
 	leftColumnUiStore,

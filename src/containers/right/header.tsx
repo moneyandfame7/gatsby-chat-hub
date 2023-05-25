@@ -8,8 +8,8 @@ import { RightColumnContent } from '@services/store/ui/right-column'
 
 import { ColumnHeader } from '@components/column-header'
 import { CloseIcon } from '@components/icons'
+import { SearchInput } from '@components/search-input'
 import { IconButton } from '@components/shared/buttons'
-import { SearchInput } from '@components/shared/search-input'
 
 export const RightHeader: React.FC = observer(() => {
 	const { rightColumnUiStore } = useStores()

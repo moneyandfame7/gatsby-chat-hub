@@ -3,12 +3,13 @@ import React, { PropsWithChildren, useCallback } from 'react'
 import { useLocation } from '@reach/router'
 
 import { useConversationAvatar } from '@services/actions/ui/conversations'
-import { useLayout } from '@services/hooks'
+import { useIsAnimated, useLayout } from '@services/hooks'
 import { useStores } from '@services/store'
 
+import { Animation } from '@components/animation'
 import { DeleteIcon, MarkReadIcon, MarkUnreadIcon, NewTabIcon } from '@components/icons'
+import { ListItem } from '@components/list-item'
 import { ContextMenu, ContextMenuItem } from '@components/overlay'
-import { ListItem } from '@components/shared/list-item'
 
 import { ROUTES } from '@utils/constants'
 import { formatDate } from '@utils/functions'
@@ -73,6 +74,28 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({ conversation
 	}
 	const avatar = useConversationAvatar(conversation)
 	const { isMobile } = useLayout()
+	const isAnimated = useIsAnimated()
+	{
+		/* <Animation.Fade
+					key={u.id}
+					layout={isAnimated ? true : undefined}
+					onClick={() => {
+						selectParticipant(u)
+					}}
+					zIndex={1}
+					cursor='pointer'
+				>
+					<ListItem
+						subtitle='last seen in'
+						avatar={{
+							src: u.photo,
+						}}
+						title={u.username}
+						withCheckbox
+						isChecked={participants.some((p) => p.id === u.id)}
+					/>
+				</Animation.Fade> */
+	}
 	return (
 		<ConversationContextMenu containerRef={containerRef} conversation={conversation}>
 			<ListItem

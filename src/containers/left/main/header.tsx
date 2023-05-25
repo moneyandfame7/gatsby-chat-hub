@@ -1,24 +1,23 @@
 /* lib  */
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 
 import { AnimatePresence } from 'framer-motion'
 import { observer } from 'mobx-react-lite'
 
-import { useApolloNetworkStatus } from '@services/apollo/clients'
-import useNetworkStatus from '@services/hooks/useNetworkStatus'
+import { useNetworkStatus } from '@services/hooks'
 import { useStores } from '@services/store'
 import { LeftColumnContent } from '@services/store/ui/left-column'
 
-import { ColumnHeader } from '@components/column-header'
-import { SearchInput } from '@components/shared/search-input'
+import { ColumnHeader, LeftGoBack, SearchInput } from '@components'
 
-import { LeftGoBack } from '../go-back'
+import type { PropsWithLeftColumnStore } from '@utils/types'
+
 import { LeftDropdownMenu } from '../menu'
-import { WithLeftColumnStore } from '../settings'
 
-interface LeftMainHeaderProps extends WithLeftColumnStore {}
+interface LeftMainHeaderProps extends PropsWithLeftColumnStore {}
 export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ leftColumnUiStore }) => {
 	const { authorizationStore, searchStore } = useStores()
+	const { isFetching, isOnline } = useNetworkStatus()
 
 	const searchInputPlaceholder =
 		leftColumnUiStore.content === LeftColumnContent.Contacts ? 'Search contacts' : 'Search (⌘K)'
@@ -26,9 +25,6 @@ export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ leftCol
 	const isSearchInputFocused =
 		leftColumnUiStore.content === LeftColumnContent.Contacts ||
 		leftColumnUiStore.content === LeftColumnContent.GlobalSearch
-
-	const isLoading = useApolloNetworkStatus().numPendingQueries > 0
-	const isOnline = useNetworkStatus()
 
 	const handleLogoutSelect = useCallback(async () => {
 		await authorizationStore.logout()
@@ -76,7 +72,7 @@ export const LeftMainHeader: React.FC<LeftMainHeaderProps> = observer(({ leftCol
 			<AnimatePresence initial={false}>{renderContent()}</AnimatePresence>
 			<SearchInput
 				width='90%'
-				isLoading={isLoading || !isOnline}
+				isLoading={isFetching || !isOnline}
 				loaderStatus={!isOnline ? 'offline' : 'fetching'}
 				isFocused={isSearchInputFocused}
 				handleFocus={handleFocusInput}

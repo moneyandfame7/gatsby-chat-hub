@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 
 import { Badge, Center, Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, chakra } from '@chakra-ui/react'
 import { AnimatePresence } from 'framer-motion'
@@ -67,6 +67,7 @@ export const ConversationsTabs: React.FC<ConversationsTabsProps> = ({ all, allLo
 				mode: 'popLayout',
 		  }
 		: undefined
+
 	return (
 		<Tabs isLazy={isAnimated} position='relative' variant='unstyled' defaultIndex={0} id='ConversationsTabs'>
 			<TabList px={2} overflowX='auto' boxShadow='0 2px 2px rgb(114 114 114 / 17%)' height='100%'>
@@ -79,14 +80,14 @@ export const ConversationsTabs: React.FC<ConversationsTabsProps> = ({ all, allLo
 			<TabIndicator mt='-1.5px' height='3px' bg='#8774E1' borderRadius='1px' _hover={{ height: '3px' }} />
 			<TabPanels overflowX='hidden' height='100%' my={2}>
 				<TabPanel p={0} {...animationTabs}>
-					<Animation.Slide custom='left' data-component-name='Animated' p={0} ref={containerRef}>
+					<Animation.Fade data-component-name='Animated' px={2} ref={containerRef}>
 						{renderTab(allLoading, all)}
-					</Animation.Slide>
+					</Animation.Fade>
 				</TabPanel>
 				<TabPanel p={0} {...animationTabs}>
-					<Animation.Slide custom='right' data-component-name='Animated' p={0} ref={containerRef}>
+					<Animation.Fade data-component-name='Animated' px={2} ref={containerRef}>
 						{renderTab(false, unread)}
-					</Animation.Slide>
+					</Animation.Fade>
 				</TabPanel>
 			</TabPanels>
 		</Tabs>

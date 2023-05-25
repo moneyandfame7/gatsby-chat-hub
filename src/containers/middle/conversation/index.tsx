@@ -27,9 +27,9 @@ export const Conversation: React.FC<ConversationProps> = observer(({ id }) => {
 		cacheStore.selectCache(selectConversationById(id))
 	)
 
-	const { data } = useQuery<ConversationByIdData, ConversationByIdInput>(CONVERSATION_ID_QUERY, {
+	const { data, loading } = useQuery<ConversationByIdData, ConversationByIdInput>(CONVERSATION_ID_QUERY, {
 		variables: { id },
-		fetchPolicy: 'cache-and-network',
+		fetchPolicy: 'cache-first',
 	})
 	useEffect(() => {
 		if (data) {
@@ -45,6 +45,10 @@ export const Conversation: React.FC<ConversationProps> = observer(({ id }) => {
 			setConversation(cached)
 		}
 	}, [id])
+
+	useEffect(() => {
+		console.log('state')
+	}, [conversation])
 
 	const closeConversation = () => {
 		if (!rightColumnUiStore.isInDom) {
@@ -77,7 +81,7 @@ export const Conversation: React.FC<ConversationProps> = observer(({ id }) => {
 			bgSize='cover'
 			bgRepeat='no-repeat'
 		>
-			<ConversationHeader conversation={conversation} />
+			<ConversationHeader conversation={conversation} loading={loading} />
 		</VStack>
 	)
 })
