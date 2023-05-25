@@ -5,16 +5,17 @@ import { observer } from 'mobx-react-lite'
 
 import { LeftColumnContent } from '@services/store'
 
+import { Scrollable } from '@components'
 import { Animation } from '@components/animation'
-import { Scrollable } from '@components/overlay'
 
-import { WithLeftColumnStore } from '../settings'
+import type { PropsWithLeftColumnStore } from '@utils/types'
+
 import { ContactList } from './contacts'
 import { Conversations } from './conversations'
 import { LeftMainHeader } from './header'
 import { LeftSearch } from './search'
 
-interface LeftMainProps extends WithLeftColumnStore {}
+interface LeftMainProps extends PropsWithLeftColumnStore {}
 
 export const LeftMain: React.FC<LeftMainProps> = observer(({ leftColumnUiStore }) => {
 	const renderContent = useCallback(() => {
@@ -33,7 +34,7 @@ export const LeftMain: React.FC<LeftMainProps> = observer(({ leftColumnUiStore }
 	return (
 		<Animation.Scale display='flex' flexDirection='column' height='100%' pos='relative'>
 			<LeftMainHeader leftColumnUiStore={leftColumnUiStore} />
-			<Scrollable pos='relative' id='LeftWrapper' height='100%' width='100%' overflowY='scroll'>
+			<Scrollable pos='relative' id='LeftWrapper' height='100%' width='100%' overflowY='auto'>
 				<AnimatePresence initial={false}>{renderContent()}</AnimatePresence>
 			</Scrollable>
 		</Animation.Scale>

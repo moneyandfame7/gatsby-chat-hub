@@ -7,14 +7,13 @@ import { LeftColumnContent } from '@services/store'
 
 import { Animation } from '@components/animation'
 
-import { WithLeftColumnStore } from '@containers/left/settings'
-
-import { Participant } from '@utils/graphql/conversations'
+import type { Participant } from '@utils/graphql/conversations'
+import type { PropsWithLeftColumnStore } from '@utils/types'
 
 import { ProvideInformation } from './provide-information'
 import { SelectParticipants } from './select-participants'
 
-interface ConversationModalProps extends WithLeftColumnStore {}
+interface ConversationModalProps extends PropsWithLeftColumnStore {}
 
 export const CreateConversation: React.FC<ConversationModalProps> = observer(({ leftColumnUiStore }) => {
 	const [selectedParticipants, setSelectedParticipants] = useState<Participant[]>([])

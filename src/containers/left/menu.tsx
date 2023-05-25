@@ -66,7 +66,7 @@ export const LeftDropdownMenu: React.FC<LeftDropdownMenuProps> = observer(({ onN
 	return (
 		<Animation.Rotate>
 			<StyledMenu
-				closeOnSelect={false}
+				closeOnSelect={true}
 				menuButton={<MenuButton as={IconButton} icon={<MenuIcon />} p={0} aria-label='Open menu' />}
 			>
 				{menuItems}

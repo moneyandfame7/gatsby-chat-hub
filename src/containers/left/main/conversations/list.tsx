@@ -1,4 +1,8 @@
-import React from 'react'
+import React, { memo } from 'react'
+
+import { useIsAnimated } from '@services/hooks'
+
+import { Animation } from '@components/animation'
 
 import { Conversation } from '@utils/graphql/conversations'
 
@@ -8,12 +12,15 @@ interface ConversationsListProps {
 	conversations: Conversation[]
 	containerRef: React.RefObject<HTMLDivElement>
 }
-export const ConversationsList: React.FC<ConversationsListProps> = ({ conversations, containerRef }) => {
+export const ConversationsList: React.FC<ConversationsListProps> = memo(({ conversations, containerRef }) => {
+	const isAnimated = useIsAnimated()
 	return (
 		<>
 			{conversations.map((c) => (
-				<ConversationItem containerRef={containerRef} key={c.id} conversation={c} />
+				<Animation.Fade key={c.id} layout={isAnimated ? true : undefined}>
+					<ConversationItem containerRef={containerRef} conversation={c} />
+				</Animation.Fade>
 			))}
 		</>
 	)
-}
+})

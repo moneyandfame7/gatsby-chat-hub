@@ -9,10 +9,8 @@ import { useIsAnimated } from '@services/hooks'
 import { IconButton } from '@components/shared/buttons'
 import { SecondaryLoader } from '@components/shared/loaders'
 
-import { Animation } from '../animation'
-import { CloseIcon, SearchIcon } from '../icons'
-
-/* ui */
+import { Animation } from './animation'
+import { CloseIcon, SearchIcon } from './icons'
 
 interface SearchInputProps {
 	handleChange: (value: string) => void

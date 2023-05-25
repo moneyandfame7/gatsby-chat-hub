@@ -9,21 +9,16 @@ import { useSelectSearchUsers } from '@services/actions/search'
 import { useIsAnimated } from '@services/hooks'
 import { LeftColumnContent, useStores } from '@services/store'
 
+import { ColumnHeader, LeftGoBack, ListItem, Scrollable } from '@components'
 import { Animation } from '@components/animation'
-import { ColumnHeader } from '@components/column-header'
-import { Scrollable } from '@components/overlay'
-import { ListItem } from '@components/shared/list-item'
 import { SecondaryLoader } from '@components/shared/loaders'
 
-import { WithLeftColumnStore } from '@containers/left/settings'
+import type { Participant } from '@utils/graphql/conversations'
+import type { PropsWithLeftColumnStore, PropsWithParticipants } from '@utils/types'
 
-import { Participant } from '@utils/graphql/conversations'
-import { PropsWithParticipants } from '@utils/types'
-
-import { LeftGoBack } from '../go-back'
 import { CreateConversationGoNext } from './go-next-button'
 
-interface ConversationModalProps extends WithLeftColumnStore {
+interface ConversationModalProps extends PropsWithLeftColumnStore {
 	participants: Participant[]
 	handleGoBack: () => void
 	selectParticipant: (p: Participant) => void

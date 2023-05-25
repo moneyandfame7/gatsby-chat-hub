@@ -7,29 +7,27 @@ import { useLocation } from '@reach/router'
 import { observer } from 'mobx-react-lite'
 
 import { useConversationAvatar } from '@services/actions/ui/conversations'
-import { useLayout } from '@services/hooks'
-import useNetworkStatus from '@services/hooks/useNetworkStatus'
+import { useLayout, useNetworkStatus } from '@services/hooks'
 import { useStores } from '@services/store'
 import { RightColumnContent } from '@services/store/ui/right-column'
 
+import { ColumnHeader, ListItemAvatar } from '@components'
 import { Animation } from '@components/animation'
-import { ColumnHeader } from '@components/column-header'
 import { ArrowBack, BellIcon, DeleteIcon, InfoIcon, MoreVerticalIcon, SearchIcon } from '@components/icons'
 import { StyledMenu, StyledMenuItem } from '@components/overlay'
 import { IconButton } from '@components/shared/buttons'
-import { ListItemAvatar } from '@components/shared/list-item'
 
-import { Conversation } from '@utils/graphql/conversations'
+import type { PropsWithConversation } from '@utils/types'
 
-interface MessagesHeaderProps {
-	conversation: Conversation
+interface MessagesHeaderProps extends PropsWithConversation {
+	loading: boolean
 }
-export const ConversationHeader: FC<MessagesHeaderProps> = observer(({ conversation }) => {
+export const ConversationHeader: FC<MessagesHeaderProps> = observer(({ conversation, loading }) => {
 	const { userStore, rightColumnUiStore } = useStores()
 	const { isMobile } = useLayout()
 	const conversationAvatar = useConversationAvatar(conversation)
 	const location = useLocation()
-	const isOnline = useNetworkStatus()
+	const { isOnline } = useNetworkStatus()
 
 	const handleClickGoBack = () => {
 		navigate(location.pathname)
@@ -47,11 +45,14 @@ export const ConversationHeader: FC<MessagesHeaderProps> = observer(({ conversat
 		if (!isOnline) {
 			return <Animation.Dots text='waiting for network' />
 		}
+		if (!conversation && loading) {
+			return <Animation.Dots text='updating' />
+		}
 		if (conversation?.participants.length > 2) {
-			return `${conversation?.participants.length} members`
+			return `${conversation?.participants.length} members, 1 online`
 		}
 		return 'last seen in'
-	}, [conversation, isOnline])
+	}, [conversation, isOnline, loading])
 
 	return (
 		<ColumnHeader w='full' userSelect='none' pos='relative' boxShadow='0 2px 2px rgb(114 114 114 / 17%)'>
@@ -95,9 +96,17 @@ export const ConversationHeader: FC<MessagesHeaderProps> = observer(({ conversat
 						/>
 					}
 				>
-					<StyledMenuItem icon={<BellIcon />}>Mute</StyledMenuItem>
-					{isMobile && <StyledMenuItem icon={<SearchIcon />}>Search</StyledMenuItem>}
-					<StyledMenuItem icon={<InfoIcon />}>Information</StyledMenuItem>
+					<StyledMenuItem closeOnSelect icon={<BellIcon />}>
+						Mute
+					</StyledMenuItem>
+					{isMobile && (
+						<StyledMenuItem closeOnSelect icon={<SearchIcon />} onClick={handleClickOnInfo}>
+							Search
+						</StyledMenuItem>
+					)}
+					<StyledMenuItem closeOnSelect icon={<InfoIcon />} onClick={handleClickOnInfo}>
+						Information
+					</StyledMenuItem>
 					<MenuDivider my='2px' />
 					<StyledMenuItem color='red' icon={<DeleteIcon color='red' fill='none' />}>
 						Delete chat

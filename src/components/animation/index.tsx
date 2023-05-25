@@ -93,17 +93,19 @@ const Slide: React.FC<AnimationProps> = observer(
 		)
 	})
 )
-const Fade: React.FC<AnimationProps> = observer(({ children, ...props }) => {
-	const isAnimated = useIsAnimated()
+const Fade: React.FC<AnimationProps> = observer(
+	forwardRef(({ children, ...props }, ref) => {
+		const isAnimated = useIsAnimated()
 
-	return isAnimated ? (
-		<Animated variants={ANIMATION_VARIANTS.FADE} initial='hidden' animate='open' exit='hidden' {...props}>
-			{children}
-		</Animated>
-	) : (
-		<Box {...props}>{children}</Box>
-	)
-})
+		return isAnimated ? (
+			<Animated variants={ANIMATION_VARIANTS.FADE} initial='hidden' animate='open' exit='hidden' {...props} ref={ref}>
+				{children}
+			</Animated>
+		) : (
+			<Box {...props}>{children}</Box>
+		)
+	})
+)
 const Rotate: React.FC<AnimationProps> = observer(({ children, ...props }) => {
 	const isAnimated = useIsAnimated()
 

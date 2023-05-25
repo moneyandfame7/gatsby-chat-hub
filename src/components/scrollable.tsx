@@ -10,7 +10,7 @@ export interface ScrollableProps extends BoxProps {
 
 export const Scrollable: React.FC<ScrollableProps> = ({ children, ...props }) => {
 	return (
-		<Box overflowY='scroll' {...props}>
+		<Box overflowY='auto' {...props}>
 			{children}
 		</Box>
 	)

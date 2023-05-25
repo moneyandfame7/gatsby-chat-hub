@@ -21,11 +21,10 @@ const AVATAR_VARIANTS: Record<AvatarVariants, string> = {
 export function useConversationAvatar(conversation: Conversation) {
 	const { userStore } = useStores()
 
-	const variant = AvatarVariants.Suzy
 	if (conversation.participants.length > 2) {
 		return {
 			name: conversation.name,
-			background: AVATAR_VARIANTS[variant],
+			background: AVATAR_VARIANTS[conversation.avatarVariant || AvatarVariants.PurpleWhite],
 		}
 	}
 	const participantWithoutMe = conversation.participants.filter((p) => p.id !== userStore.user?.id)[0]

@@ -1,5 +1,5 @@
 /* lib  */
-import React, { PropsWithChildren, useState } from 'react'
+import React, { PropsWithChildren, createContext, useContext, useState } from 'react'
 
 import {
 	Menu,
@@ -18,8 +18,26 @@ import { observer } from 'mobx-react-lite'
 import { useIsAnimated } from '@services/hooks'
 
 import { KeyboardEventKey } from '@utils/constants'
+import { NullableField } from '@utils/types'
 
 import { Backdrop } from './backdrop'
+
+interface StyledMenuContextParams {
+	handleClose: VoidFunction
+	handleOpen: VoidFunction
+	isOpen: boolean
+}
+const StyledMenuContext = createContext<NullableField<StyledMenuContextParams>>(null)
+const StyledMenuProvider = StyledMenuContext.Provider
+
+export const useStyledMenuContext = () => {
+	const data = useContext(StyledMenuContext)
+
+	if (!data) {
+		// throw new Error('Can not use `useStyledMenuContext` outside of the `StyledMenuProvider`')
+	}
+	return data
+}
 
 export const StyledMenuList = observer(
 	forwardRef<MenuListProps, 'div'>(({ ...props }, ref) => {
@@ -39,7 +57,7 @@ export const StyledMenuList = observer(
 export const StyledMenuItem = observer(
 	forwardRef<MenuItemProps, 'div'>(({ ...props }, ref) => {
 		const withAnimations = useIsAnimated()
-
+		const context = useStyledMenuContext()
 		const baseStyle: SystemStyleObject = {
 			bg: 'none',
 			backgroundColor: 'none',
@@ -53,7 +71,21 @@ export const StyledMenuItem = observer(
 			fontSize: '.875rem',
 		}
 
-		return <MenuItem sx={baseStyle} {...props} ref={ref} />
+		return (
+			<MenuItem
+				sx={baseStyle}
+				ref={ref}
+				{...props}
+				onClick={(e) => {
+					if (props.closeOnSelect && context?.handleClose) {
+						context?.handleClose()
+						props.onClick && props.onClick(e)
+					} else {
+						props.onClick && props.onClick(e)
+					}
+				}}
+			/>
+		)
 	})
 )
 
@@ -85,13 +117,15 @@ export const StyledMenu: React.FC<StyledMenuProps & MenuProps> = ({
 	}
 
 	return (
-		<Menu isLazy placement={placement} isOpen={isOpen} onOpen={handleOpen} {...props}>
-			{menuButton}
+		<StyledMenuProvider value={{ handleClose, handleOpen, isOpen }}>
+			<Menu isLazy placement={placement} isOpen={isOpen} onOpen={handleOpen} {...props}>
+				{menuButton}
 
-			<Portal>
-				<StyledMenuList zIndex='sticky'>{children}</StyledMenuList>
-			</Portal>
-			{isOpen && <Backdrop onClick={handleClose} handler={handlePressEscape} />}
-		</Menu>
+				<Portal>
+					<StyledMenuList zIndex='popover'>{children}</StyledMenuList>
+				</Portal>
+				{isOpen && <Backdrop /* bg='red'  */ zIndex='overlay' onClick={handleClose} handler={handlePressEscape} />}
+			</Menu>
+		</StyledMenuProvider>
 	)
 }
