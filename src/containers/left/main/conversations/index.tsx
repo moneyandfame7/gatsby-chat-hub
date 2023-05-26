@@ -38,7 +38,7 @@ export const Conversations: React.FC = observer(() => {
 					return prev
 				}
 				const newConversation = subscriptionData.data.conversationCreated
-
+				console.log('SUBSCRIPTION INVOCED')
 				return Object.assign({}, prev, {
 					conversations: [newConversation, ...prev.conversations],
 				})

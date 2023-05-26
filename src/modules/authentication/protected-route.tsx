@@ -15,7 +15,6 @@ export const ProtectedRoute: FC<PropsWithChildren> = observer(({ children }) => 
 	}
 	const { authorizationStore, userStore } = useStores()
 	if (!authorizationStore.isValidAccessToken) {
-		// eslint-disable-next-line @typescript-eslint/no-extra-semi
 		;(async () => {
 			const data = await authorizationStore.refresh()
 			if (!data?.accessToken) {

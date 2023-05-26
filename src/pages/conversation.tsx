@@ -5,6 +5,8 @@ import { PageProps, navigate } from 'gatsby'
 import { HStack } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
 
+import { ProtectedRoute } from '@modules/authentication'
+
 import { useStores } from '@services/store'
 
 import { pageHead } from '@components/page-head'
@@ -29,11 +31,13 @@ const ConversationPage: React.FC<PageProps> = observer(({ location }) => {
 	}, [isValidId, conversationId])
 
 	return (
-		<HStack flexDir={rtl ? 'row-reverse' : 'row'} data-component-name='Wrapper'>
-			<LeftColumn />
-			<MiddleColumn conversationId={isValidId ? conversationId : null} />
-			<RightColumn />
-		</HStack>
+		<ProtectedRoute>
+			<HStack flexDir={rtl ? 'row-reverse' : 'row'} data-component-name='Wrapper'>
+				<LeftColumn />
+				<MiddleColumn conversationId={isValidId ? conversationId : null} />
+				<RightColumn />
+			</HStack>
+		</ProtectedRoute>
 	)
 })
 
