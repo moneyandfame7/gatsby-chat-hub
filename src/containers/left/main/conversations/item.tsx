@@ -61,41 +61,19 @@ const ConversationContextMenu: React.FC<ConversationItemProps> = ({ containerRef
 		</ContextMenu>
 	)
 }
-
+const getDateForConversation = (c: Conversation) => {
+	if (c?.lastMessage) {
+		return c.lastMessage.updatedAt
+	}
+	return c.createdAt
+}
 export const ConversationItem: React.FC<ConversationItemProps> = ({ conversation, containerRef }) => {
 	const { userStore } = useStores()
 	const { hash } = useLocation()
 	const activeConversationId = hash.split('#')[1]
-	const getDateForConversation = (c: Conversation) => {
-		if (c?.lastMessage) {
-			return c.lastMessage.createdAt
-		}
-		return c.createdAt
-	}
+
 	const avatar = useConversationAvatar(conversation)
 	const { isMobile } = useLayout()
-	const isAnimated = useIsAnimated()
-	{
-		/* <Animation.Fade
-					key={u.id}
-					layout={isAnimated ? true : undefined}
-					onClick={() => {
-						selectParticipant(u)
-					}}
-					zIndex={1}
-					cursor='pointer'
-				>
-					<ListItem
-						subtitle='last seen in'
-						avatar={{
-							src: u.photo,
-						}}
-						title={u.username}
-						withCheckbox
-						isChecked={participants.some((p) => p.id === u.id)}
-					/>
-				</Animation.Fade> */
-	}
 	return (
 		<ConversationContextMenu containerRef={containerRef} conversation={conversation}>
 			<ListItem
@@ -105,7 +83,7 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({ conversation
 				avatar={avatar}
 				title={conversation.name || conversation.participants.filter((p) => p.id !== userStore.user?.id)[0].username}
 				to={ROUTES.chat(conversation.id)}
-				subtitle='Lorem ipsum dorem lasldlasdlalsdlasldaksdfkaskdfkaskdfkaksdfk'
+				subtitle={conversation.lastMessage?.text}
 			/>
 		</ConversationContextMenu>
 	)

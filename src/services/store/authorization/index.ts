@@ -69,7 +69,6 @@ export class AuthorizationStore implements IAuthorizationStore {
 			this.setAccessToken(values.accessToken)
 			this.setRefreshToken(values.refreshToken)
 		} else {
-			/* @TODO: показати, що я як даун годину намагався вирішити трабл*/
 			this.setAccessToken(null)
 			this.setRefreshToken(null)
 		}
@@ -94,10 +93,12 @@ export class AuthorizationStore implements IAuthorizationStore {
 	public async logout(): Promise<void> {
 		this.updateCredentials(null)
 		this.rootStore.cacheStore.clear()
-		navigate(ROUTES.login())
+		navigate(ROUTES.login(), { replace: true })
 	}
 	public async refresh(): Promise<NullableField<AccessToken>> {
 		if (!this.refreshToken) {
+			console.log('REFRESH TOKEN NOT EXIST')
+			// this.logout()
 			return null
 		}
 		const { data, errors } = await secondaryClient.mutate<AuthResponse<'refresh'>, AuthInput<'refresh'>>({

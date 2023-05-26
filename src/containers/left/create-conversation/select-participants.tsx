@@ -29,7 +29,7 @@ const SearchList: React.FC<
 > = observer(({ participants, searchList, selectParticipant }) => {
 	const isAnimated = useIsAnimated()
 	return (
-		<Scrollable height='calc(100% - 112px)' width='100%' p={3}>
+		<Scrollable height='calc(100% - 100px)' width='100%' p={3}>
 			{searchList.map((u) => (
 				<Animation.Fade
 					key={u.id}

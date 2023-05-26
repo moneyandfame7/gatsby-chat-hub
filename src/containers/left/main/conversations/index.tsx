@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+
+import { navigate } from 'gatsby'
 
 import { useQuery } from '@apollo/client'
 import { observer } from 'mobx-react-lite'
@@ -8,6 +10,7 @@ import { useStores } from '@services/store'
 import { Animation } from '@components/animation'
 import { ClientOnly } from '@components/client-only'
 
+import { ROUTES } from '@utils/constants'
 import {
 	CONVERSATIONS_QUERY,
 	CONVERSATION_CREATED_SUBSCRIPTION,
@@ -17,6 +20,9 @@ import {
 } from '@utils/graphql/conversations'
 
 import { ConversationsTabs } from './tabs'
+
+const sortByLatestUpdated = (c: Conversation[]) =>
+	[...c].sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)))
 
 export const Conversations: React.FC = observer(() => {
 	const { cacheStore } = useStores()
@@ -38,7 +44,6 @@ export const Conversations: React.FC = observer(() => {
 					return prev
 				}
 				const newConversation = subscriptionData.data.conversationCreated
-				console.log('SUBSCRIPTION INVOCED')
 				return Object.assign({}, prev, {
 					conversations: [newConversation, ...prev.conversations],
 				})
@@ -54,7 +59,7 @@ export const Conversations: React.FC = observer(() => {
 
 	useEffect(() => {
 		if (all?.conversations) {
-			const fetched = all?.conversations
+			const fetched = sortByLatestUpdated(all.conversations)
 			setConversations(fetched)
 			cacheStore.updateConversations(fetched)
 		}

@@ -1,41 +1,4 @@
-import jwtDecode, { JwtPayload } from 'jwt-decode'
-
 import { rootStore } from '@services/store/root'
-
-export function isRefreshNeeded(token?: string | null) {
-	if (!token) {
-		return { valid: false, needRefresh: true }
-	}
-
-	const decoded = jwtDecode<JwtPayload>(token)
-
-	if (!decoded) {
-		return { valid: false, needRefresh: true }
-	}
-	if (decoded.exp && Date.now() >= decoded.exp * 1000) {
-		return { valid: false, needRefresh: true }
-	}
-	return { valid: true, needRefresh: false }
-}
-
-export const getAccessToken = async () => {
-	const { authorizationStore } = rootStore
-
-	switch (true) {
-		/* якщо немає токенів - повертаємо null */
-		case !authorizationStore.isLoggedIn:
-			await authorizationStore.logout()
-			return null
-
-		/* якщо все гуд - просто повертаємо access token */
-		case authorizationStore.isValidAccessToken:
-			return authorizationStore.accessToken
-
-		/* повертаємо рефрешнутий access token */
-		default:
-			return authorizationStore.refresh()
-	}
-}
 
 async function getRefreshedAccessTokenPromise() {
 	const { authorizationStore } = rootStore
@@ -43,7 +6,7 @@ async function getRefreshedAccessTokenPromise() {
 		const data = await authorizationStore.refresh()
 		return data?.accessToken
 	} catch (e) {
-		console.warn(e)
+		console.warn(e, '[ON REFRESH TOKEN ERROR]')
 		return e
 	}
 }
@@ -54,8 +17,11 @@ export function getAccessTokenPromise() {
 	const { authorizationStore } = rootStore
 
 	if (authorizationStore.isLoggedIn && authorizationStore.isValidAccessToken) {
+		console.log('[ACCESS VALID]')
 		return new Promise((resolve) => resolve(authorizationStore.accessToken))
 	}
+
+	console.log('[NEED TO REFRESH]')
 
 	if (!pendingAccessTokenPromise)
 		pendingAccessTokenPromise = getRefreshedAccessTokenPromise().finally(() => (pendingAccessTokenPromise = null))
