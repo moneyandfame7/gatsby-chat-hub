@@ -22,7 +22,7 @@ export const wsLink =
 					connectionParams: async () => ({
 						isWebsocket: true,
 						headers: {
-							authorization: `Bearer ${rootStore.authorizationStore.accessToken}`,
+							authorization: `Bearer ${await getAccessTokenPromise()}`,
 						},
 					}),
 				})
@@ -44,6 +44,7 @@ export const withSubLink =
 export const errorLink = onError(({ graphQLErrors, networkError }) => {
 	if (graphQLErrors) {
 		for (const err of graphQLErrors) {
+			console.log({ err })
 		}
 	}
 	if (networkError) {
@@ -52,8 +53,14 @@ export const errorLink = onError(({ graphQLErrors, networkError }) => {
 })
 
 export const linkTokenToHeaders = setContext(async ({ operationName }, { headers }) => {
-	const accessToken = await getAccessTokenPromise()
+	let accessToken
+	if (operationName !== 'Login') {
+		accessToken = await getAccessTokenPromise()
+	} else {
+		console.log('Its just LOGIN')
+	}
 
+	console.log({ accessToken, operationName })
 	return {
 		headers: {
 			...headers,

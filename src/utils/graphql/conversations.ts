@@ -20,6 +20,7 @@ export interface Conversation {
 	id: string
 	lastMessage: NullableField<LastMessage>
 	createdAt: Date
+	updatedAt: Date
 	name: string
 	description?: string
 	avatarVariant?: AvatarVariants
@@ -44,6 +45,7 @@ export const CONVERSATION_FRAGMENT: DocumentNode = gql`
 		id
 		unreadMessages
 		createdAt
+		updatedAt
 		name
 		description
 		avatarVariant
@@ -86,7 +88,7 @@ export const CONVERSATION_ID_QUERY: DocumentNode = gql`
 			id
 			createdAt
 			name
-			createdAt
+			updatedAt
 			unreadMessages
 			avatarVariant
 			description
