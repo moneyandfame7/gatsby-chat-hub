@@ -1,16 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-
-import { navigate } from 'gatsby'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { useQuery } from '@apollo/client'
 import { observer } from 'mobx-react-lite'
 
 import { useStores } from '@services/store'
 
+import { ClientOnly } from '@components'
 import { Animation } from '@components/animation'
-import { ClientOnly } from '@components/client-only'
 
-import { ROUTES } from '@utils/constants'
 import {
 	CONVERSATIONS_QUERY,
 	CONVERSATION_CREATED_SUBSCRIPTION,
@@ -45,7 +42,7 @@ export const Conversations: React.FC = observer(() => {
 				}
 				const newConversation = subscriptionData.data.conversationCreated
 				return Object.assign({}, prev, {
-					conversations: [newConversation, ...prev.conversations],
+					conversations: sortByLatestUpdated([newConversation, ...prev.conversations]),
 				})
 			},
 		})

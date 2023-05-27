@@ -1,6 +1,6 @@
 import { uniqBy } from 'lodash'
 import { makeAutoObservable, runInAction, toJS } from 'mobx'
-import { makePersistable, stopPersisting } from 'mobx-persist-store'
+import { makePersistable } from 'mobx-persist-store'
 
 import { client } from '@services/apollo/clients'
 
@@ -44,7 +44,6 @@ export class CacheStore {
 		await client.clearStore()
 		runInAction(() => {
 			this.globalCache = initialState
-			stopPersisting(this)
 		})
 	}
 
