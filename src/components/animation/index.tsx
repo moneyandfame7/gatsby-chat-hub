@@ -17,27 +17,30 @@ type AnimationProps = PropsWithChildren & React.ComponentProps<typeof Animated>
 type AnimationVariants = 'SCALE' | 'FADE' | 'SLIDE' | 'ROTATE' | 'WIDTH'
 type AnimationDirection = 'left' | 'right'
 
+type AnimationState = 'open' | 'hidden'
+type AnimationScaleSize = Record<AnimationState, number>
+
 const ANIMATION_VARIANTS: Record<AnimationVariants, Variants> = {
 	SCALE: {
-		open: {
-			scale: 1,
+		open: ({ open, hidden }: AnimationScaleSize) => ({
+			scale: open,
 			opacity: 1,
-			transition: { duration: 0.2 },
-		},
-		hidden: {
+			transition: { duration: 0.1 },
+		}),
+		hidden: ({ hidden }: AnimationScaleSize) => ({
 			opacity: 0,
-			scale: 0.5,
-			transition: { duration: 0.2 },
-		},
+			scale: hidden,
+			transition: { duration: 0.1 },
+		}),
 	},
 	FADE: {
 		open: {
 			opacity: 1,
-			transition: { duration: 0.2 },
+			transition: { duration: 0.1 },
 		},
 		hidden: {
 			opacity: 0,
-			transition: { duration: 0.2 },
+			transition: { duration: 0.1 },
 		},
 	},
 	SLIDE: {
@@ -70,16 +73,18 @@ const ANIMATION_VARIANTS: Record<AnimationVariants, Variants> = {
 	},
 }
 
-const Scale: React.FC<AnimationProps> = observer(({ children, ...props }) => {
-	const isAnimated = useIsAnimated()
-	return isAnimated ? (
-		<Animated variants={ANIMATION_VARIANTS.SCALE} initial='hidden' animate='open' exit='hidden' {...props}>
-			{children}
-		</Animated>
-	) : (
-		<Box {...props}>{children}</Box>
-	)
-})
+const Scale: React.FC<AnimationProps> = observer(
+	forwardRef(({ children, ...props }, ref) => {
+		const isAnimated = useIsAnimated()
+		return isAnimated ? (
+			<Animated ref={ref} variants={ANIMATION_VARIANTS.SCALE} initial='hidden' animate='open' exit='hidden' {...props}>
+				{children}
+			</Animated>
+		) : (
+			<Box {...props}>{children}</Box>
+		)
+	})
+)
 const Slide: React.FC<AnimationProps> = observer(
 	forwardRef(({ children, ...props }, ref) => {
 		const isAnimated = useIsAnimated()

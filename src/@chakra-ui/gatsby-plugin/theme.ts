@@ -40,6 +40,7 @@ const theme = extendTheme(
 			colors: {
 				primary: {
 					default: '#8774E1',
+					light: '#CAC0FC',
 				},
 			},
 		},

@@ -30,7 +30,7 @@ export const Conversations: React.FC = observer(() => {
 		loading: allLoading,
 		subscribeToMore,
 	} = useQuery<ConversationsData>(CONVERSATIONS_QUERY, {
-		fetchPolicy: 'cache-and-network',
+		fetchPolicy: 'cache-first',
 	})
 
 	const subscribeToNewConversations = useCallback(() => {
@@ -64,7 +64,15 @@ export const Conversations: React.FC = observer(() => {
 
 	return (
 		<ClientOnly>
-			<Animation.Scale left={0} top={0} bottom={0} pos='absolute' width='100%' id='ConversationsContainer'>
+			<Animation.Scale
+				left={0}
+				top={0}
+				bottom={0}
+				pos='absolute'
+				width='100%'
+				id='ConversationsContainer'
+				custom={{ open: 1, hidden: 0.8 }}
+			>
 				<ConversationsTabs all={conversations} allLoading={allLoading} />
 			</Animation.Scale>
 		</ClientOnly>

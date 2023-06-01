@@ -9,6 +9,8 @@ export const ROUTES = {
 }
 export enum KeyboardEventKey {
 	Escape = 'Escape',
+	Enter = 'Enter',
+	Shift = 'Shift',
 }
 
 export enum ContainerIndex {

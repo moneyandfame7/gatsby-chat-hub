@@ -98,7 +98,7 @@ export const SearchInput: React.FC<SearchInputProps> = observer(
 
 				<AnimatePresence initial={false}>
 					{Boolean(inputValue) && !isLoading && (
-						<Animation.Scale key='AnimatedClearButton'>
+						<Animation.Scale key='AnimatedClearButton' custom={{ open: 1, hidden: 0.8 }}>
 							<InputRightElement>
 								<IconButton
 									height='17px'

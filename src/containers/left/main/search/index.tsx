@@ -10,8 +10,23 @@ import type { PropsWithLeftColumnStore } from '@utils/types'
 interface LeftSearchProps extends PropsWithLeftColumnStore {}
 export const LeftSearch: React.FC<LeftSearchProps> = observer(({ leftColumnUiStore }) => {
 	return (
-		<Animation.Fade pos='absolute' width='100%' padding='inherit' top={0} left={0} bg='pink' height='100%'>
+		<Animation.Scale
+			custom={{ open: 1, hidden: 1.05 }}
+			pos='absolute'
+			width='100%'
+			padding='inherit'
+			top={0}
+			left={0}
+			height='100%'
+			p={5}
+		>
 			<Text>lasdlflasldflalsdfllasdlflasdlflasdlflasdlf</Text>
-		</Animation.Fade>
+			<Text>lasdlflasldflalsdfllasdlflasdlflasdlflasdlf</Text>
+			<Text>lasdlflasldflalsdfllasdlflasdlflasdlflasdlf</Text>
+			<Text>lasdlflasldflalsdfllasdlflasdlflasdlflasdlf</Text>
+			<Text>lasdlflasldflalsdfllasdlflasdlflasdlflasdlf</Text>
+			<Text>lasdlflasldflalsdfllasdlflasdlflasdlflasdlf</Text>
+			<Text>lasdlflasldflalsdfllasdlflasdlflasdlflasdlf</Text>
+		</Animation.Scale>
 	)
 })

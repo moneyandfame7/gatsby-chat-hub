@@ -17,6 +17,7 @@ import { ArrowBack, BellIcon, DeleteIcon, InfoIcon, MoreVerticalIcon, SearchIcon
 import { StyledMenu, StyledMenuItem } from '@components/overlay'
 import { IconButton } from '@components/shared/buttons'
 
+import { ContainerIndex } from '@utils/constants'
 import type { PropsWithConversation } from '@utils/types'
 
 interface MessagesHeaderProps extends PropsWithConversation {
@@ -55,7 +56,13 @@ export const ConversationHeader: FC<MessagesHeaderProps> = observer(({ conversat
 	}, [conversation, isOnline, loading])
 
 	return (
-		<ColumnHeader w='full' userSelect='none' pos='relative' boxShadow='0 2px 2px rgb(114 114 114 / 17%)'>
+		<ColumnHeader
+			zIndex={ContainerIndex.Middle}
+			w='full'
+			userSelect='none'
+			pos='relative'
+			boxShadow='0 2px 2px rgb(114 114 114 / 17%)'
+		>
 			{isMobile && <IconButton onClick={handleClickGoBack} icon={<ArrowBack />} aria-label='Close chat' p={0} />}
 			<Box flex={1}>
 				<HStack cursor='pointer' onClick={handleClickOnInfo}>
