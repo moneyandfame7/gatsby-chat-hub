@@ -34,3 +34,7 @@ export const useIsChatOpen = () => {
 
 	return validateId(location.hash.split('#')[1])
 }
+
+export function getRandomArbitrary(min: number, max: number) {
+	return Math.floor(Math.random() * (max - min + 1)) + min
+}

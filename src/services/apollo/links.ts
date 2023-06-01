@@ -56,11 +56,7 @@ export const linkTokenToHeaders = setContext(async ({ operationName }, { headers
 	let accessToken
 	if (operationName !== 'Login') {
 		accessToken = await getAccessTokenPromise()
-	} else {
-		console.log('Its just LOGIN')
 	}
-
-	console.log({ accessToken, operationName })
 	return {
 		headers: {
 			...headers,

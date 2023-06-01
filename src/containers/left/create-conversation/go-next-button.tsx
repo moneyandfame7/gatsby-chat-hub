@@ -10,7 +10,7 @@ interface CreateConversationGoNextProps {
 
 export const CreateConversationGoNext: React.FC<CreateConversationGoNextProps> = ({ onClick }) => {
 	return (
-		<Animation.Scale>
+		<Animation.Scale custom={{ open: 1, hidden: 0.8 }}>
 			<IconButton onClick={onClick} icon={<ArrowRightCircleIcon />} aria-label='Go next step' />
 		</Animation.Scale>
 	)

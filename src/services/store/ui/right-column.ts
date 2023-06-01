@@ -27,7 +27,6 @@ export class RightColumnUiStore {
 	}
 
 	public reset() {
-		console.log('AJSDJASJD')
 		switch (this.content) {
 			case RightColumnContent.MessagesSearch:
 				this.setContent(RightColumnContent.Information)

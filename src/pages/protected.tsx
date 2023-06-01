@@ -1,19 +1,22 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { PageProps } from 'gatsby'
 
 import { gql, useLazyQuery, useMutation } from '@apollo/client'
-import { Box, Button, Text } from '@chakra-ui/react'
+import { Box, Button, Text, Textarea } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
+import ResizeTextarea from 'react-textarea-autosize'
 
 import { ProtectedRoute } from '@modules/authentication'
 
 import { getAccessTokenPromise } from '@services/apollo/helpers'
+import { useStickyHeightScroll } from '@services/hooks'
 import { useStores } from '@services/store'
 
 import { pageHead } from '@components/page-head'
 
 import { Participant } from '@utils/graphql/conversations'
+import '@utils/test.css'
 
 const TEST_QUERY = gql`
 	query GetProtected {
@@ -25,34 +28,20 @@ const TEST_QUERY = gql`
 `
 
 const ProtectedPage: React.FC<PageProps> = observer(() => {
-	const { authorizationStore } = useStores()
+	const scrollRef = useStickyHeightScroll()
 
-	const [get] = useLazyQuery<Participant>(TEST_QUERY, { fetchPolicy: 'network-only' })
-
-	const handleGet = async () => {
-		const res = await get()
-
-		// console.log(res.data, res.error, authorizationStore.isValidAccessToken)
-	}
-
-	// useEffect(()=>{},[data,error])
 	return (
-		// <ProtectedRoute>
 		<>
-			<Box bg='red' minW='50px' minH='50vh'>
-				<Text color='#fff'>lorem ipsum dorem</Text>
-				<Button onClick={authorizationStore.logout}>Logout</Button>
-				<Button onClick={handleGet}>Get protected route</Button>
-				<Button
-					onClick={async () => {
-						await getAccessTokenPromise()
-					}}
-				>
-					Refresh
-				</Button>
-			</Box>
-
-			{/* {data ? <Text>{data.id}</Text> : <Text color='red'>{error?.message}</Text>} */}
+			<div className='conversation'>
+				<header className='header' />
+				<div className='messages-container' ref={scrollRef}>
+					<div className='scroll' ref={scrollRef}>
+						{Array.from({ length: 50 }).map((_, i: number) => (
+							<p key={i}>{i}</p>
+						))}
+					</div>
+				</div>
+			</div>
 		</>
 
 		// </ProtectedRoute>

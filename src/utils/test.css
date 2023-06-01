@@ -1,0 +1,28 @@
+.conversation {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	background-color: aqua;
+}
+.header {
+	width: 100%;
+	box-shadow: 0 2px 2px rgb(114 114 114 / 17%);
+	min-height: 60px;
+}
+.messages-container {
+	flex-shrink: 10;
+	height: 100%;
+	overflow: auto;
+}
+.messages-container,
+.scroll {
+	transform: scale(1, -1);
+}
+.scroll {
+	background: red;
+	width: max-content;
+}
+
+.text-input {
+	resize: vertical;
+}

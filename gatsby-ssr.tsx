@@ -20,6 +20,10 @@ export const wrapRootElement: GatsbyBrowser['wrapRootElement'] = ({ element }) =
 	)
 }
 
+export const onInitialClientRender: GatsbyBrowser['onInitialClientRender'] = (props) => {
+	console.log('has been started! sosi hui')
+}
+
 export const wrapPageElement: GatsbyBrowser['wrapPageElement'] = ({ element }) => {
 	return <ClientOnly>{element}</ClientOnly>
 }
