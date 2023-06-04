@@ -36,6 +36,9 @@ const config: GatsbyConfig = {
 					'@services': path.resolve(__dirname, 'src/services'),
 					'@utils': path.resolve(__dirname, 'src/utils'),
 					'@components': path.resolve(__dirname, 'src/components'),
+					'@types': path.resolve(__dirname, 'src/types'),
+					'@lib': path.resolve(__dirname, 'src/lib'),
+					'@api': path.resolve(__dirname, 'src/api'),
 				},
 				extensions: ['js'],
 			},
@@ -47,6 +50,7 @@ const config: GatsbyConfig = {
 				isUsingColorMode: true,
 			},
 		},
+		`gatsby-plugin-sass`,
 	],
 }
 

@@ -1,7 +1,5 @@
 import { type ThemeConfig, extendTheme } from '@chakra-ui/react'
 
-import gradient from '@assets/gradient.png'
-
 const config: ThemeConfig = {
 	initialColorMode: 'light',
 	useSystemColorMode: false,
@@ -32,6 +30,9 @@ const theme = extendTheme(
 				secondary: '#707579',
 				icon: 'rgb(112,117,121)',
 			},
+			primary: {
+				main: '#3390ec',
+			},
 
 			red: '#E53835',
 			yellow: '#FDD764',
@@ -39,20 +40,18 @@ const theme = extendTheme(
 		semanticTokens: {
 			colors: {
 				primary: {
-					default: '#8774E1',
-					light: '#CAC0FC',
+					default: '#3290EC',
+					dark: '#2E84D9',
+					light: '#33A7F4',
+					transparent: 'rgb(51 144 236 / 10%)',
+					transparent2: 'rgb(51 144 236 / 3%)',
 				},
 			},
 		},
 		styles: {
 			global: () => ({
-				body: {
-					// bgImage: `${gradient}`,
-					// bgSize: 'cover',
-				},
 				'*': {
 					WebkitTapHighlightColor: 'transparent',
-					overflowX: 'hidden',
 				},
 			}),
 		},

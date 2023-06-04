@@ -15,6 +15,8 @@
 		"<THIRD_PARTY_MODULES>",
 		"^@modules/(.*)$",
 		"^@services/(.*)$",
+		"^@api",
+		"^@types",
 		"^@ui/(.*)$",
 		"^@components",
 		"^@components/(.*)$",
@@ -24,5 +26,6 @@
 		"^[./]"
 	],
 	"importOrderSeparation": true,
+	"quoteProps": "preserve",
 	"importOrderSortSpecifiers": true
 }

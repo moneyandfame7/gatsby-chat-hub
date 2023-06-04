@@ -1,0 +1,14 @@
+$color-primary: #3290ec;
+$color-text-secondary: #707579;
+$color-border-inputs: rgb(218, 220, 224);
+$color-placeholders: #a2acb4;
+$color-background: #fff;
+$border-radius: 12px;
+:root {
+	--color-primary: #{$color-primary};
+	--color-text-secondary: #{$color-text-secondary};
+	--color-border-inputs: #{$color-border-inputs};
+	--color-placeholders: #{$color-placeholders};
+	--color-background: #{$color-background};
+	--border-radius: #{12px};
+}

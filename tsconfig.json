@@ -30,7 +30,12 @@
 			"@assets/*": ["./src/assets/*"],
 
 			"@utils/*": ["./src/utils/*"],
-			"@utils": ["./src/utils"]
+			"@utils": ["./src/utils"],
+
+			"@types": ["./src/types"],
+
+			"@lib/*": ["./src/lib/*"],
+			"@api": ["./src/api"]
 		}
 	},
 	"include": ["./src/**/*", "./gatsby-node.ts", "./gatsby-config.ts", "./plugins/**/*"]

@@ -9,7 +9,7 @@ export const ClientOnly: React.FC<PropsWithChildren> = ({ children }) => {
 	useEffect(() => {
 		setTimeout(() => {
 			setDomLoaded(true)
-		}, 50)
+		})
 	}, [])
 
 	return (

@@ -21,8 +21,7 @@ export const Dropzone: React.FC = () => {
 			onPaste={(e) => {
 				e.preventDefault()
 				console.log(e.clipboardData.files[0])
-			}}
-		>
+			}}>
 			<input {...getInputProps()} />
 			<p>Drag 'n' drop some files here, or click to select files</p>
 		</Box>

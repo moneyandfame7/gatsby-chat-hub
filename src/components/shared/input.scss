@@ -1,0 +1,98 @@
+.input-container {
+	position: relative;
+	width: 100%;
+
+	input {
+		height: 54px;
+		width: 100%;
+		border: 1px solid var(--color-border-inputs);
+		transition: border-color 0.15s ease;
+		border-radius: 16px;
+		box-sizing: border-box;
+		padding: 16px;
+		&:autofill,
+		&:-webkit-autofill-strong-password,
+		&:-webkit-autofill-strong-password-viewable,
+		&:-webkit-autofill-and-obscured {
+			box-shadow: inset 0 0 0 10rem var(--color-background);
+			-webkit-text-fill-color: var(--color-text);
+		}
+
+		// Hide hint for Safari password strength meter
+		&::-webkit-strong-password-auto-fill-button {
+			opacity: 0;
+			width: 0 !important;
+			overflow: hidden !important;
+			max-width: 0 !important;
+			min-width: 0 !important;
+			clip: rect(0, 0, 0, 0);
+			position: absolute;
+		}
+
+		&::-ms-clear,
+		&::-ms-reveal {
+			display: none;
+		}
+	}
+
+	label {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 16px;
+		display: flex;
+		align-items: center;
+		pointer-events: none;
+	}
+
+	input,
+	label .text {
+		font-size: 16px;
+	}
+
+	label .text {
+		transition: all 0.15s ease-out;
+		color: var(--color-placeholders);
+	}
+
+	input:focus {
+		outline: none;
+		border-color: var(--color-primary);
+		box-shadow: inset 0 0 0 1px var(--color-primary);
+		caret-color: var(--color-primary);
+		&::placeholder {
+			transition: color 0.15s ease;
+			color: var(--color-primary);
+		}
+	}
+
+	input:hover {
+		border-color: var(--color-primary);
+		&::placeholder {
+			transition: color 0.15s ease;
+			color: var(--color-primary);
+		}
+	}
+	input::placeholder {
+		color: var(--color-placeholders);
+	}
+	input:hover + label .text {
+		color: var(--color-primary);
+	}
+
+	input:focus + label .text,
+	:not(input[value=""]) + label .text {
+		font-size: 12px;
+		transform: translate(-7%, -150%);
+		background-color: white;
+		padding-left: 4px;
+		padding-right: 4px;
+	}
+	:not(input[value=""]) + label .text {
+		color: var(--color-text-secondary);
+	}
+
+	input:focus + label .text {
+		color: var(--color-primary);
+	}
+}
